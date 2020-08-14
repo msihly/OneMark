@@ -1,6 +1,6 @@
 {
-  "name": "onemark-react",
-  "version": "0.1.0",
+  "name": "onemark",
+  "version": "2.0.0",
   "author": "Mohamed Sihly",
   "private": true,
   "dependencies": {
@@ -17,7 +17,7 @@
   "proxy": "http://localhost:3001",
   "scripts": {
     "dev": "concurrently \"cd api && npm run start\" \"npm run start\"",
-    "start": "react-scripts start",
+    "start": "concurrently \"cd api && npm run start\" \"npm run start\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -38,6 +38,6 @@
     ]
   },
   "engines": {
-    "node": "12.18"
+    "node": "12.18.0"
   }
 }
