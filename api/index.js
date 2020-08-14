@@ -18,9 +18,8 @@ try {
         secret: SESSION_SECRET
     };
 
-    if (app.get("env") === "production") {
-        app.set("trust proxy", 1);
-        sessionSetup.cookie.secure = true;
+    if (process.env.NODE_ENV === "production") {
+        app.enable("trust proxy");
     }
 
     app.use(cookieParser(SESSION_SECRET));
