@@ -7,7 +7,7 @@
 	"scripts": {
 		"dev": "nodemon --inspect ./server/index.js",
         "start": "node ./server/index.js",
-        "build": "cd ./client && npm run-script build"
+        "build": "react-scripts build"
 	},
 	"keywords": [],
 	"license": "ISC",
