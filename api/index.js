@@ -36,5 +36,9 @@ try {
     const normalizedPath = require("path").join(__dirname, "routes");
     require("fs").readdirSync(normalizedPath).forEach(file => require("./routes/" + file));
 
-    app.listen(API_PORT, () => console.log(`Listening on port ${API_PORT}...`));
-} catch (e) { console.error(e); }
+    if (process.env.NODE_ENV === "production") {
+        app.listen(API_PORT, () => console.log(`Listening on port ${API_PORT}...`));
+    } else {
+        app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}...`));
+    }
+} catch (e) { console.error(e.message); }
