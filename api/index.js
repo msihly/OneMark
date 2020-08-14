@@ -5,7 +5,7 @@ try {
     const session = require("express-session");
     const MemoryStore = require("memorystore")(session);
     const multer = require("multer");
-    const { API_PORT, SESSION_SECRET } = process.env;
+    const { PORT, SESSION_SECRET } = process.env;
     const DAY_IN_MS = 86400000;
     const app = express();
     exports.app = app;
@@ -33,12 +33,8 @@ try {
         return res.sendFile(path.join(__dirname, "../build", "index.html"));
     });
 
-    const normalizedPath = require("path").join(__dirname, "routes");
+    const normalizedPath = path.join(__dirname, "routes");
     require("fs").readdirSync(normalizedPath).forEach(file => require("./routes/" + file));
 
-    if (process.env.NODE_ENV === "production") {
-        app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}...`));
-    } else {
-        app.listen(API_PORT, () => console.log(`Listening on port ${API_PORT}...`));
-    }
+    app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
 } catch (e) { console.error(e.message); }

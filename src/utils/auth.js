@@ -8,9 +8,11 @@ class Auth {
     }
 
     async login(formData) {
-        let res = await(await fetch("/api/user/login", { method: "POST", body: formData ?? {} })).json();
-        this.setStatus(res.success);
-        return res;
+        try {
+            let res = await(await fetch("/api/user/login", { method: "POST", body: formData ?? {} })).json();
+            this.setStatus(res.success);
+            return res;
+        } catch (e) { console.error(e.message); return false; }
     }
 
     localLogout() {
@@ -19,15 +21,19 @@ class Auth {
     }
 
     async logout() {
-        let res = await(await fetch("/api/user/logout", { method: "DELETE" })).json();
-        if (res.success) { this.setStatus(false); }
-        return res;
+        try {
+            let res = await(await fetch("/api/user/logout", { method: "DELETE" })).json();
+            if (res.success) { this.setStatus(false); }
+            return res;
+        } catch (e) { console.error(e.message); return false; }
     }
 
     async register(formData) {
-        let res = await(await fetch("/api/user/register", { method: "POST", body: formData })).json();
-        this.setStatus(res.success);
-        return res;
+        try {
+            let res = await(await fetch("/api/user/register", { method: "POST", body: formData })).json();
+            this.setStatus(res.success);
+            return res;
+        } catch (e) { console.error(e.message); return false; }
     }
 
     setStatus(status) {
