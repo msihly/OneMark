@@ -104,4 +104,4 @@ try {
             return res.send({ success: true, message: `Bookmark #${req.params.id} deleted`});
         } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
     });
-} catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+} catch (e) { console.error(e.message); }

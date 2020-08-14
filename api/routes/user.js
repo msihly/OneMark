@@ -123,4 +123,4 @@ try {
             return res.send({ success: true, message: "Password updated" });
         } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
     });
-} catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+} catch (e) { console.error(e.message); }
