@@ -6,7 +6,7 @@
 	"main": "./server/index.js",
 	"scripts": {
 		"dev": "nodemon --inspect ./server/index.js",
-		"start": "node ./server/index.js"
+		"start": "cd ./client && npm run-script build && cd .. && node ./server/index.js"
 	},
 	"keywords": [],
 	"license": "ISC",
