@@ -29,11 +29,8 @@ try {
     app.use(express.json());
     app.use(express.static(path.join(__dirname, "../build")));
 
-    // const normalizedPath = path.join(__dirname, "routes");
-    // require("fs").readdirSync(normalizedPath).forEach(file => require("./routes/" + file));
-
-    require(path.join(__dirname, "routes", "user.js"));
-    require(path.join(__dirname, "routes", "bookmark.js"));
+    const normalizedPath = path.join(__dirname, "routes");
+    require("fs").readdirSync(normalizedPath).forEach(file => require("./routes/" + file));
 
     app.get("*", (req, res) => {
         return res.sendFile(path.join(__dirname, "../build", "index.html"));
