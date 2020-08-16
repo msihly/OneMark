@@ -5,7 +5,7 @@ try {
     const session = require("express-session");
     const MemoryStore = require("memorystore")(session);
     const multer = require("multer");
-    const { PORT, SESSION_SECRET } = process.env;
+    const { NODE_ENV, PORT, SESSION_SECRET } = process.env;
     const DAY_IN_MS = 86400000;
     const app = express();
     exports.app = app;
@@ -18,7 +18,7 @@ try {
         saveUninitialized: true
     };
 
-    if (process.env.NODE_ENV === "production") {
+    if (NODE_ENV === "production") {
         app.enable("trust proxy");
         sessionSetup.cookie.secure = true;
     }
@@ -28,6 +28,13 @@ try {
     app.use(multer({ limits: { fieldSize: 25 * 1024 * 1024 } }).any());
     app.use(express.json());
     app.use(express.static(path.join(__dirname, "../client/build")));
+
+    app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", `chrome-extension://${NODE_ENV === "production" ? "cjklnajnighcegajggjfmjecfidllinm" : "dlglodafpchdfbogheganllipcnmjgpb"}`);
+        res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+        res.header("Access-Control-Allow-Headers", "Origin, Authorization, X-Requested-With, Content-Type, Accept");
+        next();
+    });
 
     const normalizedPath = path.join(__dirname, "routes");
     require("fs").readdirSync(normalizedPath).forEach(file => require("./routes/" + file));

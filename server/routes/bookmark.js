@@ -9,7 +9,7 @@ try {
             validateSession(req);
             const bookmarks = await $try(db.getAllBookmarks)(req.session.uid);
             return res.send({ success: true, bookmarks });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.post("/api/bookmark", async (req, res) => {
@@ -28,7 +28,7 @@ try {
             if (tags.length > 0) { await $try(db.addBookmarkTags)(bookmarkId, tags); }
 
             return res.send({ success: true, bookmark: { bookmarkId, title, pageUrl, imagePath, imageSize, dateCreated: date, dateModified: date, views: 0, tags } });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.post("/api/ext/bookmark", async (req, res) => {
@@ -39,6 +39,7 @@ try {
             if (!userId) { throw new Error("Invalid AuthToken provided"); }
 
             let { title, pageUrl, tags } = req.body;
+            console.log(tags);
             tags = JSON.parse(tags);
             if (!validateBookmark(res, title, pageUrl)) { throw new Error("Invalid bookmark"); }
             if (await $try(db.checkBookmarkExists)(userId, pageUrl) !== false) { throw new Error("Bookmark already exists"); }
@@ -53,7 +54,7 @@ try {
             if (tags.length > 0) { await $try(db.addBookmarkTags)(bookmarkId, tags); }
 
             return res.send({ success: true, bookmark: { bookmarkId, title, pageUrl, imagePath, imageSize, dateCreated: date, dateModified: date, views: 0, tags } });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.put("/api/bookmark/:id", async (req, res) => {
@@ -86,7 +87,7 @@ try {
 
             let dateModified = await $try(db.editBookmark)(bookmarkId, req.session.uid, title, pageUrl, imageId, tags);
             return res.send({ success: true, bookmark: { bookmarkId, title, pageUrl, imagePath, imageSize, dateCreated, dateModified, tags } });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.put("/api/bookmark/:id/view", async (req, res) => {
@@ -94,7 +95,7 @@ try {
             validateSession(req);
             await $try(db.addView)(req.params.id, req.session.uid);
             return res.send({ success: true, message: `Bookmark #${req.params.id} view count incremented` });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.delete("/api/bookmark/:id", async (req, res) => {
@@ -102,6 +103,6 @@ try {
             validateSession(req);
             await $try(db.deleteBookmark)(req.params.id);
             return res.send({ success: true, message: `Bookmark #${req.params.id} deleted`});
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
-} catch (e) { console.error(e.message); }
+} catch (e) { console.error(e); }

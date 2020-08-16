@@ -32,7 +32,7 @@ try {
 
             [req.session.uid, req.session.username] = [userId, username];
             return res.send({ success: true, message: "Login successful" });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.post("/api/ext/user/login", async (req, res) => {
@@ -48,7 +48,7 @@ try {
 
             const token = await $try(db.createToken)(userId, 90);
             return res.send({ success: true, userId, token });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.post("/api/user/register", async (req, res) => {
@@ -69,7 +69,7 @@ try {
             }
 
             return res.send({ success: true, message: "Registration successful" });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.delete("/api/user/logout", async (req, res) => {
@@ -82,7 +82,7 @@ try {
             }
             req.session.destroy();
             return res.send({ success: true, message: "Logout successful" });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.get("/api/user/info", async (req, res) => {
@@ -90,7 +90,7 @@ try {
             validateSession(req);
             const info = await $try(db.getUserInfo)(req.session.uid);
             return res.send({ success: true, info });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.put("/api/user/profile", async (req, res) => {
@@ -105,7 +105,7 @@ try {
             await $try(db.updateProfile)(req.session.uid, email, username);
             req.session.username = username;
             return res.send({ success: true, username, email });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
 
     app.put("/api/user/password", async (req, res) => {
@@ -121,6 +121,6 @@ try {
             let [err, passwordHash] = await bcrypt.hash(password, 10);
             await db.updatePass(userId, passwordHash);
             return res.send({ success: true, message: "Password updated" });
-        } catch (e) { console.error(e.message); return res.send({ success: false, message: e.message }); }
+        } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
     });
-} catch (e) { console.error(e.message); }
+} catch (e) { console.error(e); }
