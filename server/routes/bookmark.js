@@ -20,7 +20,7 @@ try {
             if (!validateBookmark(res, title, pageUrl)) { throw new Error("Invalid bookmark"); }
 
             const uploadResult = await $try(uploadFile)(req.files);
-            if (!uploadResult.success) { throw new Error("uploadResult.errors"); }
+            if (!uploadResult.success) { throw new Error(uploadResult.errors); }
             const { imageId, imagePath, imageSize } = uploadResult;
 
             const date = getIsoDate();

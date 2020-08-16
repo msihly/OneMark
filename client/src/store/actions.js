@@ -9,7 +9,10 @@ export const getAccount = () => async (dispatch) => {
         if (!res.success) { throw new Error(res.message); };
         await dispatch(accountRetrieved(res.info));
         return true;
-    } catch (e) { toast.error(e.message); Auth.localLogout(); }
+    }  catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
 };
 
 export const accountRetrieved = (info) => ({
@@ -24,7 +27,10 @@ export const updateAccount = (formData) => async (dispatch) => {
         await dispatch(accountUpdated(formData.get("username"), formData.get("email")));
         toast.success("Account updated")
         return true;
-    } catch (e) { toast.error(e.message); Auth.localLogout(); }
+    }  catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
 };
 
 export const accountUpdated = (username, email) => ({
@@ -35,12 +41,15 @@ export const accountUpdated = (username, email) => ({
 /******************** BOOKMARKS ********************/
 export const createBookmark = (formData) => async (dispatch) => {
     try {
-        let res = await (await fetch("/api/bookmark", { method: "POST", body: formData })).json();
-        if (!res.success) { throw new Error(res.message); };
+        let res = await(await fetch("/api/bookmark", { method: "POST", body: formData })).json();
+        if (!res.success) { throw new Error(res.message); }
         await dispatch(bookmarkCreated(res.bookmark));
         toast.success("Bookmark created");
         return true;
-    } catch (e) { toast.error(e.message); Auth.localLogout(); }
+    } catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
 };
 
 export const bookmarkCreated = (bookmark) => ({
@@ -54,7 +63,10 @@ export const editBookmark = (formData) => async (dispatch) => {
         if (!res.success) { throw new Error(res.message); };
         await dispatch(bookmarkEdited(res.bookmark));
         return true;
-    } catch (e) { toast.error(e.message); Auth.localLogout(); }
+    } catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
 };
 
 export const bookmarkEdited = (bookmark) => ({
@@ -68,7 +80,10 @@ export const viewBookmark = (bookmarkId) => async (dispatch) => {
         if (!res.success) { throw new Error(res.message); };
         await dispatch(bookmarkViewed(bookmarkId));
         return true;
-    } catch (e) { toast.error(e.message); Auth.localLogout(); }
+    } catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
 };
 
 export const bookmarkViewed = (bookmarkId) => ({
@@ -83,7 +98,10 @@ export const deleteBookmark = (bookmark) => async (dispatch) => {
         await dispatch(bookmarkDeleted(bookmark));
         toast.success("Bookmark deleted");
         return true;
-    } catch (e) { toast.error(e.message); Auth.localLogout(); }
+    }  catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
 };
 
 export const bookmarkDeleted = (bookmark) => ({
@@ -104,7 +122,10 @@ export const getBookmarks = () => async (dispatch) => {
         await dispatch(bookmarksRetrieved(bookmarks));
         if (bookmarks.length === 0) { toast.info("No bookmarks found"); };
         return true;
-    } catch (e) { toast.error(e.message); Auth.localLogout(); }
+    }  catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
 };
 
 export const bookmarksFiltered = (bookmarks) => ({
