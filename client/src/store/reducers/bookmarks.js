@@ -32,8 +32,8 @@ const bookmark = (state = initState, action) => {
                 case "Date Created-asc": return sorted.sort((a,b) => a.dateCreated.localeCompare(b.dateCreated));
                 case "Title-desc": return sorted.sort((a,b) => b.title.localeCompare(a.title));
                 case "Title-asc": return sorted.sort((a,b) => a.title.localeCompare(b.title));
-                case "Views-desc": return sorted.sort((a,b) => b.views.localeCompare(a.views));
-                case "Views-asc": return sorted.sort((a,b) => a.views.localeCompare(b.views));
+                case "Views-desc": return sorted.sort((a,b) => b.views.toString().localeCompare(a.views.toString(), undefined, { numeric: true }));
+                case "Views-asc": return sorted.sort((a,b) => a.views.toString().localeCompare(b.views.toString(), undefined, { numeric: true }));
                 case "Image Size-desc": return sorted.sort((a,b) => b.imageSize - a.imageSize);
                 case "Image Size-asc": return sorted.sort((a,b) => a.imageSize - b.imageSize);
                 default: return state;
