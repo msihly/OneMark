@@ -5,8 +5,8 @@
 	"description": "Express backend for OneMark",
 	"main": "./server/index.js",
 	"scripts": {
-		"dev": "nodemon --inspect ./server/index.js",
-		"start": "node ./server/index.js",
+		"dev": "concurrently \"nodemon --inspect ./server/index.js\" \"npm start --prefix client\"",
+        "start": "node ./server/index.js",
 		"heroku-postbuild": "cd client && npm install && npm run build"
 	},
 	"keywords": [],

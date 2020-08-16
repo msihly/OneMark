@@ -20,7 +20,7 @@ try {
 
     if (process.env.NODE_ENV === "production") {
         app.enable("trust proxy");
-        // sessionSetup.cookie.secure = true;
+        sessionSetup.cookie.secure = true;
     }
 
     app.use(cookieParser(SESSION_SECRET));
@@ -36,5 +36,5 @@ try {
         return res.sendFile(path.join(__dirname, "../client/build", "index.html"));
     });
 
-    app.listen(PORT, () => console.log(`Listening on port ${PORT}...`));
+    app.listen(PORT || 3001, () => console.log(`Listening on port ${PORT || 3001}...`));
 } catch (e) { console.error(e.message); }

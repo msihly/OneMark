@@ -56,7 +56,7 @@ class SearchBar extends Component {
                 [reTitle, reURL, reTag, reAny, reNegTitle, reNegURL, reNegTag, reNegAny] = [titles, urls, tags, any, negTitles, negUrls, negTags, negAny].map(arr => RegExp(`^${arr}$`, "i"));
 
             filteredBookmarks = bookmarks.filter(bk => {
-                let [title, pageUrl, tags] = [bk.Title, bk.PageURL, bk.Tags.length > 0 ? bk.Tags : [null]];
+                let [title, pageUrl, tags] = [bk.title, bk.pageUrl, bk.tags.length > 0 ? bk.tags : [null]];
                 return ( !reNegTitle.test(title) && !reNegURL.test(pageUrl) && !tags.some(tag => reNegTag.test(tag)) && ![title, pageUrl, tags].flat().some(term => reNegAny.test(term)) )
                         && ( reTitle.test(title) || reURL.test(pageUrl) || tags.some(tag => reTag.test(tag)) || [title, pageUrl, tags].flat().some(term => reAny.test(term)) || (!hasPositives && hasNegatives));
             });

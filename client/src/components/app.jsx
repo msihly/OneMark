@@ -5,6 +5,7 @@ import * as actions from "../store/actions.js";
 import AuthRoute from "../views/authRoute.jsx";
 import Home from "../views/home.jsx";
 import Login from "../views/login.jsx";
+import PrivacyPolicy from "../views/privacyPolicy.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/common.css";
@@ -36,6 +37,7 @@ class App extends Component {
                 <Switch>
                     <AuthRoute exact path="/" component={Home} />
                     <Route path="/login" component={Login} />
+                    <Route path="/privacy" component={PrivacyPolicy} />
                     <Route path="*" component={() => "Page does not exist"} />
                 </Switch>
             </BrowserRouter>
