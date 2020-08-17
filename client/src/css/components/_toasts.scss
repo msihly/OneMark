@@ -1,0 +1,117 @@
+.Toastify__toast {
+    padding-left: 0.65em;
+    // border-left: 3px solid;
+    border-radius: 4px;
+}
+
+.Toastify__toast-body {
+    display: flex;
+    align-items: center;
+    font-family: Roboto;
+    font-size: 1.1em;
+    font-weight: 400;
+
+    .Toastify__toast &::before {
+        content: "";
+        padding-right: 0.5em;
+        line-height: 1;
+    }
+}
+
+.Toastify__toast--dark {
+    background-color: $black-med;
+    color: $white-light;
+}
+
+.Toastify__toast--default {
+    border-color: $white-med;
+
+    .Toastify__progress-bar {
+        background: $white-med;
+    }
+}
+
+.Toastify__toast--info {
+    border-color: $blue-med;
+
+    .Toastify__toast-body::before {
+        content: url("../../images/info.svg");
+        filter: $blue-med-svg;
+    }
+
+    .Toastify__progress-bar {
+        background: $blue-med;
+    }
+}
+
+.Toastify__toast--success {
+    border-color: $green-med;
+
+    .Toastify__toast-body::before {
+        content: url("../../images/checkmark.svg");
+        filter: $green-med-svg;
+    }
+
+    .Toastify__progress-bar {
+        background: $green-med;
+    }
+}
+
+.Toastify__toast--warning {
+    border-color: $orange-med;
+
+    .Toastify__toast-body::before {
+        content: url("../../images/warning.svg");
+        filter: $orange-med-svg;
+    }
+
+    .Toastify__progress-bar {
+        background: $orange-med;
+    }
+}
+
+.Toastify__toast--error {
+    border-color: $red-med-2;
+
+    .Toastify__toast-body::before {
+        content: url("../../images/error.svg");
+        filter: $red-med-2-svg;
+    }
+
+    .Toastify__progress-bar {
+        background: $red-med-2;
+    }
+}
+
+.Toastify__close-button {
+    margin: 0;
+    line-height: 1;
+    color: $white-med;
+
+    &:hover {
+        background-color: transparent;
+        color: $red-med;
+    }
+}
+
+.bg {
+    &-green {
+        background-color: $green-light;
+    }
+
+    &-blue {
+        background-color: $blue-med;
+    }
+
+    &-red {
+        background-color: $red-med;
+    }
+
+    &-orange {
+        background-color: $orange-light;
+    }
+
+    &-yellow {
+        background-color: $yellow;
+    }
+}

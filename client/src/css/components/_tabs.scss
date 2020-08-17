@@ -1,0 +1,32 @@
+.tab {
+    &-buttons {
+        align-self: flex-start;
+        min-width: fit-content;
+        height: 100%;
+        border-right: 1px solid #222;
+        box-sizing: border-box;
+    }
+
+    &-button {
+        padding: 1rem;
+        border: 3px solid transparent;
+        font-weight: 400;
+        color: $white-light;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover {
+            background-color: #272727;
+        }
+
+        &.active {
+            border-left-color: $blue-med;
+        }
+    }
+
+    &-content {
+        align-self: flex-start;
+        width: inherit;
+        padding: 1rem;
+    }
+}

@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import * as actions from "../store/actions.js";
 import NavBar from "../components/navbar/navBar.jsx";
 import Bookmarks from "../components/bookmarks/bookmarks.jsx";
-import "../css/home.css";
 
 class Home extends Component {
     componentDidMount() {
@@ -12,7 +11,7 @@ class Home extends Component {
 
     render() {
         return (
-            <div className="dark">
+            <div className="common home dark">
                 <NavBar />
                 <Bookmarks />
             </div>

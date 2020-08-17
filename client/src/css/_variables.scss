@@ -1,6 +1,4 @@
-$theme-color: var(--blue-light);
-$theme-image-panel: url("../images/panel-white-mountain.jpg");
-$theme-image-wrapper: url("../images/purple-mountain.jpg");
+// COLOR
 $black-med: rgb(30, 30, 30);
 $blue-med: rgb(20, 90, 170);
 $blue-med-svg: invert(26%) sepia(90%) saturate(1460%) hue-rotate(196deg) brightness(85%) contrast(93%);
@@ -18,16 +16,33 @@ $red-med: rgb(185, 50, 50);
 $red-med-2: #a00f0f;
 $red-med-2-svg: invert(14%) sepia(45%) saturate(6703%) hue-rotate(351deg) brightness(85%) contrast(101%);
 $red-dark: rgb(130, 10, 10);
-$white-light: #dfdfdf;
-$white-med: #e8e8e8;
+$white-light: rgb(230, 230, 230);
+$white-med: rgb(215, 215, 215);
+$white-dark: rgb(200, 200, 200);
 $yellow: rgb(215, 190, 0);
 
+// THEME
+$theme-color: $blue-light;
+$theme-image-panel: url("../../images/panel-white-mountain.jpg");
+$theme-image-wrapper: url("../../images/purple-mountain.jpg");
+
+// MEDIA QUERIES
+$media-1200-w: "screen and (max-width: 1200px)";
+$media-900-w: "screen and (max-width: 900px)";
+$media-750-w: "screen and (max-width: 750px)";
+$media-650-h: "screen and (max-width: 650px)";
+$media-500-wh: "screen and (max-width: 500px), screen and (max-height: 500px)";
+
 .light {
-    --foreground-color: #000;
-    --background-color: #eee;
+    @at-root :root {
+        --foreground-color: #000;
+        --background-color: #eee;
+    }
 }
 
 .dark {
-    --foreground-color: #eee;
-    --background-color: #000;
+    @at-root :root {
+        --foreground-color: #eee;
+        --background-color: #000;
+    }
 }

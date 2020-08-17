@@ -5,7 +5,6 @@ import Form from "../components/form/form.jsx";
 import Input from "../components/form/input.jsx";
 import Checkbox from "../components/form/checkbox.jsx";
 import Auth from "../utils/auth.js";
-import "../css/login.css";
 import { toast } from "react-toastify";
 
 class Login extends Component {
@@ -32,7 +31,7 @@ class Login extends Component {
 
     render() {
         return (
-            <main className="light">
+            <main className="common login light">
                 <div className="lg-background"></div>
                 <div className="lg-wrapper">
                     <div className="lg">

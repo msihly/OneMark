@@ -8,7 +8,7 @@ import Login from "../views/login.jsx";
 import PrivacyPolicy from "../views/privacyPolicy.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "../css/common.css";
+import "../css/index.scss";
 
 toast.configure({
     position: "bottom-left",

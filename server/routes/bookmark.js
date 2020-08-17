@@ -39,7 +39,6 @@ try {
             if (!userId) { throw new Error("Invalid AuthToken provided"); }
 
             let { title, pageUrl, tags } = req.body;
-            console.log(tags);
             tags = JSON.parse(tags);
             if (!validateBookmark(res, title, pageUrl)) { throw new Error("Invalid bookmark"); }
             if (await $try(db.checkBookmarkExists)(userId, pageUrl) !== false) { throw new Error("Bookmark already exists"); }

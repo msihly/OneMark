@@ -1,40 +1,41 @@
 {
-	"name": "api",
-	"version": "1.0.0",
-	"author": "Mohamed Sihly",
-	"description": "Express backend for OneMark",
-	"main": "./server/index.js",
-	"scripts": {
-		"dev": "concurrently \"nodemon --inspect ./server/index.js\" \"npm start --prefix client\"",
-        "start": "node ./server/index.js",
-		"heroku-postbuild": "cd client && npm install && npm run build"
-	},
-	"keywords": [],
-	"license": "ISC",
-	"dependencies": {
-		"aws-sdk": "^2.725.0",
-		"bcrypt": "^5.0.0",
-		"cookie-parser": "^1.4.5",
-		"express": "^4.17.1",
-		"express-session": "^1.17.1",
-		"memorystore": "^1.6.2",
-		"multer": "^1.4.2",
-		"mysql2": "^2.1.0"
-    },
-    "browserslist": {
-        "production": [
-          ">0.2%",
-          "not dead",
-          "not op_mini all"
-        ],
-        "development": [
-          "last 1 chrome version",
-          "last 1 firefox version",
-          "last 1 safari version"
-        ]
-    },
-    "engines": {
-        "node": "12.18.0",
-        "npm": "6.14.7"
-    }
+		"name": "api",
+		"version": "1.0.0",
+		"author": "Mohamed Sihly",
+		"description": "Express backend for OneMark",
+		"main": "./server/index.js",
+		"scripts": {
+				"dev": "concurrently \"nodemon --inspect ./server/index.js\" \"npm start --prefix client\"",
+				"start": "node ./server/index.js",
+				"heroku-postbuild": "cd client && npm install && npm run build"
+		},
+		"keywords": [],
+		"license": "ISC",
+		"dependencies": {
+				"aws-sdk": "^2.725.0",
+				"bcrypt": "^5.0.0",
+				"cookie-parser": "^1.4.5",
+				"express": "^4.17.1",
+				"express-session": "^1.17.1",
+				"memorystore": "^1.6.2",
+				"multer": "^1.4.2",
+				"mysql2": "^2.1.0",
+				"sass": "^1.26.10"
+		},
+		"browserslist": {
+				"production": [
+						">0.2%",
+						"not dead",
+						"not op_mini all"
+				],
+				"development": [
+						"last 1 chrome version",
+						"last 1 firefox version",
+						"last 1 safari version"
+				]
+		},
+		"engines": {
+				"node": "12.18.0",
+				"npm": "6.14.7"
+		}
 }

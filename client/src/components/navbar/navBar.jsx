@@ -20,6 +20,10 @@ class NavBar extends Component {
         this.props.openModal("account");
     }
 
+    openPrivacyPolicy = () => {
+        this.props.history.push("/privacy");
+    }
+
     logout = async () => {
         let res = await Auth.logout();
         if (res.success) {
@@ -59,6 +63,7 @@ class NavBar extends Component {
                             <Account />
                         </Modal>
                     ) : null }
+                    <div handleClick={this.openPrivacyPolicy} className="side-menu-btn">PRIVACY</div>
                     <div handleClick={this.logout} className="side-menu-btn">LOGOUT</div>
                 </NavMenu>
 			</nav>

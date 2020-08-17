@@ -1,0 +1,105 @@
+.file-input {
+    overflow: hidden;
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+    z-index: -1;
+
+    &-group {
+        display: inline-flex;
+        flex-direction: row-reverse;
+        padding: 0;
+        width: fit-content;
+        max-width: 100%;
+        background: none;
+        cursor: pointer;
+
+        &.del {
+            > .file-input-btn {
+                &::before {
+                    background-image: url("../../images/Delete.png");
+                }
+
+                &::after {
+                    content: "Remove Image";
+
+                    @media #{$media-500-wh} {
+                        content: "Remove";
+                    }
+                }
+            }
+
+            &:hover {
+                > .file-input-btn {
+                    background-color: $red-med;
+                    border-color: $red-med;
+                }
+
+                > .file-input-name {
+                    border-color: $red-med;
+                }
+            }
+
+        }
+    }
+
+    &-btn, &-name {
+        padding: 0.3em 0.5em 0.4em 0.5em;
+        height: 0.9em;
+    }
+
+    &-btn {
+        border: 2px solid #ccc;
+        background: none;
+        color: #ccc;
+        font-family: Roboto;
+        font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: all 0.1s;
+
+        &::before {
+            content: "";
+            padding-left: 1.5em;
+            background: left center no-repeat;
+            background-size: 1.25em;
+            background-image: url("../../images/Upload.png");
+            filter: invert(0.8);
+        }
+
+        &::after {
+            content: "Upload Image";
+
+            @media #{$media-500-wh} {
+                content: "Upload";
+            }
+        }
+
+        &:hover, .file-input-name:not(.hidden) + & {
+            color: #fff;
+            background-color: $blue-light;
+            border-color: $blue-light;
+            border-radius: 3px;
+        }
+
+        .file-input-name:not(.hidden) + & {
+            border-radius: 3px 0 0 3px;
+        }
+    }
+
+    &-name {
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #ccc;
+        border: 2px solid $blue-light;
+        border-left: none;
+        border-radius: 0 3px 3px 0;
+        overflow: hidden;
+        transition: all 0.1s;
+    }
+}

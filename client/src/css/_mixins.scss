@@ -1,11 +1,15 @@
-@mixin font($font-family, $font-file) {
+@mixin font($name, $weight: 500, $exts: woff woff2) {
+    $path: "fonts/#{to-lower-case($name)}-#{$weight}";
+    $src: null;
+
+    @each $ext in $exts {
+        $src: append($src, url(quote($path + "." + $ext)) format(quote($ext)), comma);
+    }
+
 	@font-face {
-		font-family: $font-family;
-		src: url($font-file + ".woff") format("woff"), url($font-file + ".woff2") format("woff2");
-		font-weight: normal;
+		font-family: $name;
+		font-weight: $weight;
 		font-style: normal;
+        src: $src;
 	}
 }
-
-@include font("Arvo", "/htdocs/lib/fonts/Arvo");
-@include font("Arvo-Bold", "/htdocs/lib/fonts/Arvo-Bold");

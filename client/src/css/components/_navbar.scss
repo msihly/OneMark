@@ -1,0 +1,208 @@
+$nav-height: 2.3rem;
+$nav-padding: 0.5rem;
+
+.nav {
+    &bar {
+        position: sticky;
+        top: 0;
+        right: 0;
+        left: 0;
+        display: flex;
+        justify-content: space-between;
+        margin: 0;
+        padding: $nav-padding 0;
+        height: $nav-height;
+        background-color: #111;
+        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.25);
+        z-index: 5;
+
+        > :first-child {
+            padding-left: 1rem;
+        }
+
+        > :last-child {
+            padding-right: 1rem;
+        }
+    }
+
+    &-menu {
+        position: relative;
+        display: flex;
+        padding: 0 0.5rem;
+
+        &-content {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            top: $nav-height + $nav-padding;
+            right: 0;
+            max-height: 80vh;
+            font-size: 1em;
+            font-weight: 500;
+            background-color: rgba(19, 19, 19, 0.85);
+            color: $white-light;
+            box-shadow: -2px 2px 8px 0 rgba(0, 0, 0, 0.3);
+            overflow: auto;
+            z-index: 5;
+        }
+    }
+
+    &-btn {
+        display: flex;
+        align-self: center;
+        align-items: center;
+        font-size: 1.2rem;
+        font-weight: 500;
+        cursor: pointer;
+        color: $white-light;
+        transition: all 0.1s ease-in-out;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+}
+
+.search-group {
+    position: relative;
+    display: flex;
+    max-width: 50vw;
+    width: 100%;
+    margin: 0 auto;
+
+    @media #{$media-750-w} {
+        max-width: 60vw;
+    }
+}
+
+.searchbar {
+    margin: 0.2rem auto;
+    padding: 0.4rem 2rem 0.4rem 1rem;
+    width: inherit;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    color: $white-light;
+    background-color: #222;
+    outline: none;
+    text-overflow: ellipsis;
+}
+
+.adv-search {
+    &-btn {
+        position: absolute;
+        right: 0;
+        padding: 0 0.5rem;
+    }
+
+    &-content {
+        position: absolute;
+        top: $nav-height + $nav-padding;
+        width: 100%;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        color: $white-light;
+        background-color: #111;
+        box-shadow: 0px 2px 8px 4px rgba(0, 0, 0, 0.5);
+        box-sizing: border-box;
+        z-index: 5;
+
+        @media #{$media-500-wh} {
+            width: fit-content;
+        }
+    }
+
+    &-input {
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+}
+
+.placeholder::-webkit-input-placeholder {
+    opacity: 1;
+    font-size: 1em;
+}
+
+.create-bookmark {
+    &:hover::before {
+        color: #fff;
+    }
+
+    &::before {
+        content: "+";
+        margin: 0 0.4rem;
+        font-size: 1.4em;
+    }
+
+    &::after {
+        content: "Create";
+        text-transform: uppercase;
+
+        @media #{$media-750-w} {
+            content: "";
+        }
+    }
+}
+
+.sort-menu {
+    &::before {
+        content: "\2191 \2193";
+        padding: 0 5px 5px 0;
+        cursor: pointer;
+    }
+
+    &::after {
+        content: "Sort";
+        text-transform: uppercase;
+
+        @media #{$media-750-w} {
+            content: "";
+        }
+    }
+
+    &-btn {
+        > :last-child {
+            padding-left: 1rem;
+        }
+
+        .active {
+            background-color: rgba(0, 0, 0, 0.65);
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+        }
+    }
+}
+
+.side-menu {
+    &::before {
+        content: "Menu";
+        text-transform: uppercase;
+
+        @media #{$media-750-w} {
+            content: "";
+        }
+    }
+
+    &:hover::after {
+        border-color: #fff;
+    }
+}
+
+.sort-menu-btn, .side-menu-btn {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.7rem 1.2rem;
+    width: 100%;
+    max-width: -webkit-fill-available;
+    white-space: nowrap;
+    text-transform: uppercase;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+        color: #fff;
+        background-color: rgba(45, 45, 45, 0.5);
+    }
+}

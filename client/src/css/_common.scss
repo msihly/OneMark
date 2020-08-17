@@ -1,0 +1,184 @@
+html, body {
+    margin: 0;
+    min-height: 100vh;
+    background-color: var(--background-color);
+    font-family: "Roboto", Arial, Helvetica, sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    transition: all 0.2s ease-in-out;
+
+    @media #{$media-500-wh} {
+        font-size: 16px;
+    }
+
+}
+
+.bg-prism {
+    background-image: url("../images/background-prism-white.png");
+    background-repeat: repeat;
+}
+
+@import "./components/form";
+@import "./components/menu";
+@import "./components/toasts";
+@import "./components/modal";
+
+.common, #portal-root {
+    :focus {
+        outline-color: $white-light;
+    }
+
+    figure {
+        margin: 0;
+    }
+
+    table {
+        border-collapse: collapse;
+        font-weight: 400;
+    }
+
+    th, td {
+        padding: 0.35em;
+    }
+
+    .table-vert {
+        tbody > tr > th {
+            text-align: left;
+        }
+
+        &.right > tbody > tr {
+            > th {
+                text-align: right;
+                padding-right: 0.5em;
+            }
+
+            > td {
+                padding-left: 0.5em;
+            }
+        }
+    }
+
+    h1, h2, h3 {
+        margin: 0.5rem 0;
+    }
+
+    h4, h5, h6 {
+        margin: 0 0 0.5rem 0;
+    }
+
+    p, span {
+        color: var(--foreground-color);
+    }
+
+    p {
+        margin: 0;
+        font-weight: 400;
+    }
+
+    a {
+        text-decoration: none;
+        display: grid;
+    }
+
+    button {
+        width: fit-content;
+        float: left;
+        padding: 0.5rem 1rem;
+        margin: 0.4rem 0.3rem;
+        border: none;
+        border-radius: 3px;
+        font-size: 1em;
+        font-family: "Roboto";
+        background-color: $blue-med;
+        color: #fff;
+        cursor: pointer;
+        transition: all 0.2s;
+
+        &:hover {
+            background: $blue-light;
+        }
+    }
+
+    .btn-hollow {
+        width: fit-content;
+        padding: 0.85rem 1rem;
+        margin: 0.5rem 0;
+        background: none;
+        font-size: 16px;
+        font-weight: 600;
+        font-family: "Roboto";
+        color: var(--foreground-color);
+        border: 2px solid var(--foreground-color);
+        border-radius: 0;
+
+        &:hover {
+            border-radius: 3px;
+            background-color: $theme-color;
+            border-color: $theme-color;
+            color: #fff;
+        }
+    }
+
+    .text-btn {
+        display: inline;
+        color: $theme-color;
+        cursor: pointer;
+    }
+
+    .invisible {
+        visibility: hidden !important;
+        transition: visibility 0s;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .relative {
+        position: relative;
+    }
+
+    .hidden-panel {
+        opacity: 0;
+    }
+
+    .flex-end {
+        align-self: flex-end;
+    }
+
+    .pad-ctn {
+        &-1, &-2, &-3 {
+            box-sizing: border-box;
+        }
+
+        &-1 {
+            padding: 1rem;
+        }
+
+        &-2 {
+            padding: 2rem;
+        }
+
+        &-3 {
+            padding: 3rem;
+        }
+
+        &-2, &-3 {
+            @media #{$media-500-wh} {
+                padding: 1rem;
+            }
+        }
+    }
+
+    .full-width {
+        width: 100% !important;
+    }
+
+    .no-mgn {
+        margin: 0 !important;
+    }
+
+    .mgn-btm {
+        margin-bottom: 0.3rem;
+    }
+}
