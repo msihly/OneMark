@@ -87,30 +87,32 @@ class PrivacyPolicy extends Component {
                         <p>We use personal information collected via our Services for a variety of business purposes described below. We process your personal information for these purposes in reliance
                             on our legitimate business interests, in order to enter into or perform a contract with you, with your consent, and/or for compliance with our legal obligations. We indicate
                             the specific processing grounds we rely on next to each purpose listed below.</p>
-                        <p>We use the information we collect or receive:</p>
-                        <ul>
-                            <li>To facilitate account creation and logon process. If you choose to link your account with us to a third party account (such as your Google or Facebook account), we use
-                                the information you allowed us to collect from those third parties to facilitate account creation and logon process for the performance of the contract.</li>
-                            <li>To send administrative information to you. We may use your personal information to send you product, service and new feature information and/or information about changes
-                                to our terms, conditions, and policies.</li>
-                            <li>To protect our Services. We may use your information as part of our efforts to keep our Services safe and secure (for example, for fraud monitoring and prevention).</li>
-                            <li>To manage user accounts. We may use your information for the purposes of managing our account and keeping it in working order.</li>
-                            <li>To deliver services to the user. We may use your information to provide you with the requested service.</li>
-                        </ul>
+                        <p>We use the information we collect or receive:
+                            <ul>
+                                <li>To facilitate account creation and logon process. If you choose to link your account with us to a third party account (such as your Google or Facebook account), we use
+                                    the information you allowed us to collect from those third parties to facilitate account creation and logon process for the performance of the contract.</li>
+                                <li>To send administrative information to you. We may use your personal information to send you product, service and new feature information and/or information about changes
+                                    to our terms, conditions, and policies.</li>
+                                <li>To protect our Services. We may use your information as part of our efforts to keep our Services safe and secure (for example, for fraud monitoring and prevention).</li>
+                                <li>To manage user accounts. We may use your information for the purposes of managing our account and keeping it in working order.</li>
+                                <li>To deliver services to the user. We may use your information to provide you with the requested service.</li>
+                            </ul>
+                        </p>
                     </Section>
                     <Section header="Will your information be shared with anyone?"
                         summary="We only share information with your consent, to comply with laws, to provide you with services, to protect your rights, or to fulfill business obligations.">
-                        <p>We may process or share data based on the following legal basis:</p>
-                        <ul>
-                            <li><b>Consent:</b> We may process your data if you have given us specific consent to use your personal information in a specific purpose.</li>
-                            <li><b>Legitimate Interests:</b> We may process your data when it is reasonably necessary to achieve our legitimate business interests.</li>
-                            <li><b>Performance of a Contract:</b> Where we have entered into a contract with you, we may process your personal information to fulfill the terms of our contract.</li>
-                            <li><b>Legal Obligations:</b> We may disclose your information where we are legally required to do so in order to comply with applicable law, governmental requests, a judicial
-                                proceeding, court order, or legal process, such as in response to a court order or a subpoena (including in response to public authorities to meet national security or law
-                                enforcement requirements).</li>
-                            <li><b>Vital Interests:</b> We may disclose your information where we believe it is necessary to investigate, prevent, or take action regarding potential violations of our
-                                policies, suspected fraud, situations involving potential threats to the safety of any person and illegal activities, or as evidence in litigation in which we are involved.</li>
-                        </ul>
+                        <p>We may process or share data based on the following legal basis:
+                            <ul>
+                                <li><b>Consent:</b> We may process your data if you have given us specific consent to use your personal information in a specific purpose.</li>
+                                <li><b>Legitimate Interests:</b> We may process your data when it is reasonably necessary to achieve our legitimate business interests.</li>
+                                <li><b>Performance of a Contract:</b> Where we have entered into a contract with you, we may process your personal information to fulfill the terms of our contract.</li>
+                                <li><b>Legal Obligations:</b> We may disclose your information where we are legally required to do so in order to comply with applicable law, governmental requests, a judicial
+                                    proceeding, court order, or legal process, such as in response to a court order or a subpoena (including in response to public authorities to meet national security or law
+                                    enforcement requirements).</li>
+                                <li><b>Vital Interests:</b> We may disclose your information where we believe it is necessary to investigate, prevent, or take action regarding potential violations of our
+                                    policies, suspected fraud, situations involving potential threats to the safety of any person and illegal activities, or as evidence in litigation in which we are involved.</li>
+                            </ul>
+                        </p>
                         <p>More specifically, we may need to process your data or share your personal information in the following situations:</p>
                         <ul>
                             <li><b>Vendors, Consultants and Other Third-Party Service Providers:</b> We may share your data with third party vendors, service providers, contractors or agents who perform
@@ -155,8 +157,8 @@ class PrivacyPolicy extends Component {
                             http://ec.europa.eu/justice/data-protection/bodies/authorities/index_en.htm</a>.</p>
                         <p>If you have questions or comments about your privacy rights, you may email us at mohamed.sihly@gmail.com.</p>
                         <h3>Account Information</h3>
-                            <p>If you would at any time like to review or change the information in your account or terminate your account, you can:</p>
-                            <ul><li>Log into your account settings and update your user account.</li></ul>
+                            <p>If you would at any time like to review or change the information in your account or terminate your account, you can:
+                                <ul><li>Log into your account settings and update your user account.</li></ul></p>
                             <p>Upon your request to terminate your account, we will deactivate or delete your account and information from our active databases. However, some information may be retained in our files to
                                 prevent fraud, troubleshoot problems, assist with any investigations, enforce our Terms of Use and/or comply with legal requirements.</p>
                             <p>Cookies and similar technologies: Most Web browsers are set to accept cookies by default. If you prefer, you can usually choose to set your browser to remove cookies and to reject cookies.

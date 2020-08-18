@@ -9,12 +9,18 @@
         text-decoration: none;
     }
 
-    ul > li {
-        list-style-type: disc;
-    }
-
     p, ul > li {
         line-height: 1.5;
+        font-weight: 400;
+    }
+
+    p {
+        margin: 1em 0;
+    }
+
+    ul > li {
+        margin: 0.5em 0;
+        list-style-type: disc;
     }
 
     h1, h2, h3, h4, h5, h6 {
@@ -37,11 +43,11 @@
     .table-of-contents {
         font-weight: 600;
         font-size: 1.1em;
-    }
 
-    .table-of-contents > li {
-        margin: 0.25em 0;
-        text-transform: uppercase;
+        > li {
+            margin: 0.5em 0;
+            text-transform: uppercase;
+        }
     }
 
     .header {
