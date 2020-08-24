@@ -21,6 +21,9 @@
 &nbsp;
 
 # Changelog
+## Version 2.01 &nbsp;-&nbsp; (2020-08-24)
+* Re-added ability to open bookmark on middle-click / scroll-wheel click
+
 ## Version 2.00 &nbsp;-&nbsp; (2020-08-17)
 * Official release of the React (Create-React-App) / Node (Express) edition of OneMark. See the [OneMark-Original-Public repository](https://github.com/msihly/OneMark-Original-Public) for the original version of OneMark (last revision 1.02) built using vanilla HTML5, CSS3, JavaScript, and PHP. The existing changelog has been appended below for consolidated reference.
 * Toast system changed to use the [React-Toastify](https://github.com/fkhadra/react-toastify) library

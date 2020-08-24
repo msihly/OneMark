@@ -27,6 +27,10 @@ class Bookmark extends Component {
         lazyObserver.observe(ReactDOM.findDOMNode(this));
     }
 
+    handleMouseDown = (event) => {
+        if (event.button === 1) { this.openBookmark(); }
+    }
+
     openBookmark = () => {
         const { bookmark: { bookmarkId, pageUrl }, addView } = this.props;
         window.open(pageUrl);
@@ -51,7 +55,7 @@ class Bookmark extends Component {
 	render() {
 		const { bookmark, bookmark: { bookmarkId, isDisplayed, title }, isEditorOpen, isInfoOpen } = this.props;
 		return (
-			<figure onClick={this.openBookmark} className={`bookmark${isDisplayed ? "" : " hidden"}`}>
+			<figure onClick={this.openBookmark} onMouseDown={this.handleMouseDown} className={`bookmark${isDisplayed ? "" : " hidden"}`}>
 				<figcaption className="title">{title}</figcaption>
 				<img className="image" src={this.state.image} alt="" />
 				<DropMenu id={bookmarkId} isWrapped>
