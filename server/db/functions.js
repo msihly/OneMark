@@ -50,7 +50,7 @@ exports.register = async (email, username, password) => {
     let [fields, rows] = await conn.query(sql, [email, date]);
     const userId = fields.insertId;
 
-    let [err, hash] = await bcrypt.hash(password, 10);
+    let hash = await bcrypt.hash(password, 10);
     sql = `INSERT INTO Logins (Username, PasswordHash, UserID) VALUES (?, ?, ?);`;
     await conn.query(sql, [username, hash, userId]);
     return userId;

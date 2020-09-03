@@ -111,14 +111,18 @@ try {
     app.put("/api/user/password", async (req, res) => {
         try {
             validateSession(req);
-            const {currentPassword, newPassword, passwordConf} = req.body;
+            const [{ uid: userId }, { currentPassword, newPassword, passwordConf }] = [req.session, req.body];
+
             if (!currentPassword || !newPassword || !passwordConf) { throw new Error("All fields are required"); }
             if (newPassword === currentPassword) { throw new Error("New password cannot match current password"); }
-            if (newPassword.length < 8) { throw new Error("Password must be a minimum of 8 characters"); }
+            if (currentPassword.length < 8 || newPassword.length < 8) { throw new Error("Password must be a minimum of 8 characters"); }
             if (newPassword !== passwordConf) { throw new Error("New password does not match confirmation"); }
-            if (await bcrypt.compare(currentPassword, await $try(db.getPass)(userId))) { throw new Error("Incorrect password"); }
 
-            let [err, passwordHash] = await bcrypt.hash(password, 10);
+            const currentPasswordHash = await $try(db.getPass)(userId);
+            let match = await bcrypt.compare(currentPassword, currentPasswordHash.replace("$2y", "$2b"));
+            if (!match) { throw new Error("Incorrect password"); }
+
+            let passwordHash = await bcrypt.hash(newPassword, 10);
             await db.updatePass(userId, passwordHash);
             return res.send({ success: true, message: "Password updated" });
         } catch (e) { console.error(e); return res.send({ success: false, message: e.message }); }
