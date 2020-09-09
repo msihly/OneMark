@@ -1,0 +1,27 @@
+.notFound {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: $black-light;
+    overflow: hidden;
+
+    .heading {
+        font-size: 12em;
+        color: $blue-med;
+    }
+
+    .subheading {
+        font-size: 3em;
+        color: $white-med;
+    }
+
+    img {
+        margin: 1.5em 0;
+        width: 50%;
+        max-width: 500px;
+        height: auto;
+    }
+}

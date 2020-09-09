@@ -9,6 +9,7 @@ import PrivacyPolicy from "../views/privacyPolicy.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/index.scss";
+import PageNotFound from "../images/page-not-found.svg";
 
 toast.configure({
     position: "bottom-left",
@@ -38,7 +39,12 @@ class App extends Component {
                     <AuthRoute exact path="/" component={Home} />
                     <Route path="/login" component={Login} />
                     <Route path="/privacy" component={PrivacyPolicy} />
-                    <Route path="*" component={() => "Page does not exist"} />
+                    <Route path="*" component={() =>
+                        <div className="notFound">
+                            <div className="heading">404</div>
+                            <div className="subheading">Page Not Found</div>
+                            <img src={PageNotFound} alt=""/>
+                        </div>} />m
                 </Switch>
             </BrowserRouter>
 		);

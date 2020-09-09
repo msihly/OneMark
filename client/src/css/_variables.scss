@@ -1,19 +1,24 @@
 // COLOR
+$black-light: rgb(45, 45, 45);
 $black-med: rgb(30, 30, 30);
+$black-dark: rgb(15, 15, 15);
+$blue-light: rgb(0, 115, 190);
 $blue-med: rgb(20, 90, 170);
 $blue-med-svg: invert(26%) sepia(90%) saturate(1460%) hue-rotate(196deg) brightness(85%) contrast(93%);
-$blue-light: rgb(0, 115, 190);
 $green-light: rgb(70, 190, 70);
 $green-med: rgb(10, 130, 10);
 $green-med-svg: invert(16%) sepia(100%) saturate(7103%) hue-rotate(137deg) brightness(102%) contrast(92%);
+$grey-light: rgb(110, 110, 110);
+$grey-med: rgb(85, 85, 85);
+$grey-dark: rgb(60, 60, 60);
 $orange-light: rgb(210, 130, 0);
-$orange-med: #c86e00;
+$orange-med: rgb(200, 110, 0);
 $orange-med-svg: invert(42%) sepia(76%) saturate(781%) hue-rotate(1deg) brightness(94%) contrast(104%);
 $orange-dark: rgb(200, 75, 0);
 $purple-dark: rgb(90, 15, 90);
 $red-light: rgb(205, 70, 70);
 $red-med: rgb(185, 50, 50);
-$red-med-2: #a00f0f;
+$red-med-2: rgb(160, 15, 15);
 $red-med-2-svg: invert(14%) sepia(45%) saturate(6703%) hue-rotate(351deg) brightness(85%) contrast(101%);
 $red-dark: rgb(130, 10, 10);
 $white-light: rgb(230, 230, 230);

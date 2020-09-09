@@ -21,6 +21,10 @@
 &nbsp;
 
 # Changelog
+## Version 2.02 &nbsp;-&nbsp; (2020-09-09)
+* Added custom 404 page
+* Fixed controlled inputs jumping to end of line on input
+
 ## Version 2.01 &nbsp;-&nbsp; (2020-08-24)
 * Re-added ability to open bookmark on middle-click / scroll-wheel click
 

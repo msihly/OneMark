@@ -20,6 +20,13 @@ class Input extends Component {
 
     handleInput = (event) => {
         const { id, hasErrorCheck, updateInput } = this.props;
+        const ele = event.target;
+        const cursorPos = ele.selectionStart;
+        window.requestAnimationFrame(() => {
+            ele.selectionStart = cursorPos;
+            ele.selectionEnd = cursorPos;
+        });
+
         updateInput(id, event.target.value);
         if (hasErrorCheck) { this.checkError(event.target.value); }
     }

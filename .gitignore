@@ -17,3 +17,7 @@ build/
 *.env.*
 npm-debug.log*
 .vscode/
+*.psd
+*.ai
+*.db
+client/src/images/components
