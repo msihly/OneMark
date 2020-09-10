@@ -66,12 +66,12 @@ try {
 
             const bookmark = await $try(db.getBookmark)(bookmarkId);
             const curTags = await $try(db.getAllBookmarkTags)(bookmarkId);
-            let { imageId, imagePath: curImagePath, title: curTitle, pageUrl: curPageUrl, dateCreated } = bookmark;
+            let { imageId, imagePath: curImagePath, imageSize, title: curTitle, pageUrl: curPageUrl, dateCreated } = bookmark;
 
             const hasDiffs = (title == curTitle && pageUrl == curPageUrl && getArrayDiff(tags, curTags).length === 0);
             if (hasDiffs && req.files.length === 0 && isImageRemoved == "false") { throw new Error("No changes made"); }
 
-            let imagePath, imageSize;
+            let imagePath;
             if (req.files.length > 0) {
                 let uploadResult = await $try(uploadFile)(req.files);
                 if (!uploadResult.success) { throw new Error(uploadResult.errors); }

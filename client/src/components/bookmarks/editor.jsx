@@ -24,12 +24,10 @@ class Editor extends Component {
             let success = await editBookmark(formData);
             if (!success) { return toast.error("Error editing bookmark"); }
             sortBookmarks();
-            toast.success("Bookmark edited");
         } else {
             let success = await createBookmark(formData);
             if (!success) { return toast.error("Error creating bookmark"); }
             sortBookmarks();
-            toast.success("Bookmark created");
         }
     }
 

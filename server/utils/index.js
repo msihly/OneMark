@@ -18,8 +18,9 @@ exports.getFutureDate = ({seconds = 0, minutes = 0, hours = 0, days = 0, months 
     return date;
 }
 
-exports.getIsoDate = (date = new Date()) => {
-    return date.toISOString().split("T")[0] + " " + date.toTimeString().split(" ")[0];
+exports.getIsoDate = (date) => {
+    const isoDate = new Date(`${date ? date : new Date()}${date ? " UTC" : ""}`).toISOString();
+    return `${isoDate.substring(0, 10)} ${isoDate.substring(11, 19)}`;
 }
 
 exports.getUniqueArray = (...arrays) => {

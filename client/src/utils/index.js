@@ -26,6 +26,12 @@ export const formatBytes = (bytes) => {
     return `${(bytes / (1024 ** power)).toFixed(2)} ${("KMGTPEZY"[power - 1] || "")}B`;
 }
 
+export const getLocalDate = (dateTime) => {
+    const date = new Date(`${dateTime} UTC`);
+    const localDate = new Date(date.setMinutes(date.getMinutes() - date.getTimezoneOffset())).toISOString();
+    return `${localDate.substring(0, 10)} ${localDate.substring(11, 19)}`;
+}
+
 export const formatDate = (dateTime, type = "date") => {
     const [year, month, day, time] = [dateTime.substring(0, 4), dateTime.substring(5, 7), dateTime.substring(8, 10), dateTime.substring(11)];
     switch (type.toLowerCase()) {

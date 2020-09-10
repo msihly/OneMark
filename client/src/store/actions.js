@@ -1,6 +1,7 @@
 import * as types from "./actionTypes.js";
 import Auth from "../utils/auth.js";
 import { toast } from "react-toastify";
+import { getLocalDate } from "../utils/index.js";
 
 /******************** ACCOUNT ********************/
 export const getAccount = () => async (dispatch) => {
@@ -43,7 +44,7 @@ export const createBookmark = (formData) => async (dispatch) => {
     try {
         let res = await(await fetch("/api/bookmark", { method: "POST", body: formData })).json();
         if (!res.success) { throw new Error(res.message); }
-        await dispatch(bookmarkCreated(res.bookmark));
+        await dispatch(bookmarkCreated({ ...res.bookmark, dateCreated: getLocalDate(res.bookmark.dateCreated), dateModified: getLocalDate(res.bookmark.dateModified) }));
         toast.success("Bookmark created");
         return true;
     } catch (e) {
@@ -61,7 +62,8 @@ export const editBookmark = (formData) => async (dispatch) => {
     try {
         let res = await (await fetch(`/api/bookmark/${formData.get("bookmarkId")}`, { method: "PUT", body: formData })).json();
         if (!res.success) { throw new Error(res.message); };
-        await dispatch(bookmarkEdited(res.bookmark));
+        await dispatch(bookmarkEdited({ ...res.bookmark, dateModified: getLocalDate(res.bookmark.dateModified) }));
+        toast.success("Bookmark edited");
         return true;
     } catch (e) {
         toast.error(e.message);
@@ -118,7 +120,13 @@ export const getBookmarks = () => async (dispatch) => {
     try {
         let res = await (await fetch("/api/bookmarks", { method: "GET" })).json();
         if (!res.success) { throw new Error(res.message); };
-        let bookmarks = res.bookmarks.map(bookmark => { return { ...bookmark, isDisplayed: true } });
+        let bookmarks = res.bookmarks.map(bookmark => { return {
+            ...bookmark,
+            dateCreated: getLocalDate(bookmark.dateCreated),
+            dateModified: getLocalDate(bookmark.dateModified),
+            isDisplayed: true
+        } });
+
         await dispatch(bookmarksRetrieved(bookmarks));
         if (bookmarks.length === 0) { toast.info("No bookmarks found"); };
         return true;

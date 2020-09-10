@@ -21,6 +21,11 @@
 &nbsp;
 
 # Changelog
+## Version 2.03 &nbsp;-&nbsp; (2020-09-09)
+* Fixed date-related inconsistencies between client and server
+* Fixed duplicate toasts on bookmark creation
+* Fixed missing image size data after editing bookmark
+
 ## Version 2.02 &nbsp;-&nbsp; (2020-09-09)
 * Added custom 404 page
 * Fixed controlled inputs jumping to end of line on input
