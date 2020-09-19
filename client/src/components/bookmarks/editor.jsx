@@ -23,12 +23,11 @@ class Editor extends Component {
             formData.append("bookmarkId", bookmark.bookmarkId)
             let success = await editBookmark(formData);
             if (!success) { return toast.error("Error editing bookmark"); }
-            sortBookmarks();
         } else {
             let success = await createBookmark(formData);
             if (!success) { return toast.error("Error creating bookmark"); }
-            sortBookmarks();
         }
+        sortBookmarks();
     }
 
     render() {
@@ -39,9 +38,9 @@ class Editor extends Component {
                     <img className="image" src={imageUrl ? (/No-Image.*\.jpg$/i.test(imageUrl) ? NoImage : imageUrl) : NoImage} alt="" />
                     <figcaption className="title">{title || "No Title"}</figcaption>
                 </figure>
-                <Form handleSubmit={this.handleSubmit} submitText="SUBMIT" submitClasses="btn-hollow white submit">
+                <Form handleSubmit={this.handleSubmit} submitText="SUBMIT" submitClasses="btn-hollow submit">
                     <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={/No-Image.*\.jpg$/i.test(bookmark.imagePath) ? NoImage : bookmark.imagePath} />
-                    <div className="row row-mgn-2 mobile">
+                    <div className="row mg-2 mobile">
                         <div className="column full-width">
                             <Input id={`${id}-pageUrl`} initValue={bookmark.pageUrl ?? ""} type="text" placeholder="Enter URL"
                                 name="pageUrl" label="Link" isRow hasErrorCheck isRequired />

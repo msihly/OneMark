@@ -15,19 +15,23 @@ class Checkbox extends Component {
     }
 
     toggleCheckbox = (event) => {
-        const { id, isChecked, option, handleClick, updateCheckbox } = this.props;
         event.preventDefault();
+        event.stopPropagation();
+        const { id, isChecked, option, handleClick, updateCheckbox } = this.props;
         updateCheckbox(id, !isChecked);
         if (handleClick && option) { handleClick(option); }
+        else if (handleClick) { handleClick(!isChecked); }
     }
 
     render() {
-        const { inputName, isChecked, text } = this.props;
+        const { classes, inputName, isChecked, text } = this.props;
         return (
-            <label onClick={this.toggleCheckbox} className="checkbox-ctn">
+            <label onClick={this.toggleCheckbox} className={`checkbox-ctn${isChecked ? " checked" : ""} ${classes ?? ""}`}>
                 <input type="checkbox" name={inputName ?? null} checked={isChecked} />
                 <span className="checkbox"></span>
-                <label className="lb-title checkbox-title">{text}</label>
+                {text ? (
+                    <label className="lb-title checkbox-title">{text}</label>
+                ) : null}
             </label>
         );
     }

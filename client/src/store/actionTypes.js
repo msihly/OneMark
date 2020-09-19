@@ -10,6 +10,9 @@ export const BOOKMARK_DELETED = "bookmarkDeleted";
 export const BOOKMARKS_RETRIEVED = "bookmarksRetrieved";
 export const BOOKMARKS_FILTERED = "bookmarksFiltered";
 export const BOOKMARKS_SORTED = "bookmarksSorted";
+export const BOOKMARK_SELECTED = "bookmarkSelected";
+export const BOOKMARKS_UNSELECTED = "bookmarksUnselected";
+export const TAGS_UPDATED = "tagsUpdated";
 
 /* MENUS */
 export const EXTERNAL_CLICK = "externalClick";
@@ -26,6 +29,7 @@ export const INPUT_UPDATED = "inputUpdated";
 export const INPUT_DELETED = "inputDeleted";
 export const IMAGE_INPUT_CREATED = "imageInputCreated";
 export const IMAGE_INPUT_UPDATED = "imageInputUpdated";
+export const MULTI_SELECTS_UNSELECTED = "multiSelectsUnselected";
 export const TAG_INPUT_CREATED = "tagInputCreated";
 export const TAG_INPUT_UPDATED = "tagInputUpdated";
 export const TAG_ADDED = "tagAdded";

@@ -17,7 +17,7 @@ class SearchTermInput extends Component {
     render() {
         const { searchValue } = this.state;
         return (
-            <div className="row row-mgn-1 flex-child grow mgn-btm">
+            <div className="row mg-1 flex-child grow mgn-btm">
                 <input onChange={this.handleInput} value={searchValue} className="adv-search-input" type="text" />
                 <span onClick={this.handleAdd} className="add-btn"></span>
             </div>

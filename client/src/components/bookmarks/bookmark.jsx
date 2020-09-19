@@ -8,6 +8,7 @@ import Editor from "./editor.jsx";
 import Info from "./info.jsx";
 import NoImage from "../../images/No-Image.jpg";
 import LoadingImage from "../../images/Lazy-Load.jpg";
+import Checkbox from "../form/checkbox.jsx";
 
 class Bookmark extends Component {
     state = {
@@ -29,6 +30,11 @@ class Bookmark extends Component {
 
     handleMouseDown = (event) => {
         if (event.button === 1) { this.openBookmark(); }
+    }
+
+    handleMultiSelect = () => {
+        const { bookmark: { bookmarkId }, selectBookmark } = this.props;
+        selectBookmark(bookmarkId);
     }
 
     openBookmark = () => {
@@ -58,6 +64,7 @@ class Bookmark extends Component {
 			<figure onClick={this.openBookmark} onMouseDown={this.handleMouseDown} className={`bookmark${isDisplayed ? "" : " hidden"}`}>
 				<figcaption className="title">{title}</figcaption>
 				<img className="image" src={this.state.image} alt="" />
+                <Checkbox id={`${bookmarkId}-multi-select`} handleClick={this.handleMultiSelect} classes="multi-select-checkbox" />
 				<DropMenu id={bookmarkId} isWrapped>
 					<div handleClick={this.openInfo}>Info</div>
 					<div handleClick={this.openEditor}>Edit</div>
@@ -87,6 +94,7 @@ const mapDispatchToProps = dispatch => ({
     addView: bookmarkId => dispatch(actions.viewBookmark(bookmarkId)),
     deleteBookmark: bookmark => dispatch(actions.deleteBookmark(bookmark)),
     openModal: id => dispatch(actions.modalOpened(id)),
+    selectBookmark: bookmarkId => dispatch(actions.bookmarkSelected(bookmarkId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Bookmark);

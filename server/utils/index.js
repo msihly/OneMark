@@ -1,8 +1,8 @@
 const crypto = require("crypto");
 
 exports.$try = fn => (...args) => {
-	return fn(...args).then(r => { return r; }).catch(e => { console.error(e.message); return false; });
-};
+	return fn(...args).then(r => { return r; }).catch(e => { console.error(e); return false; });
+}
 
 exports.getArrayDiff = (a, b) => {
     return a.filter(e => !b.includes(e)).concat(b.filter(e => !a.includes(e)));
@@ -23,20 +23,29 @@ exports.getIsoDate = (date) => {
     return `${isoDate.substring(0, 10)} ${isoDate.substring(11, 19)}`;
 }
 
-exports.getUniqueArray = (...arrays) => {
+exports.handleErrors = fn => (req, res) => {
+    fn(req, res).catch(e => {
+        console.error(e);
+        return res.send({ success: false, message: e.message });
+    });
+}
+
+exports.hash = (method, input, outputType = "hex") => {
+    return crypto.createHash(method).update(input).digest(outputType);
+}
+
+exports.randomBase64 = (length) => {
+    return crypto.randomBytes(length).toString("base64");
+}
+
+exports.uniqueArrayFilter = (...arrays) => {
     const all = [].concat(...arrays);
     const nonUnique = all.filter((set => value => set.has(value) || !set.add(value))(new Set));
     return all.filter(e => !nonUnique.includes(e));
 }
 
-exports.hash = (method, input, outputType = "hex") => {
-    try { return crypto.createHash(method).update(input).digest(outputType); }
-    catch (e) { return console.log(e); }
-}
-
-exports.randomBase64 = (length) => {
-    try { return crypto.randomBytes(length).toString("base64"); }
-    catch (e) { return console.log(e); }
+exports.uniqueArrayMerge = (oldArray, newArrays) => {
+    return [...new Set([...new Set(oldArray), ...[].concat(...newArrays)])];
 }
 
 exports.validate = (input, type) => {

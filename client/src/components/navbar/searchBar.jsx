@@ -74,8 +74,8 @@ class SearchBar extends Component {
                     <React.Fragment>
                         <DropMenu id="adv-search" toggleClasses="adv-search-btn nav-btn down-arrow" contentClasses="adv-search-content" retainOnClick>
                             <h4>Advanced Search</h4>
-                            <div className="row row-mgn-1 mobile">
-                                <div className="row row-mgn-1 mgn-btm">
+                            <div className="row mg-1 mobile">
+                                <div className="row mg-1 mgn-btm">
                                     <DropSelect id="adv-search-type" handleSelect={this.handleSelect} option="typeValue" initValue={typeValue} parent="adv-search">
                                         <div>Anything</div>
                                         <div>URL</div>

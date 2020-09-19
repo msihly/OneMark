@@ -21,3 +21,4 @@ npm-debug.log*
 *.ai
 *.db
 client/src/images/components
+sql/

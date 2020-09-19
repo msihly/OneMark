@@ -1,11 +1,12 @@
 import * as types from "../actionTypes.js";
+import { uniqueArrayMerge } from "../../utils";
 
 const initState = [];
 
 const bookmark = (state = initState, action) => {
     switch (action.type) {
         case types.BOOKMARK_CREATED: {
-            return [...state, { ...action.payload.bookmark, isDisplayed: true }];
+            return [...state, { ...action.payload.bookmark, isDisplayed: true, isSelected: false }];
         } case types.BOOKMARK_EDITED: {
             const { bookmarkId, dateModified, imagePath, imageSize, pageUrl, tags, title } = action.payload.bookmark;
             return state.map(bookmark => {
@@ -38,9 +39,25 @@ const bookmark = (state = initState, action) => {
                 case "Image Size-asc": return sorted.sort((a,b) => a.imageSize - b.imageSize);
                 default: return state;
             }
+        } case types.BOOKMARK_SELECTED: {
+            const { bookmarkId } = action.payload;
+            return state.map(bookmark => {
+                return bookmark.bookmarkId === bookmarkId ? { ...bookmark, isSelected: !bookmark.isSelected } : bookmark;
+            });
+        } case types.BOOKMARKS_UNSELECTED: {
+            return state.map(bookmark => { return { ...bookmark, isSelected: false } });
         } case types.BOOKMARK_DELETED: {
             const { bookmarkId } = action.payload.bookmark;
             return state.filter(bookmark => bookmark.bookmarkId !== bookmarkId);
+        } case types.TAGS_UPDATED: {
+            const { bookmarkIds, addedTags, removedTags, dateModified } = action.payload;
+            return state.map(bookmark => {
+                return bookmarkIds.includes(bookmark.bookmarkId) ? {
+                    ...bookmark,
+                    tags: uniqueArrayMerge(bookmark.tags, addedTags).filter(tag => !removedTags.includes(tag)),
+                    dateModified
+                } : bookmark;
+            });
         } default: {
             return state;
         }

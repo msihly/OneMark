@@ -176,31 +176,33 @@ label {
     display: flex;
     flex-flow: row;
 
+    &.between, &.mg-1 {
+        > :not(:last-child) {
+            margin-right: 0.25rem;
+        }
+    }
+
+    &.mg-2 > :not(:last-child) {
+        margin-right: 0.5rem;
+    }
+
     &.mobile {
         @media #{$media-500-wh} {
             flex-flow: column;
+        }
+
+        &.mg-1, &.mg-2 {
+            > :not(:last-child) {
+                @media #{$media-500-wh} {
+                    margin-right: 0;
+                }
+            }
         }
     }
 
     > .form-group:not(:last-of-type) {
         @media #{$media-500-wh} {
             margin: 0;
-        }
-    }
-}
-
-:not(:last-child) {
-    .row.between > &, .row-mgn-1 > & {
-        margin-right: 0.25rem;
-    }
-
-    .row-mgn-2 > & {
-        margin-right: 0.5rem;
-    }
-
-    .row.row-mgn-1.mobile > &, .row.row-mgn-2.mobile > & {
-        @media #{$media-500-wh} {
-            margin-right: 0;
         }
     }
 }

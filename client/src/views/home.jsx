@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../store/actions.js";
-import NavBar from "../components/navbar/navBar.jsx";
-import Bookmarks from "../components/bookmarks/bookmarks.jsx";
+import NavBar from "../components/navbar/navBar";
+import Bookmarks from "../components/bookmarks/bookmarks";
+import MultiSelectBar from "../components/multiSelect/actionBar";
 
 class Home extends Component {
     componentDidMount() {
@@ -14,6 +15,7 @@ class Home extends Component {
             <div className="common home dark">
                 <NavBar />
                 <Bookmarks />
+                <MultiSelectBar />
             </div>
         );
     }

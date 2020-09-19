@@ -22,14 +22,14 @@ class Tag extends Component {
 
 class TagInput extends Component {
     state = {
-        displayedTags: this.props.initValue,
+        displayedTags: this.props.initValue ?? [],
         buttonClass: "",
         value: ""
     }
 
     componentDidMount = () => {
         const { id, initValue, createInput } = this.props;
-        createInput(id, initValue);
+        createInput(id, initValue ?? []);
     }
 
     componentWillUnmount = () => {

@@ -21,6 +21,17 @@
 &nbsp;
 
 # Changelog
+## Version 2.04 &nbsp;-&nbsp; (2020-09-18)
+* Added multi-select functionality to bookmarks
+    * A checkbox will now appear on hovering over the top-left of a bookmark
+        * Clicking the checkbox will bring up the multi-select bar at the bottom of the screen
+        * Updated checkbox component to support additional functionality and prevent click-through behavior
+    * Current options are "Edit Tags", which will bring up the new multi-tag editor ("tagger") and "Unselect All"
+* Abstracted error handling on server and fixed existing related helper functions
+* Added new utility functions for client and server
+* Minor fixes to SCSS classes
+* Minor reorganization of reducer and action files for clarity (will be further improved in future release with addition of Redux Toolkit)
+
 ## Version 2.03 &nbsp;-&nbsp; (2020-09-09)
 * Fixed date-related inconsistencies between client and server
 * Fixed duplicate toasts on bookmark creation

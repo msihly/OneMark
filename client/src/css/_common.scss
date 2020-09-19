@@ -128,16 +128,24 @@ button {
     display: none !important;
 }
 
-.relative {
-    position: relative;
-}
-
 .hidden-panel {
     opacity: 0;
 }
 
+.relative {
+    position: relative;
+}
+
 .flex-end {
     align-self: flex-end;
+}
+
+.a-center {
+    align-items: center;
+}
+
+.j-center {
+    justify-content: center;
 }
 
 .pad-ctn {

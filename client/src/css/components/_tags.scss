@@ -3,11 +3,23 @@
     justify-content: space-between;
     padding: 0.25rem;
     font-weight: 500;
-    color: #999;
+    color: $grey-light-1;
 
     &:hover {
-        background-color: #222;
-        color: #ccc;
+        background-color: $black-med;
+        color: $white-dark;
+    }
+
+    &s {
+        height: 4.5rem;
+        border: 2px solid $black-light;
+        border-top: 0;
+        border-radius: 0 0 4px 4px;
+        overflow-x: hidden;
+
+        &::-webkit-scrollbar {
+            width: 6px;
+        }
     }
 
     &-group {
@@ -29,7 +41,7 @@
         align-self: center;
         font-size: 24px;
         line-height: 0.5;
-        color: #ccc;
+        color: $white-dark;
         cursor: pointer;
 
         &:hover {
@@ -37,72 +49,85 @@
         }
     }
 
-    &-search, &-search-btn, &s {
-        border: 2px solid #333;
+    &-count {
+        align-self: center;
+        font-size: 20px;
+        line-height: 0.5;
+        color: $white-dark;
     }
 
     &-search {
         margin: 0 !important;
         width: calc(100% - 34px);
-        border-right: 1px solid #171717;
+        border: 2px solid $black-light;
+        border-right: 1px solid $black-med;
         border-radius: 4px 0 0 0;
         outline: none;
-    }
 
-    &-search-btn {
-        padding: 2px 10px;
-        border-left: 0 !important;
-        border-radius: 0 4px 0 0;
-        font-size: 24px;
-        background-color: #333;
-        color: #ccc;
+        &-btn {
+            padding: 2px 10px;
+            border-left: 0 !important;
+            border-radius: 0 4px 0 0;
+            font-size: 24px;
+            background-color: $black-light;
+            color: $white-dark;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.1s ease-in-out;
+
+            &::before {
+                content: "\2022";
+                display: inline-block;
+                width: 0.5em;
+                transition: transform 0.1s ease-in-out;
+            }
+
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                color: #fff;
+            }
+
+            &.add {
+                &::before {
+                    content: "\00D7";
+                    transform: rotate(45deg);
+                }
+
+                &:hover {
+                    background-color: $blue-light;
+                }
+            }
+
+            &.del {
+                &::before {
+                    content: "\00D7";
+                    transform: rotate(0deg);
+                }
+
+                &:hover {
+                    background-color: $red-med;
+                }
+            }
+        }
+    }
+}
+
+.tagger {
+    h3 {
         text-align: center;
-        cursor: pointer;
-        transition: all 0.1s ease-in-out;
-
-        &::before {
-            content: "\2022";
-            display: inline-block;
-            width: 0.5em;
-            transition: transform 0.1s ease-in-out;
-        }
-
-        &:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-        }
-
-        &.add {
-            &::before {
-                content: "\00D7";
-                transform: rotate(45deg);
-            }
-
-            &:hover {
-                background-color: $blue-light;
-            }
-        }
-
-        &.del {
-            &::before {
-                content: "\00D7";
-                transform: rotate(0deg);
-            }
-
-            &:hover {
-                background-color: $red-med;
-            }
-        }
     }
 
-    &s {
-        height: 4.5rem;
-        border-top: 0;
-        border-radius: 0 0 4px 4px;
+    .current-tags {
+        height: 6rem;
+        width: 9rem;
+        padding: 0.25rem 0;
+        border: 2px solid $black-light;
+        border-radius: 4px;
         overflow-x: hidden;
+        box-sizing: border-box;
 
-        &::-webkit-scrollbar {
-            width: 6px;
+        .tag {
+            padding: 0.25rem 0.5rem;
         }
     }
 }

@@ -103,7 +103,7 @@ exports.validateToken = async (token) => {
                 FROM        Token AS t
                 WHERE       t.Selector = ?;`;
     let [rows, fields] = await conn.query(sql, [selector]);
-    if (rows.length === 0) { throw "Selector lookup failed"; }
+    if (rows.length === 0) { throw new Error("Selector lookup failed"); }
 
     const validatorHash = hash("sha256", validator);
     if (validatorHash !== rows[0].validatorHash) { throw `Validator ${validator} does not match stored hash ${rows[0].validatorHash}`; }
@@ -215,17 +215,17 @@ exports.uploadImage = async (imagePath, imageHash, imageSize) => {
 /********************* TAGS *********************/
 exports.addBookmarkTag = async (bookmarkId, tagText) => {
     const tagId = await this.getTag(tagText) || await this.createTag(tagText);
-    if (await this.getBookmarkTag(bookmarkId, tagId)) { throw "Tag already exists"; }
+    if (await this.getBookmarkTag(bookmarkId, tagId)) { throw new Error("Tag already exists"); }
 
     let sql = `INSERT INTO BookmarkTag (BookmarkID, TagID) VALUES (?, ?);`;
     await conn.query(sql, [bookmarkId, tagId]);
 }
 
 exports.addBookmarkTags = async (bookmarkId, tags) => {
-    if (tags.length === 0) { throw "Tags argument of length 0"; }
+    if (tags.length === 0) { throw new Error("Tags argument of length 0"); }
     await this.createTags(tags);
     const tagIds = await this.getTags(tags);
-    if (tagIds.length === 0 || !tagIds) { throw "Failed to retrieve tag ids"; }
+    if (tagIds.length === 0 || !tagIds) { throw new Error("Failed to retrieve tag ids"); }
 
     let sql = `INSERT INTO BookmarkTag (BookmarkID, TagID) VALUES ${"(?, ?), ".repeat(tagIds.length - 1)}(?, ?);`;
     await conn.query(sql, tagIds.flatMap(tagId => [bookmarkId, tagId]));
@@ -237,8 +237,8 @@ exports.createTag = async (tagText) => {
     return fields.insertId;
 }
 
-exports.createTags = async (tags) => {
-    if (tags.length === 0) { throw "Tags argument of length 0"; }
+exports.createTags = async (tags = []) => {
+    if (tags.length === 0) { throw new Error("No tags provided"); }
     let sql = `INSERT IGNORE INTO Tag (TagText) VALUES ${"(?), ".repeat(tags.length - 1)}(?);`;
     await conn.query(sql, tags);
 }
@@ -251,6 +251,38 @@ exports.editBookmarkTags = async (bookmarkId, tags) => {
     if (addedTags.length > 0) { await this.addBookmarkTags(bookmarkId, addedTags); }
     if (removedTags.length > 0) { await this.removeBookmarkTags(bookmarkId, removedTags); }
     return true;
+}
+
+exports.editMultiBookmarkTags = async (bookmarkIds = [], addedTags = [], removedTags = []) => {
+    if (bookmarkIds.length === 0) { throw new Error("No bookmarks provided"); }
+    if (addedTags.length === 0 && removedTags === 0) { throw new Error("No tags added or removed"); }
+
+    if (addedTags.length > 0) {
+        await this.createTags(addedTags);
+        let tagIds = await this.getTags(addedTags);
+        if (tagIds.length === 0 || !tagIds) { throw new Error("Failed to retrieve 'added' tag ids"); }
+
+        let map = bookmarkIds.flatMap(bookmarkId => tagIds.flatMap(tagId => [bookmarkId, tagId]));
+        let sql = `INSERT IGNORE INTO BookmarkTag (BookmarkID, TagID) VALUES ${"(?, ?), ".repeat(map.length / 2 - 1)}(?, ?);`;
+        await conn.query(sql, map);
+    }
+    if (removedTags.length > 0) {
+        let sql = `DELETE
+                    FROM        BookmarkTag
+                    WHERE       BookmarkID IN (?${", ?".repeat(bookmarkIds.length - 1)}) AND TagID IN (
+                        SELECT       t.TagID
+                        FROM         Tag AS t
+                        WHERE        t.TagText IN (?${", ?".repeat(removedTags.length - 1)})
+                    );`;
+        await conn.query(sql, [...bookmarkIds, ...removedTags]);
+    }
+
+    let dateModified = getIsoDate();
+    let sql = `UPDATE       Bookmark AS b
+                SET         b.DateModified = ?
+                WHERE       BookmarkID IN (?${", ?".repeat(bookmarkIds.length - 1)});`
+    await conn.query(sql, [dateModified, ...bookmarkIds]);
+    return dateModified;
 }
 
 exports.getAllBookmarkTags = async (bookmarkId) => {
@@ -299,7 +331,7 @@ exports.getTag = async (tagText) => {
 }
 
 exports.getTags = async (tags) => {
-    if (tags.length === 0) { throw "Tags argument of length 0"; }
+    if (tags.length === 0) { throw new Error("Tags argument of length 0"); }
     let sql = `SELECT      t.TagID AS tagId
                 FROM        Tag AS t
                 WHERE       t.TagText IN (?${", ?".repeat(tags.length - 1)});`;
@@ -325,7 +357,7 @@ exports.removeBookmarkTag = async (bookmarkId, tagText) => {
 }
 
 exports.removeBookmarkTags = async (bookmarkId, tags) => {
-    if (tags.length === 0) { throw "Tags argument of length 0"; }
+    if (tags.length === 0) { throw new Error("Tags argument of length 0"); }
     let sql = `DELETE
                 FROM        BookmarkTag
                 WHERE       BookmarkID = ? AND TagID IN (

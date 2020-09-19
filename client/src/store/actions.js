@@ -40,6 +40,52 @@ export const accountUpdated = (username, email) => ({
 });
 
 /******************** BOOKMARKS ********************/
+export const bookmarkCreated = (bookmark) => ({
+    type: types.BOOKMARK_CREATED,
+    payload: { bookmark }
+});
+
+export const bookmarkDeleted = (bookmark) => ({
+    type: types.BOOKMARK_DELETED,
+    payload: { bookmark }
+});
+
+export const bookmarkEdited = (bookmark) => ({
+    type: types.BOOKMARK_EDITED,
+    payload: { bookmark }
+});
+
+export const bookmarksFiltered = (bookmarks) => ({
+    type: types.BOOKMARKS_FILTERED,
+    payload: { bookmarks }
+});
+
+export const bookmarksRetrieved = (bookmarks) => ({
+    type: types.BOOKMARKS_RETRIEVED,
+    payload: { bookmarks }
+});
+
+export const bookmarkSelected = (bookmarkId) => ({
+    type: types.BOOKMARK_SELECTED,
+    payload: { bookmarkId }
+});
+
+export const bookmarksSorted = (sortCase) => {
+    if (!sortCase) { sortCase = localStorage.getItem("sort") ?? "Date Modified-desc"; }
+    localStorage.setItem("sort", sortCase);
+    return { type: types.BOOKMARKS_SORTED, payload: { sortCase } };
+};
+
+export const bookmarksUnselected = () => ({
+    type: types.BOOKMARKS_UNSELECTED,
+    payload: {}
+});
+
+export const bookmarkViewed = (bookmarkId) => ({
+    type: types.BOOKMARK_VIEWED,
+    payload: { bookmarkId }
+});
+
 export const createBookmark = (formData) => async (dispatch) => {
     try {
         let res = await(await fetch("/api/bookmark", { method: "POST", body: formData })).json();
@@ -52,46 +98,6 @@ export const createBookmark = (formData) => async (dispatch) => {
         if (e.message === "Unauthorized access") { Auth.localLogout(); }
     }
 };
-
-export const bookmarkCreated = (bookmark) => ({
-    type: types.BOOKMARK_CREATED,
-    payload: { bookmark }
-});
-
-export const editBookmark = (formData) => async (dispatch) => {
-    try {
-        let res = await (await fetch(`/api/bookmark/${formData.get("bookmarkId")}`, { method: "PUT", body: formData })).json();
-        if (!res.success) { throw new Error(res.message); };
-        await dispatch(bookmarkEdited({ ...res.bookmark, dateModified: getLocalDate(res.bookmark.dateModified) }));
-        toast.success("Bookmark edited");
-        return true;
-    } catch (e) {
-        toast.error(e.message);
-        if (e.message === "Unauthorized access") { Auth.localLogout(); }
-    }
-};
-
-export const bookmarkEdited = (bookmark) => ({
-    type: types.BOOKMARK_EDITED,
-    payload: { bookmark }
-});
-
-export const viewBookmark = (bookmarkId) => async (dispatch) => {
-    try {
-        let res = await (await fetch(`/api/bookmark/${bookmarkId}/view`, { method: "PUT" })).json();
-        if (!res.success) { throw new Error(res.message); };
-        await dispatch(bookmarkViewed(bookmarkId));
-        return true;
-    } catch (e) {
-        toast.error(e.message);
-        if (e.message === "Unauthorized access") { Auth.localLogout(); }
-    }
-};
-
-export const bookmarkViewed = (bookmarkId) => ({
-    type: types.BOOKMARK_VIEWED,
-    payload: { bookmarkId }
-});
 
 export const deleteBookmark = (bookmark) => async (dispatch) => {
     try {
@@ -106,15 +112,31 @@ export const deleteBookmark = (bookmark) => async (dispatch) => {
     }
 };
 
-export const bookmarkDeleted = (bookmark) => ({
-    type: types.BOOKMARK_DELETED,
-    payload: { bookmark }
-});
+export const editBookmark = (formData) => async (dispatch) => {
+    try {
+        let res = await (await fetch(`/api/bookmark/${formData.get("bookmarkId")}`, { method: "PUT", body: formData })).json();
+        if (!res.success) { throw new Error(res.message); };
+        await dispatch(bookmarkEdited({ ...res.bookmark, dateModified: getLocalDate(res.bookmark.dateModified) }));
+        toast.success("Bookmark edited");
+        return true;
+    } catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
+};
 
-export const bookmarksRetrieved = (bookmarks) => ({
-    type: types.BOOKMARKS_RETRIEVED,
-    payload: { bookmarks }
-});
+export const editTags = (formData) => async (dispatch) => {
+    try {
+        let res = await (await fetch("/api/bookmarks/tags", { method: "PUT", body: formData })).json();
+        if (!res.success) { throw new Error(res.message); };
+        await dispatch(tagsUpdated(res.bookmarkIds, res.addedTags, res.removedTags, res.dateModified));
+        toast.success("Tags updated");
+        return true;
+    } catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
+}
 
 export const getBookmarks = () => async (dispatch) => {
     try {
@@ -124,7 +146,8 @@ export const getBookmarks = () => async (dispatch) => {
             ...bookmark,
             dateCreated: getLocalDate(bookmark.dateCreated),
             dateModified: getLocalDate(bookmark.dateModified),
-            isDisplayed: true
+            isDisplayed: true,
+            isSelected: false
         } });
 
         await dispatch(bookmarksRetrieved(bookmarks));
@@ -136,16 +159,27 @@ export const getBookmarks = () => async (dispatch) => {
     }
 };
 
-export const bookmarksFiltered = (bookmarks) => ({
-    type: types.BOOKMARKS_FILTERED,
-    payload: { bookmarks }
+export const tagsUpdated = (bookmarkIds, addedTags, removedTags, dateModified) => ({
+    type: types.TAGS_UPDATED,
+    payload: { bookmarkIds, addedTags, removedTags, dateModified }
 });
 
-export const bookmarksSorted = (sortCase) => {
-    if (!sortCase) { sortCase = localStorage.getItem("sort") ?? "Date Modified-desc"; }
-    localStorage.setItem("sort", sortCase);
-    return { type: types.BOOKMARKS_SORTED, payload: { sortCase } };
-}
+export const unselectAllBookmarks = () => (dispatch) => {
+    dispatch(bookmarksUnselected());
+    dispatch(multiSelectsUnselected());
+};
+
+export const viewBookmark = (bookmarkId) => async (dispatch) => {
+    try {
+        let res = await (await fetch(`/api/bookmark/${bookmarkId}/view`, { method: "PUT" })).json();
+        if (!res.success) { throw new Error(res.message); };
+        await dispatch(bookmarkViewed(bookmarkId));
+        return true;
+    } catch (e) {
+        toast.error(e.message);
+        if (e.message === "Unauthorized access") { Auth.localLogout(); }
+    }
+};
 
 /******************** MENUS ********************/
 export const externalClick = () => ({
@@ -175,21 +209,6 @@ export const modalOpened = (id) => ({
 });
 
 /******************** INPUTS ********************/
-export const inputCreated = (id, value) => ({
-    type: types.INPUT_CREATED,
-    payload: { id, value }
-});
-
-export const inputUpdated = (id, value) => ({
-    type: types.INPUT_UPDATED,
-    payload: { id, value }
-});
-
-export const inputDeleted = (id) => ({
-    type: types.INPUT_DELETED,
-    payload: { id }
-});
-
 export const imageInputCreated = (id, value) => ({
     type: types.IMAGE_INPUT_CREATED,
     payload: { id, value }
@@ -198,6 +217,26 @@ export const imageInputCreated = (id, value) => ({
 export const imageInputUpdated = (id, value, isImageRemoved) => ({
     type: types.IMAGE_INPUT_UPDATED,
     payload: { id, value, isImageRemoved }
+});
+
+export const inputCreated = (id, value) => ({
+    type: types.INPUT_CREATED,
+    payload: { id, value }
+});
+
+export const inputDeleted = (id) => ({
+    type: types.INPUT_DELETED,
+    payload: { id }
+});
+
+export const inputUpdated = (id, value) => ({
+    type: types.INPUT_UPDATED,
+    payload: { id, value }
+});
+
+export const multiSelectsUnselected = () => ({
+    type: types.MULTI_SELECTS_UNSELECTED,
+    payload: {}
 });
 
 export const tagAdded = (id, value) => ({
@@ -216,12 +255,12 @@ export const panelCreated = (id, value) => ({
     payload: { id, value }
 });
 
-export const panelUpdated = (id, value) => ({
-    type: types.PANEL_UPDATED,
-    payload: { id, value }
-});
-
 export const panelDeleted = (id) => ({
     type: types.PANEL_DELETED,
     payload: { id }
+});
+
+export const panelUpdated = (id, value) => ({
+    type: types.PANEL_UPDATED,
+    payload: { id, value }
 });
