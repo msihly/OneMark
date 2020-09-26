@@ -27,16 +27,16 @@ const bookmark = (state = initState, action) => {
         } case types.BOOKMARKS_SORTED: {
             let sorted = [...state];
             switch (action.payload.sortCase) {
-                case "Date Modified-desc": return sorted.sort((a,b) => b.dateModified.localeCompare(a.dateModified));
-                case "Date Modified-asc": return sorted.sort((a,b) => a.dateModified.localeCompare(b.dateModified));
-                case "Date Created-desc": return sorted.sort((a,b) => b.dateCreated.localeCompare(a.dateCreated));
-                case "Date Created-asc": return sorted.sort((a,b) => a.dateCreated.localeCompare(b.dateCreated));
-                case "Title-desc": return sorted.sort((a,b) => b.title.localeCompare(a.title));
-                case "Title-asc": return sorted.sort((a,b) => a.title.localeCompare(b.title));
-                case "Views-desc": return sorted.sort((a,b) => b.views.toString().localeCompare(a.views.toString(), undefined, { numeric: true }));
-                case "Views-asc": return sorted.sort((a,b) => a.views.toString().localeCompare(b.views.toString(), undefined, { numeric: true }));
-                case "Image Size-desc": return sorted.sort((a,b) => b.imageSize - a.imageSize);
-                case "Image Size-asc": return sorted.sort((a,b) => a.imageSize - b.imageSize);
+                case "Date Modified-desc": return sorted.sort((a, b) => b.dateModified.localeCompare(a.dateModified));
+                case "Date Modified-asc": return sorted.sort((a, b) => a.dateModified.localeCompare(b.dateModified));
+                case "Date Created-desc": return sorted.sort((a, b) => b.dateCreated.localeCompare(a.dateCreated));
+                case "Date Created-asc": return sorted.sort((a, b) => a.dateCreated.localeCompare(b.dateCreated));
+                case "Title-desc": return sorted.sort((a, b) => b.title.localeCompare(a.title));
+                case "Title-asc": return sorted.sort((a, b) => a.title.localeCompare(b.title));
+                case "Views-desc": return sorted.sort((a, b) => b.views - a.views);
+                case "Views-asc": return sorted.sort((a, b) => a.views - b.views);
+                case "Image Size-desc": return sorted.sort((a, b) => b.imageSize - a.imageSize);
+                case "Image Size-asc": return sorted.sort((a, b) => a.imageSize - b.imageSize);
                 default: return state;
             }
         } case types.BOOKMARK_SELECTED: {
