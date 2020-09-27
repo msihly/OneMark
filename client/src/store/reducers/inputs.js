@@ -1,42 +1,30 @@
-import * as types from "../actionTypes.js";
+import * as types from "../actions/types";
 
-const initState = [];
-
-export default function inputs(state = initState, action) {
+export default function inputs(state = [], action) {
     switch (action.type) {
         case types.INPUT_CREATED: {
-            return [...state, {id: action.payload.id, value: action.payload.value}];
+            const { id, value } = action.payload;
+            return [...state, { id, value }];
         } case types.INPUT_UPDATED: {
-            return state.map(input => {
-                return input.id === action.payload.id ? {...input, value: action.payload.value} : input;
-            });
+            const { id, value } = action.payload;
+            return state.map(input => input.id === id ? { ...input, value } : input);
         } case types.INPUT_DELETED: {
-            return state.filter(input => input.id !== action.payload.id);
+            const { id } = action.payload;
+            return state.filter(input => input.id !== id);
         } case types.IMAGE_INPUT_CREATED: {
-            return [...state, {
-                id: action.payload.id,
-                value: action.payload.value,
-                isImageRemoved: false
-            }];
+            const { id, value } = action.payload;
+            return [...state, { id, value, isImageRemoved: false }];
         } case types.IMAGE_INPUT_UPDATED: {
-            return state.map(input => {
-                return input.id === action.payload.id ? {...input,
-                    value: action.payload.value,
-                    isImageRemoved: action.payload.isImageRemoved
-                } : input;
-            });
+            const { id, value, isImageRemoved } = action.payload;
+            return state.map(input => input.id === id ? {...input, value, isImageRemoved } : input);
         } case types.MULTI_SELECTS_UNSELECTED: {
-            return state.map(input => {
-                return /multi-select/i.test(input.id) ? {...input, value: false} : input;
-            });
+            return state.map(input => /multi-select/i.test(input.id) ? { ...input, value: false } : input);
         } case types.TAG_ADDED: {
-            return state.map(input => {
-                return input.id === action.payload.id ? {...input, value: [...input.value, action.payload.value]} : input;
-            });
+            const { id, value } = action.payload;
+            return state.map(input => input.id === id ? { ...input, value: [...input.value, value] } : input);
         } case types.TAG_REMOVED: {
-            return state.map(input => {
-                return input.id === action.payload.id ? {...input, value: input.value.filter(tag => tag !== action.payload.value)} : input;
-            });
+            const { id, value } = action.payload;
+            return state.map(input => input.id === id ? { ...input, value: input.value.filter(tag => tag !== value) } : input);
         } default: {
             return state;
         }

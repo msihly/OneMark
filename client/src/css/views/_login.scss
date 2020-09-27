@@ -6,13 +6,13 @@
 
     .lg-background {
         position: absolute;
-        top: -0.3rem;
-        bottom: -0.3rem;
-        right: -0.3rem;
-        left: -0.3rem;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
         background-image: $theme-image-wrapper;
         background-position: center;
-        filter: blur(3px);
+        overflow: hidden;
     }
 
     .lg {
@@ -39,6 +39,7 @@
             align-items: center;
             width: 100%;
             height: 100%;
+            backdrop-filter: blur(3px);
             box-sizing: border-box;
             transition: 0.3s all;
 

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions.js";
+import * as actions from "../../store/actions";
 import { formatBytes, formatDate } from "../../utils";
 
 class Info extends Component {

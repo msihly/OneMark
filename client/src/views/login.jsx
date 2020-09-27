@@ -1,14 +1,15 @@
 import React, { Component } from "react";
-import Panels from "../components/tabs/panels.jsx";
-import PanelButton from "../components/tabs/panelButton.jsx";
-import Form from "../components/form/form.jsx";
-import Input from "../components/form/input.jsx";
-import Checkbox from "../components/form/checkbox.jsx";
-import Auth from "../utils/auth.js";
+import Panels from "../components/tabs/panels";
+import PanelButton from "../components/tabs/panelButton";
+import Form from "../components/form/form";
+import Input from "../components/form/input";
+import Checkbox from "../components/form/checkbox";
+import Auth from "../utils/auth";
 import { toast } from "react-toastify";
 
 class Login extends Component {
     componentDidMount = async () => {
+        document.title = "Login - OneMark";
         let res = await Auth.login();
         res.success ? this.props.history.push("/") : console.log(res.message);
     }

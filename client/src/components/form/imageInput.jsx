@@ -1,14 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions.js";
+import * as actions from "../../store/actions";
 import NoImage from "../../images/No-Image.jpg";
 
 class ImageInput extends Component {
-    // state = {
-    //     imageName: this.props.initValue.substring(this.props.initValue.lastIndexOf("/") + 1),
-    //     hasImage: !/No-Image.*\.jpg$/.test(this.props.initValue)
-    // }
-
     constructor(props) {
         super(props);
         const { initValue } = this.props;
@@ -32,7 +27,7 @@ class ImageInput extends Component {
         const [fileInput, { id, updateInput }] = [event.target, this.props];
         const isFileAdded = fileInput.files.length > 0;
 
-        this.setState({imageName: fileInput.value.split("\\").pop(), hasImage: isFileAdded});
+        this.setState({ imageName: fileInput.value.split("\\").pop(), hasImage: isFileAdded });
         if (isFileAdded) {
             const reader = new FileReader();
             reader.onload = e => updateInput(id, e.target.result, false);
@@ -47,7 +42,7 @@ class ImageInput extends Component {
             event.preventDefault();
             const { id, updateInput } = this.props;
             updateInput(id, NoImage, true);
-            this.setState({imageName: "", hasImage: false});
+            this.setState({ imageName: "", hasImage: false });
         }
     }
 

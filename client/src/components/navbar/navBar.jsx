@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions.js";
-import NavMenu from "./navMenu.jsx";
-import SearchBar from "./searchBar.jsx";
-import SortButton from "./sortButton.jsx";
-import Modal from "../popovers/modal.jsx";
-import Editor from "../bookmarks/editor.jsx";
-import Account from "./account.jsx";
-import Auth from "../../utils/auth.js";
+import * as actions from "../../store/actions";
+import NavMenu from "./navMenu";
+import SearchBar from "./searchBar";
+import SortButton from "./sortButton";
+import Modal from "../popovers/modal";
+import Editor from "../bookmarks/editor";
+import Account from "./account";
+import Auth from "../../utils/auth";
 import { toast } from "react-toastify";
 
 class NavBar extends Component {

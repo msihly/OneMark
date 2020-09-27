@@ -1,29 +1,23 @@
-import * as types from "../actionTypes.js";
+import * as types from "../actions/types";
 import { uniqueArrayMerge } from "../../utils";
 
-const initState = [];
-
-const bookmark = (state = initState, action) => {
+const bookmark = (state = [], action) => {
     switch (action.type) {
         case types.BOOKMARK_CREATED: {
-            return [...state, { ...action.payload.bookmark, isDisplayed: true, isSelected: false }];
+            const { bookmark } = action.payload;
+            return [...state, { ...bookmark, isDisplayed: true, isSelected: false }];
         } case types.BOOKMARK_EDITED: {
             const { bookmarkId, dateModified, imagePath, imageSize, pageUrl, tags, title } = action.payload.bookmark;
-            return state.map(bookmark => {
-                return bookmark.bookmarkId === bookmarkId ? { ...bookmark, dateModified, imagePath, imageSize, pageUrl, tags, title } : bookmark;
-            });
+            return state.map(bookmark => bookmark.bookmarkId === bookmarkId ? { ...bookmark, dateModified, imagePath, imageSize, pageUrl, tags, title } : bookmark);
         } case types.BOOKMARK_VIEWED: {
-            return state.map(bookmark => {
-                return bookmark.bookmarkId === action.payload.bookmarkId ? { ...bookmark, views: +bookmark.views + 1 } : bookmark;
-            });
+            const { bookmarkId } = action.payload;
+            return state.map(bookmark => bookmark.bookmarkId === bookmarkId ? { ...bookmark, views: +bookmark.views + 1 } : bookmark);
         } case types.BOOKMARKS_RETRIEVED: {
             const { bookmarks } = action.payload;
             return bookmarks.length > 0 ? state.concat(bookmarks) : state;
         } case types.BOOKMARKS_FILTERED: {
             const { bookmarks } = action.payload;
-            return bookmarks !== null ? state.map(bookmark => {
-                return {...bookmark, isDisplayed: bookmarks.find(filtered => filtered.bookmarkId === bookmark.bookmarkId) ? true : false};
-            }) : state.map(bookmark => { return { ...bookmark, isDisplayed: true } });
+            return state.map(bookmark => ({ ...bookmark, isDisplayed: bookmarks === null ? true : bookmarks.some(filtered => filtered.bookmarkId === bookmark.bookmarkId) }));
         } case types.BOOKMARKS_SORTED: {
             let sorted = [...state];
             switch (action.payload.sortCase) {
@@ -41,23 +35,19 @@ const bookmark = (state = initState, action) => {
             }
         } case types.BOOKMARK_SELECTED: {
             const { bookmarkId } = action.payload;
-            return state.map(bookmark => {
-                return bookmark.bookmarkId === bookmarkId ? { ...bookmark, isSelected: !bookmark.isSelected } : bookmark;
-            });
+            return state.map(bookmark => bookmark.bookmarkId === bookmarkId ? { ...bookmark, isSelected: !bookmark.isSelected } : bookmark);
         } case types.BOOKMARKS_UNSELECTED: {
-            return state.map(bookmark => { return { ...bookmark, isSelected: false } });
+            return state.map(bookmark => ({ ...bookmark, isSelected: false }));
         } case types.BOOKMARK_DELETED: {
             const { bookmarkId } = action.payload.bookmark;
             return state.filter(bookmark => bookmark.bookmarkId !== bookmarkId);
         } case types.TAGS_UPDATED: {
             const { bookmarkIds, addedTags, removedTags, dateModified } = action.payload;
-            return state.map(bookmark => {
-                return bookmarkIds.includes(bookmark.bookmarkId) ? {
+            return state.map(bookmark => bookmarkIds.includes(bookmark.bookmarkId) ? {
                     ...bookmark,
                     tags: uniqueArrayMerge(bookmark.tags, addedTags).filter(tag => !removedTags.includes(tag)),
                     dateModified
-                } : bookmark;
-            });
+                } : bookmark);
         } default: {
             return state;
         }

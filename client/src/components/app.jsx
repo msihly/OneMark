@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import * as actions from "../store/actions.js";
-import AuthRoute from "../views/authRoute.jsx";
-import Home from "../views/home.jsx";
-import Login from "../views/login.jsx";
-import PrivacyPolicy from "../views/privacyPolicy.jsx";
+import * as actions from "../store/actions";
+import AuthRoute from "../views/authRoute";
+import Home from "../views/home";
+import Login from "../views/login";
+import PrivacyPolicy from "../views/privacyPolicy";
+import NotFound from "../views/notFound";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/index.scss";
-import PageNotFound from "../images/page-not-found.svg";
 
 toast.configure({
     position: "bottom-left",
@@ -39,12 +39,7 @@ class App extends Component {
                     <AuthRoute exact path="/" component={Home} />
                     <Route path="/login" component={Login} />
                     <Route path="/privacy" component={PrivacyPolicy} />
-                    <Route path="*" component={() =>
-                        <div className="notFound">
-                            <div className="heading">404</div>
-                            <div className="subheading">Page Not Found</div>
-                            <img src={PageNotFound} alt=""/>
-                        </div>} />m
+                    <Route path="*" component={NotFound}/>
                 </Switch>
             </BrowserRouter>
 		);

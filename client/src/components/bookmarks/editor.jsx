@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions.js";
-import Form from "../form/form.jsx";
-import ImageInput from "../form/imageInput.jsx";
-import Input from "../form/input.jsx";
-import TagInput from "../form/tagInput.jsx";
-import NoImage from "../../images/No-Image.jpg";
+import * as actions from "../../store/actions";
+import Form from "../form/form";
+import Input from "../form/input";
+import ImageInput from "../form/imageInput";
+import TagInput from "../tags/tagInput";
 import { toast } from "react-toastify";
+import NoImage from "../../images/No-Image.jpg";
 
 class Editor extends Component {
     handlePreviewClick = () => {

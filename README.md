@@ -21,6 +21,18 @@
 &nbsp;
 
 # Changelog
+## Version 2.05 &nbsp;-&nbsp; (2020-09-27)
+* Abstracted react components further and restructured files and folders
+* Converted multiple class components to functional components
+* Further code improvements in redux files
+* Updated imports and exports to remove extensions for easier future development
+* Fixed bookmark search issue involving negated terms
+* Fixed scrolling behavior on Privacy Policy page
+* Fixed document title behavior
+* Fixed minor issues in CSS
+* Fixed miscellaneous code styling inconsistencies
+* Removed unused images
+
 ## Version 2.04 &nbsp;-&nbsp; (2020-09-18)
 * Added multi-select functionality to bookmarks
     * A checkbox will now appear on hovering over the top-left of a bookmark

@@ -1,45 +1,12 @@
-import React, { Component, cloneElement } from "react";
-
-class TableOfContents extends Component {
-    render () {
-        const { children, hashPrefix } = this.props;
-        return (
-            <React.Fragment>
-                <h2 className="header">Table of Contents</h2>
-                <ol className="table-of-contents">
-                    { children && children.map((child, idx) => <li><a href={`#${hashPrefix}-${idx + 1}`}>{ child.props.children }</a></li>) }
-                </ol>
-            </React.Fragment>
-        );
-    }
-}
-
-class Sections extends Component {
-    render () {
-        const { children, hashPrefix } = this.props;
-        return (
-            <ol>
-                { children && children.map((child, idx) => cloneElement(child, { id: `${hashPrefix}-${idx + 1}` })) }
-            </ol>
-        );
-    }
-}
-
-class Section extends Component {
-    render () {
-        const { children, id, header, subheading, summary } = this.props;
-        return (
-            <li id={id}>
-                <h3 className="header">{ header }</h3>
-                { subheading ? (<h4>{ subheading }</h4>) : null }
-                { summary ? (<p className="summary"><b>{ "In Short: " }</b>{ summary }</p>) : null }
-                { children }
-            </li>
-        );
-    }
-}
+import React, { Component } from "react";
+import TableOfContents from "../components/articles/tableOfContents";
+import { Sections, Section } from "../components/articles/sections";
 
 class PrivacyPolicy extends Component {
+    componentDidMount() {
+        document.title = "Privacy Policy - OneMark";
+    }
+
     render() {
         return (
             <div className="privacy-policy light">

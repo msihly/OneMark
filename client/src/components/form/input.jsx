@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions.js";
+import * as actions from "../../store/actions";
 
 class Input extends Component {
     state = {
@@ -38,7 +38,6 @@ class Input extends Component {
 
     checkValidity = (value) => {
         const { name, isRequired } = this.props;
-
         if (isRequired && !value) { return "Field is required"; }
         switch (name) {
             case "title":

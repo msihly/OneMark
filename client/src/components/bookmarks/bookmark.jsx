@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions.js";
-import DropMenu from "../popovers/dropMenu.jsx";
-import Modal from "../popovers/modal.jsx";
-import Editor from "./editor.jsx";
-import Info from "./info.jsx";
+import * as actions from "../../store/actions";
+import DropMenu from "../popovers/dropMenu";
+import Modal from "../popovers/modal";
+import Editor from "./editor";
+import Info from "./info";
+import Checkbox from "../form/checkbox";
 import NoImage from "../../images/No-Image.jpg";
 import LoadingImage from "../../images/Lazy-Load.jpg";
-import Checkbox from "../form/checkbox.jsx";
 
 class Bookmark extends Component {
     state = {

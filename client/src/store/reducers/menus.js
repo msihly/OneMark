@@ -1,17 +1,19 @@
-import * as types from "../actionTypes.js";
+import * as types from "../actions/types";
 
-const initState = [];
-
-export default function menus(state = initState, action) {
+export default function menus(state = [], action) {
     const nonParents = state.filter(menu => menu.id === action.payload.parent);
+
     switch (action.type) {
-        case types.MENU_OPENED:
-            return [...nonParents, {id: action.payload.id, parent: action.payload.parent, isOpen: true}];
-        case types.MENU_CLOSED:
-            return nonParents.filter(menu => menu.id !== action.payload.id);
-        case types.EXTERNAL_CLICK:
+        case types.MENU_OPENED: {
+            const { id, parent } = action.payload;
+            return [...nonParents, { id, parent, isOpen: true }];
+        } case types.MENU_CLOSED: {
+            const { id } = action.payload;
+            return nonParents.filter(menu => menu.id !== id);
+        } case types.EXTERNAL_CLICK: {
             return nonParents;
-        default:
+        } default: {
             return state;
+        }
     }
 }

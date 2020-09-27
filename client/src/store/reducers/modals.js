@@ -1,14 +1,15 @@
-import * as types from "../actionTypes.js";
+import * as types from "../actions/types";
 
-const initState = [];
-
-export default function modal(state = initState, action) {
+export default function modal(state = [], action) {
     switch (action.type) {
-        case types.MODAL_OPENED:
-            return [...state, {id: action.payload.id, isOpen: true}];
-        case types.MODAL_CLOSED:
-            return state.filter(modal=> modal.id !== action.payload.id);
-        default:
+        case types.MODAL_OPENED: {
+            const { id } = action.payload;
+            return [...state, { id, isOpen: true }];
+        } case types.MODAL_CLOSED: {
+            const { id } = action.payload;
+            return state.filter(modal => modal.id !== id);
+        } default: {
             return state;
+        }
     }
 }

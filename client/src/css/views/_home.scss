@@ -1,6 +1,8 @@
 .home, #portal-root {
+    background-image: url("../../images/background-prism-white.png");
+    background-repeat: repeat;
     font-weight: 600;
-    overflow: hidden;
+    overflow-x: hidden;
 
     @import "../components/tags";
     @import "../components/bookmark";

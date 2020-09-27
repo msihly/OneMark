@@ -1,27 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions.js";
-import Form from "../form/form.jsx";
-import TagInput from "../form/tagInput.jsx";
+import * as actions from "../../store/actions";
+import Form from "../form/form";
+import TagList from "./tagList";
+import TagInput from "./tagInput";
 import { toast } from "react-toastify";
-import { arrayIntersect, countItems } from "../../utils";
-
-class TagList extends Component {
-    render() {
-        const { tags } = this.props;
-        const tagsFreq = countItems(tags);
-        return (
-            <div className="current-tags">
-                {tagsFreq && tagsFreq.map(pair => (
-                    <div className="tag">
-                        <div className="tag-text">{pair[0]}</div>
-                        <span className="tag-count">{pair[1]}</span>
-                    </div>
-                ))}
-            </div>
-        );
-    }
-}
+import { arrayIntersect } from "../../utils";
 
 class Tagger extends Component {
     handleSubmit = async () => {

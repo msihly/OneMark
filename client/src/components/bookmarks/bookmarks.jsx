@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as actions from "../../store/actions.js";
-import Bookmark from "./bookmark.jsx";
+import * as actions from "../../store/actions";
+import Bookmark from "./bookmark";
 
 class Bookmarks extends Component {
     componentDidMount() {

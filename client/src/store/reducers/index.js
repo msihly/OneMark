@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
-import account from "./account.js";
-import bookmarks from "./bookmarks.js";
-import menus from "./menus.js";
-import modals from "./modals.js";
-import inputs from "./inputs.js";
-import panels from "./panels.js";
+import account from "./account";
+import bookmarks from "./bookmarks";
+import menus from "./menus";
+import modals from "./modals";
+import inputs from "./inputs";
+import panels from "./panels";
 
 const rootReducer = combineReducers({ account, bookmarks, menus, modals, inputs, panels });
 
