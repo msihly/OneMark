@@ -44,4 +44,4 @@ try {
     });
 
     app.listen(PORT || 3001, () => console.log(`Listening on port ${PORT || 3001}...`));
-} catch (e) { console.error(e.message); }
+} catch (e) { console.error(e); }

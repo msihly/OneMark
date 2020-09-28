@@ -11,7 +11,7 @@
         padding: 1rem;
         border: 3px solid transparent;
         font-weight: 400;
-        color: $white-light;
+        color: $white-3;
         cursor: pointer;
         transition: all 0.2s ease-in-out;
 
@@ -20,7 +20,7 @@
         }
 
         &.active {
-            border-left-color: $blue-med;
+            border-left-color: $blue-2;
         }
     }
 

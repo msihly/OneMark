@@ -19,99 +19,99 @@
 }
 
 .Toastify__toast--dark {
-    background-color: $black-med;
-    color: $white-light;
+    background-color: $black-2;
+    color: $white-3;
 }
 
 .Toastify__toast--default {
-    border-color: $white-med;
+    border-color: $white-2;
 
     .Toastify__progress-bar {
-        background: $white-med;
+        background: $white-2;
     }
 }
 
 .Toastify__toast--info {
-    border-color: $blue-med;
+    border-color: $blue-2;
 
     .Toastify__toast-body::before {
         content: url("../../images/info.svg");
-        filter: $blue-med-svg;
+        filter: $blue-2-svg;
     }
 
     .Toastify__progress-bar {
-        background: $blue-med;
+        background: $blue-2;
     }
 }
 
 .Toastify__toast--success {
-    border-color: $green-med;
+    border-color: $green-1;
 
     .Toastify__toast-body::before {
         content: url("../../images/checkmark.svg");
-        filter: $green-med-svg;
+        filter: $green-1-svg;
     }
 
     .Toastify__progress-bar {
-        background: $green-med;
+        background: $green-1;
     }
 }
 
 .Toastify__toast--warning {
-    border-color: $orange-med;
+    border-color: $orange-2;
 
     .Toastify__toast-body::before {
         content: url("../../images/warning.svg");
-        filter: $orange-med-svg;
+        filter: $orange-2-svg;
     }
 
     .Toastify__progress-bar {
-        background: $orange-med;
+        background: $orange-2;
     }
 }
 
 .Toastify__toast--error {
-    border-color: $red-med-2;
+    border-color: $red-2;
 
     .Toastify__toast-body::before {
         content: url("../../images/error.svg");
-        filter: $red-med-2-svg;
+        filter: $red-2-svg;
     }
 
     .Toastify__progress-bar {
-        background: $red-med-2;
+        background: $red-2;
     }
 }
 
 .Toastify__close-button {
     margin: 0;
     line-height: 1;
-    color: $white-med;
+    color: $white-2;
 
     &:hover {
         background-color: transparent;
-        color: $red-med;
+        color: $red-3;
     }
 }
 
 .bg {
     &-green {
-        background-color: $green-light;
+        background-color: $green-3;
     }
 
     &-blue {
-        background-color: $blue-med;
+        background-color: $blue-2;
     }
 
     &-red {
-        background-color: $red-med;
+        background-color: $red-3;
     }
 
     &-orange {
-        background-color: $orange-light;
+        background-color: $orange-3;
     }
 
     &-yellow {
-        background-color: $yellow;
+        background-color: $yellow-3;
     }
 }

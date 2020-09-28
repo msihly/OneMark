@@ -95,6 +95,14 @@ try {
         return res.send({ success: true, bookmarkIds, addedTags, removedTags, dateModified });
     }));
 
+    app.delete("/api/bookmarks", handleErrors(async (req, res) => {
+        validateSession(req);
+        let { bookmarkIds } = req.body;
+        bookmarkIds = JSON.parse(bookmarkIds);
+        await db.deleteBookmarks(bookmarkIds);
+        return res.send({ success: true, bookmarkIds });
+    }));
+
     app.delete("/api/bookmark/:id", handleErrors(async (req, res) => {
         validateSession(req);
         await db.deleteBookmark(req.params.id);

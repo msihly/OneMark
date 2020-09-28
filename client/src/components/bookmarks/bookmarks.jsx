@@ -4,9 +4,7 @@ import * as actions from "../../store/actions";
 import Bookmark from "./bookmark";
 
 class Bookmarks extends Component {
-    componentDidMount() {
-        this.props.getBookmarks();
-    }
+    componentDidMount() { this.props.getBookmarks(); }
 
 	render() {
         const { bookmarks } = this.props;

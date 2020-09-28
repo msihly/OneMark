@@ -32,12 +32,12 @@
 
             &:hover {
                 > .file-input-btn {
-                    background-color: $red-med;
-                    border-color: $red-med;
+                    background-color: $red-3;
+                    border-color: $red-3;
                 }
 
                 > .file-input-name {
-                    border-color: $red-med;
+                    border-color: $red-3;
                 }
             }
 
@@ -79,8 +79,8 @@
 
         &:hover, .file-input-name:not(.hidden) + & {
             color: #fff;
-            background-color: $blue-light;
-            border-color: $blue-light;
+            background-color: $blue-3;
+            border-color: $blue-3;
             border-radius: 3px;
         }
 
@@ -96,7 +96,7 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         color: #ccc;
-        border: 2px solid $blue-light;
+        border: 2px solid $blue-3;
         border-left: none;
         border-radius: 0 3px 3px 0;
         overflow: hidden;

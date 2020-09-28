@@ -42,6 +42,21 @@
             max-width: 98vw;
             overflow: auto;
         }
+
+        &.border {
+            &-blue, &-green, &-red, &-orange, &-purple, &-yellow {
+                border: 0;
+                border-top: 3px solid;
+                border-bottom: 2px solid $grey-1;
+            }
+
+            &-blue { border-top-color: $blue-2; }
+            &-green { border-top-color: $green-1; }
+            &-red { border-top-color: $red-2; }
+            &-orange { border-top-color: $orange-1; }
+            &-purple { border-top-color: $purple-1; }
+            &-yellow { border-top-color: $yellow-3; }
+        }
     }
 }
 
@@ -66,15 +81,15 @@ span.close {
     transition: all 0.2s;
 
     &:hover {
-        background: $red-med-2;
+        background: $red-2;
         color: #fff;
     }
 }
 
 button.close {
-    background-color: $red-med;
+    background-color: $red-3;
 
     &:hover {
-        background-color: $red-light;
+        background-color: $red-4;
     }
 }

@@ -138,6 +138,15 @@ exports.deleteBookmark = async (bookmarkId) => {
     return true;
 }
 
+exports.deleteBookmarks = async (bookmarkIds = []) => {
+    if (bookmarkIds.length === 0) { throw new Error("Bookmarks argument of length 0"); }
+    let sql = `DELETE
+                FROM        Bookmark
+                WHERE       BookmarkID IN (?${", ?".repeat(bookmarkIds.length - 1)});`;
+    await conn.query(sql, [...bookmarkIds]);
+    return true;
+}
+
 exports.editBookmark = async (bookmarkId, userId, title, pageUrl, imageId, tags) => {
     const dateModified = getIsoDate();
     let sql = `UPDATE      Bookmark AS b

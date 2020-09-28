@@ -21,6 +21,13 @@
 &nbsp;
 
 # Changelog
+## Version 2.06 &nbsp;-&nbsp; (2020-09-28)
+* Added 'Delete' action to multi-select bar
+* Added 'Alert' component
+* Improved SASS variable system
+    * Added classes for text and background color for each new color variable
+* Further refactoring / code cleanup
+
 ## Version 2.05 &nbsp;-&nbsp; (2020-09-27)
 * Abstracted react components further and restructured files and folders
 * Converted multiple class components to functional components

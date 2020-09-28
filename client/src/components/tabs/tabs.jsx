@@ -1,13 +1,9 @@
 import React, { Component } from "react";
 
 class Tabs extends Component {
-    state = {
-        activeTab: 0,
-    }
+    state = { activeTab: 0 }
 
-    switchTab = (index) => {
-        this.setState({activeTab: index});
-    }
+    switchTab = (index) => this.setState({activeTab: index});
 
     render() {
         const [{ children }, { activeTab }] = [this.props, this.state];

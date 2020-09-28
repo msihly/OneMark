@@ -11,9 +11,7 @@ import NoImage from "../../images/No-Image.jpg";
 import LoadingImage from "../../images/Lazy-Load.jpg";
 
 class Bookmark extends Component {
-    state = {
-        image: LoadingImage
-    }
+    state = { image: LoadingImage }
 
     componentDidMount() {
         const { imagePath } = this.props.bookmark;
@@ -28,9 +26,7 @@ class Bookmark extends Component {
         lazyObserver.observe(ReactDOM.findDOMNode(this));
     }
 
-    handleMouseDown = (event) => {
-        if (event.button === 1) { this.openBookmark(); }
-    }
+    handleMouseDown = (event) => { if (event.button === 1) { this.openBookmark(); } }
 
     handleMultiSelect = () => {
         const { bookmark: { bookmarkId }, selectBookmark } = this.props;

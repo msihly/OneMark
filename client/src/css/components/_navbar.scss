@@ -37,11 +37,12 @@ $nav-padding: 0.5rem;
             top: $nav-height + $nav-padding;
             right: 0;
             max-height: 80vh;
+            border-radius: 0 0 8px 8px;
+            color: $white-3;
+            background-color: rgba($black-1, 0.85);
+            box-shadow: -2px 2px 8px 0 rgba(0, 0, 0, 0.3);
             font-size: 1em;
             font-weight: 500;
-            background-color: rgba(19, 19, 19, 0.85);
-            color: $white-light;
-            box-shadow: -2px 2px 8px 0 rgba(0, 0, 0, 0.3);
             overflow: auto;
             z-index: 5;
         }
@@ -54,7 +55,7 @@ $nav-padding: 0.5rem;
         font-size: 1.2rem;
         font-weight: 500;
         cursor: pointer;
-        color: $white-light;
+        color: $white-3;
         transition: all 0.1s ease-in-out;
 
         &:hover {
@@ -82,7 +83,7 @@ $nav-padding: 0.5rem;
     border: none;
     border-radius: 30px;
     font-size: 1rem;
-    color: $white-light;
+    color: $white-3;
     background-color: #222;
     outline: none;
     text-overflow: ellipsis;
@@ -101,7 +102,7 @@ $nav-padding: 0.5rem;
         width: 100%;
         padding: 0.75rem;
         border-radius: 0.5rem;
-        color: $white-light;
+        color: $white-3;
         background-color: #111;
         box-shadow: 0px 2px 8px 4px rgba(0, 0, 0, 0.5);
         box-sizing: border-box;
@@ -146,7 +147,7 @@ $nav-padding: 0.5rem;
 
 .sort-menu {
     &::before {
-        content: "\2191 \2193";
+        content: "#{$symbol-arrow-down}#{$symbol-arrow-up}";
         padding: 0 5px 5px 0;
         cursor: pointer;
     }
@@ -165,11 +166,11 @@ $nav-padding: 0.5rem;
             padding-left: 1rem;
         }
 
-        .active {
-            background-color: rgba(0, 0, 0, 0.65);
+        &.active {
+            background-color: rgba($black-1, 0.65);
 
             &:hover {
-                background-color: rgba(0, 0, 0, 0.8);
+                background-color: rgba($black-1, 0.8);
             }
         }
     }
@@ -178,6 +179,7 @@ $nav-padding: 0.5rem;
 .side-menu {
     &::before {
         content: "Menu";
+        padding-right: 0.2em;
         text-transform: uppercase;
 
         @media #{$media-750-w} {
@@ -200,9 +202,10 @@ $nav-padding: 0.5rem;
     text-transform: uppercase;
     cursor: pointer;
     user-select: none;
+    transition: all 0.2s ease-out;
 
     &:hover {
         color: #fff;
-        background-color: rgba(45, 45, 45, 0.5);
+        background-color: rgba($black-1, 0.5);
     }
 }

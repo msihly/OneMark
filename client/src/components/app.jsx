@@ -24,13 +24,9 @@ toast.configure({
 });
 
 class App extends Component {
-	componentDidMount() {
-		window.addEventListener("click", this.props.closeMenus);
-    }
+	componentDidMount() { window.addEventListener("click", this.props.closeMenus); }
 
-    componentWillUnmount() {
-        window.removeEventListener("click", this.props.closeMenus);
-    }
+    componentWillUnmount() { window.removeEventListener("click", this.props.closeMenus); }
 
 	render() {
 		return (

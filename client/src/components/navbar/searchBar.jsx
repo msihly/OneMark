@@ -15,21 +15,13 @@ class SearchBar extends Component {
         containsValue: "contains",
     }
 
-    handleClick = (event) => {
-        event.stopPropagation();
-    }
+    handleClick = (event) => event.stopPropagation();
 
-    handleCheckbox = (option) => {
-        this.setState({[option]: !this.state[option]}, this.searchBookmarks);
-    }
+    handleCheckbox = (option) => this.setState({[option]: !this.state[option]}, this.searchBookmarks);
 
-    handleSelect = (option, value) => {
-        this.setState({[option]: value});
-    }
+    handleSelect = (option, value) => this.setState({[option]: value});
 
-    handleSearch = (event) => {
-        this.setState({searchValue: event.target.value}, this.searchBookmarks);
-    }
+    handleSearch = (event) => this.setState({searchValue: event.target.value}, this.searchBookmarks);
 
     addTerm = (value) => {
         const { typeValue, containsValue} = this.state;

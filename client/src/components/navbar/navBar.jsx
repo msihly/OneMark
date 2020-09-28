@@ -12,17 +12,11 @@ import Auth from "../../utils/auth";
 import { toast } from "react-toastify";
 
 class NavBar extends Component {
-    openEditor = () => {
-        this.props.openModal("bookmark-create");
-    }
+    openEditor = () => this.props.openModal("bookmark-create");
 
-    openAccount = () => {
-        this.props.openModal("account");
-    }
+    openAccount = () => this.props.openModal("account");
 
-    openPrivacyPolicy = () => {
-        this.props.history.push("/privacy");
-    }
+    openPrivacyPolicy = () => this.props.history.push("/privacy");
 
     logout = async () => {
         let res = await Auth.logout();

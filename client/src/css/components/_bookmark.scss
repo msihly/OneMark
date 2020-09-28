@@ -1,7 +1,3 @@
-a {
-    display: grid;
-}
-
 .bookmark-container {
 	display: flex;
     flex-flow: row wrap;
@@ -41,18 +37,36 @@ a {
         max-width: 100%;
         max-height: none;
     }
-}
 
-.image {
-	width: 100%;
-	max-width: 100%;
-	height: 100%;
-	object-fit: cover;
-    object-position: center;
-    background-color: #111;
+    a {
+        display: grid;
+    }
 
-    &:hover {
-        animation: movePosition 3s ease-in-out;
+    .image {
+        width: 100%;
+        max-width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        background-color: #111;
+
+        &:hover {
+            animation: movePosition 3s ease-in-out;
+        }
+    }
+
+    .title {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 2em;
+        line-height: 2em;
+        font-size: 15px;
+        background: rgba(0, 0, 0, 0.6);
+        color: $white-2;
+        text-align: center;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 }
 
@@ -63,16 +77,23 @@ a {
     100%    { object-position: center; }
 }
 
-.title {
-	position: absolute;
-	bottom: 0;
-	width: 100%;
-	height: 2em;
-	line-height: 2em;
-	font-size: 15px;
-	background: rgba(0, 0, 0, 0.6);
-	color: $white-med;
-	text-align: center;
-    text-overflow: ellipsis;
-    overflow: hidden;
+.preview-output {
+    @extend .bookmark;
+    position: relative;
+    width: 640px;
+    max-width: 100%;
+    height: 360px;
+    margin: 0 auto 1rem auto;
+    border: 1px solid #2F2F2F;
+    background: #171717;
+    cursor: pointer;
+
+    @media #{$media-750-w} {
+        height: 230px;
+    }
+
+    @media #{$media-500-wh} {
+        max-height: 9em;
+        max-width: 16em;
+    }
 }

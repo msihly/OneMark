@@ -1,18 +1,14 @@
 import React, { Component } from "react";
 
 class SearchTermInput extends Component {
-    state = {
-        searchValue: "",
-    }
+    state = { searchValue: "" }
 
     handleAdd = () => {
         const [{ handleSubmit }, { searchValue }] = [this.props, this.state];
         handleSubmit(searchValue);
     }
 
-    handleInput = (event) => {
-        this.setState({searchValue: event.target.value});
-    }
+    handleInput = (event) => this.setState({searchValue: event.target.value});
 
     render() {
         const { searchValue } = this.state;

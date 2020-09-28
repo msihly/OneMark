@@ -10,9 +10,7 @@ class Modal extends Component {
         closeModal(id);
     }
 
-    handleClick = (event) => {
-        event.stopPropagation();
-    }
+    handleClick = (event) => event.stopPropagation();
 
     render() {
         const { children, classes, hasHeader} = this.props;
@@ -33,12 +31,8 @@ class Modal extends Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
-	isOpen: Object(state.modals.find(modal => modal.id === ownProps.id)).isOpen || false,
-});
-
 const mapDispatchToProps = dispatch => ({
 	closeModal: id => dispatch(actions.modalClosed(id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Modal);
+export default connect(null, mapDispatchToProps)(Modal);
