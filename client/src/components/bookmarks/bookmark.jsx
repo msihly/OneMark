@@ -7,8 +7,8 @@ import Modal from "../popovers/modal";
 import Editor from "./editor";
 import Info from "./info";
 import Checkbox from "../form/checkbox";
-import NoImage from "../../images/No-Image.jpg";
-import LoadingImage from "../../images/Lazy-Load.jpg";
+import NoImage from "../../images/no-image.svg";
+import LoadingImage from "../../images/lazy-load.svg";
 
 class Bookmark extends Component {
     state = { image: LoadingImage }
@@ -18,7 +18,7 @@ class Bookmark extends Component {
         const lazyObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
-                    this.setState({ image: /No-Image.*\.jpg$/i.test(imagePath) ? NoImage : imagePath });
+                    this.setState({ image: /no-image.*\.svg$/i.test(imagePath) ? NoImage : imagePath });
                     lazyObserver.disconnect();
                 }
             });

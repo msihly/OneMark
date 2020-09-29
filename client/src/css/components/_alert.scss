@@ -37,9 +37,7 @@
         &.grey {
             background-color: $grey-3;
 
-            &:hover {
-                background-color: $grey-5;
-            }
+            &:hover { background-color: $grey-5; }
         }
     }
 }

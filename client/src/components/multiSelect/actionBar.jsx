@@ -6,9 +6,9 @@ import Modal from "../popovers/modal";
 import Alert, { Button } from "../popovers/alert";
 import MultiSelectButton from "../multiSelect/button";
 import Tagger from "../tags/tagger";
-import DeleteIcon from "../../images/multi-select-delete.svg";
-import EditTagsIcon from "../../images/multi-select-tags.svg";
-import UnselectIcon from "../../images/multi-select-unselect.svg";
+import DeleteIcon from "../../images/multi-delete.svg";
+import EditTagsIcon from "../../images/multi-tags.svg";
+import UnselectIcon from "../../images/multi-unselect.svg";
 
 class MultiSelectBar extends Component {
     deleteBookmarks = () => {

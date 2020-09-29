@@ -2,7 +2,7 @@ try {
     const db = require("../db/functions.js");
     const app = require("../index.js").app;
     const bcrypt = require("bcrypt");
-    const { $try, getFutureDate, handleErrors, validate, validateSession } = require("../utils");
+    const { getFutureDate, handleErrors, validate, validateSession } = require("../utils");
 
     app.post("/api/user/login", handleErrors(async (req, res) => {
         if (req.session.uid) { return res.send({ success: true, message: "User already logged in" }); }

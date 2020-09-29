@@ -179,8 +179,8 @@ exports.getAllBookmarks = async (userId) => {
             bookmark.dateCreated = getIsoDate(bookmark.dateCreated);
             bookmark.dateModified = getIsoDate(bookmark.dateModified);
         });
-        return bookmarks.length > 0 ? bookmarks : [];
     }
+    return bookmarks;
 }
 
 exports.getBookmark = async (bookmarkId) => {

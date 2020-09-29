@@ -55,13 +55,13 @@ $theme-image-panel: url("../../images/panel-white-mountain.jpg");
 $theme-image-wrapper: url("../../images/purple-mountain.jpg");
 
 .light {
-    --foreground-color: #000;
+    --foreground-color: black;
     --background-color: #eee;
 }
 
 .dark {
     --foreground-color: #eee;
-    --background-color: #000;
+    --background-color: black;
 }
 
 // MEDIA QUERIES

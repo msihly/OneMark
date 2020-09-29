@@ -5,6 +5,22 @@
     width: 100%;
     height: calc(100vh - 3.3rem);
     overflow: auto;
+
+    &.empty {
+        background-color: rgba(black, 0.8);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 25%;
+            margin: 0 auto;
+            background: url("../../images/no-bookmarks-found.svg") no-repeat center;
+        }
+    }
 }
 
 .bookmark {
@@ -14,7 +30,7 @@
     max-width: calc(100% / 3);
     width: calc(100% / 3);
     height: 20.5rem;
-    outline: 0.5px solid rgba(0, 0, 0, 0.5);
+    outline: 0.5px solid rgba(black, 0.5);
     outline-offset: -0.5px;
     transition: all 0.2s ease-in-out;
     box-sizing: border-box;
@@ -23,7 +39,7 @@
 
     &:hover {
         z-index: 2;
-        box-shadow: 0px 0px 6px 4px #222;
+        box-shadow: 0px 0px 6px 4px $black-2;
     }
 
     @media #{$media-1200-w} {
@@ -48,7 +64,7 @@
         height: 100%;
         object-fit: cover;
         object-position: center;
-        background-color: #111;
+        background-color: $black-1;
 
         &:hover {
             animation: movePosition 3s ease-in-out;
@@ -62,7 +78,7 @@
         height: 2em;
         line-height: 2em;
         font-size: 15px;
-        background: rgba(0, 0, 0, 0.6);
+        background: rgba(black, 0.6);
         color: $white-2;
         text-align: center;
         text-overflow: ellipsis;

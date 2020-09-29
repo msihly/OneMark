@@ -6,7 +6,7 @@ import Input from "../form/input";
 import ImageInput from "../form/imageInput";
 import TagInput from "../tags/tagInput";
 import { toast } from "react-toastify";
-import NoImage from "../../images/No-Image.jpg";
+import NoImage from "../../images/no-image.svg";
 
 class Editor extends Component {
     handlePreviewClick = () => {
@@ -35,11 +35,11 @@ class Editor extends Component {
         return (
             <React.Fragment>
                 <figure onClick={this.handlePreviewClick} className="preview-output">
-                    <img className="image" src={imageUrl ? (/No-Image.*\.jpg$/i.test(imageUrl) ? NoImage : imageUrl) : NoImage} alt="" />
+                    <img className="image" src={imageUrl ? (/no-image.*\.svg$/i.test(imageUrl) ? NoImage : imageUrl) : NoImage} alt="" />
                     <figcaption className="title">{title || "No Title"}</figcaption>
                 </figure>
                 <Form handleSubmit={this.handleSubmit} submitText="SUBMIT" submitClasses="btn-hollow submit">
-                    <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={/No-Image.*\.jpg$/i.test(bookmark.imagePath) ? NoImage : bookmark.imagePath} />
+                    <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={/no-image.*\.svg$/i.test(bookmark.imagePath) ? NoImage : bookmark.imagePath} />
                     <div className="row mg-2 mobile">
                         <div className="column full-width">
                             <Input id={`${id}-pageUrl`} initValue={bookmark.pageUrl ?? ""} type="text" placeholder="Enter URL"

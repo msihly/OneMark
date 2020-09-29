@@ -74,7 +74,7 @@ button {
     font-size: 1em;
     font-family: "Roboto";
     background-color: $blue-2;
-    color: #fff;
+    color: white;
     cursor: pointer;
     transition: all 0.2s;
 
@@ -103,7 +103,7 @@ button {
         border-radius: 3px;
         background-color: $theme-color;
         border-color: $theme-color;
-        color: #fff;
+        color: white;
     }
 }
 
@@ -284,3 +284,4 @@ button {
 @import "./components/toasts";
 @import "./components/modal";
 @import "./components/alert";
+@import "./components/banner";

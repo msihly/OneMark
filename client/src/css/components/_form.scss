@@ -12,16 +12,14 @@ label, input {
 input {
     padding: 0.5em;
     margin-bottom: 0.3rem;
-    border: 1px solid #333;
+    border: 1px solid $black-3;
     border-radius: 3px;
-    background-color: #333;
-    color: #eee;
+    background-color: $black-3;
+    color: $white-3;
     overflow: hidden;
     text-overflow: ellipsis;
 
-    &.med-width {
-        max-width: 15rem;
-    }
+    &.med-width { max-width: 15rem; }
 
     &[type="button"], &[type="submit"] {
         border: none;
@@ -34,7 +32,7 @@ label {
     font-family: sans-serif;
     font-weight: 500;
     font-size: 1em;
-    color: #fff;
+    color: white;
 }
 
 .checkbox-ctn {
@@ -71,14 +69,12 @@ label {
             left: 5px;
             width: 5px;
             height: 10px;
-            border: solid #fff;
+            border: solid white;
             border-width: 0 2px 2px 0;
         }
     }
 
-    .multi-checkboxes &:not(:last-child) {
-        margin-right: 0.75rem;
-    }
+    .multi-checkboxes &:not(:last-child) { margin-right: 0.75rem; }
 }
 
 .checkbox-title {
@@ -102,16 +98,14 @@ label {
 
     &[type="text"], &[type="password"], &[type="email"] {
         cursor: text;
-        background-color: rgba(0, 0, 0, 0);
+        background-color: rgba(black, 0);
     }
 
     &:placeholder-shown {
-        color: rgba(0, 0, 0, 0);
+        color: rgba(black, 0);
         border-bottom: 1px solid #444;
 
-        &:hover {
-            border-color: #000;
-        }
+        &:hover { border-color: black; }
 
         + .lb-title {
             color: #666;
@@ -121,9 +115,7 @@ label {
             transform: translateY(1.5rem);
             z-index: 10;
 
-            &:hover {
-                color: #000;
-            }
+            &:hover { color: black;}
         }
 
         &.invalid {
@@ -132,15 +124,13 @@ label {
             + .lb-title {
                 color: $red-3;
 
-                &:hover {
-                    color: $red-1;
-                }
+                &:hover { color: $red-1; }
             }
         }
     }
 
     &:not(:placeholder-shown), &:focus {
-        color: #000;
+        color: black;
         border-color: $green-1;
         outline: none;
 
@@ -155,9 +145,7 @@ label {
         &.invalid, &:hover.invalid {
             border-color: $red-3;
 
-            + .lb-title {
-                color: $red-3;
-            }
+            + .lb-title { color: $red-3; }
         }
     }
 }
@@ -177,33 +165,23 @@ label {
     flex-flow: row;
 
     &.between, &.mg-1 {
-        > :not(:last-child) {
-            margin-right: 0.25rem;
-        }
+        > :not(:last-child) { margin-right: 0.25rem; }
     }
 
-    &.mg-2 > :not(:last-child) {
-        margin-right: 0.5rem;
-    }
+    &.mg-2 > :not(:last-child) { margin-right: 0.5rem; }
 
     &.mobile {
-        @media #{$media-500-wh} {
-            flex-flow: column;
-        }
+        @media #{$media-500-wh} { flex-flow: column; }
 
         &.mg-1, &.mg-2 {
             > :not(:last-child) {
-                @media #{$media-500-wh} {
-                    margin-right: 0;
-                }
+                @media #{$media-500-wh} { margin-right: 0; }
             }
         }
     }
 
     > .form-group:not(:last-of-type) {
-        @media #{$media-500-wh} {
-            margin: 0;
-        }
+        @media #{$media-500-wh} { margin: 0; }
     }
 }
 
@@ -229,17 +207,11 @@ label {
     flex-flow: column;
     margin-bottom: 0.5rem;
 
-    .row > &:not(:last-of-type) {
-        margin-right: 0.75rem;
-    }
+    .row > &:not(:last-of-type) { margin-right: 0.75rem;}
 
-    &.rev {
-        flex-flow: column-reverse;
-    }
+    &.rev { flex-flow: column-reverse; }
 
-    &.no-error {
-        padding-bottom: 0.8rem;
-    }
+    &.no-error { padding-bottom: 0.8rem;}
 }
 
 .error-label {
@@ -256,7 +228,7 @@ label {
         border-radius: 3px;
         background-color: $blue-3;
         border-color: $blue-3;
-        color: #fff;
+        color: white;
     }
 }
 
@@ -267,7 +239,7 @@ label {
     background: none;
     border: solid $white-3;
     border-width: 0 0.15em 0.15em 0;
-    box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 2px 0px rgba(black, 0.3);
     cursor: pointer;
     transform: rotate(45deg);
 }
@@ -307,7 +279,7 @@ label {
         border-radius: 0 2px 4px 4px;
         background-color: #222;
         color: $white-3;
-        box-shadow: 2px 4px 4px 0 rgba(0, 0, 0, 0.3);
+        box-shadow: 2px 4px 4px 0 rgba(black, 0.3);
         font-weight: 400;
         font-size: 0.9em;
         overflow: auto;
@@ -326,16 +298,12 @@ label {
         max-width: 7.5em;
         cursor: pointer;
 
-        &:hover {
-            background-color: #333;
-        }
+        &:hover { background-color: #333; }
 
         .drop-menu-content &:nth-of-type(even) {
             background-color: #272727;
 
-            &:hover {
-                background-color: #373737;
-            }
+            &:hover { background-color: #373737; }
         }
     }
 }
@@ -360,7 +328,7 @@ label {
 
     &:hover {
         background-color: $blue-3;
-        color: #fff;
+        color: white;
     }
 }
 

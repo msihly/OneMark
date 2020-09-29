@@ -17,16 +17,12 @@
 
         &.del {
             > .file-input-btn {
-                &::before {
-                    background-image: url("../../images/Delete.png");
-                }
+                &::before { background-image: url("../../images/delete.svg");}
 
                 &::after {
                     content: "Remove Image";
 
-                    @media #{$media-500-wh} {
-                        content: "Remove";
-                    }
+                    @media #{$media-500-wh} { content: "Remove"; }
                 }
             }
 
@@ -36,9 +32,7 @@
                     border-color: $red-3;
                 }
 
-                > .file-input-name {
-                    border-color: $red-3;
-                }
+                > .file-input-name { border-color: $red-3; }
             }
 
         }
@@ -65,28 +59,24 @@
             padding-left: 1.5em;
             background: left center no-repeat;
             background-size: 1.25em;
-            background-image: url("../../images/Upload.png");
+            background-image: url("../../images/upload.svg");
             filter: invert(0.8);
         }
 
         &::after {
             content: "Upload Image";
 
-            @media #{$media-500-wh} {
-                content: "Upload";
-            }
+            @media #{$media-500-wh} { content: "Upload"; }
         }
 
         &:hover, .file-input-name:not(.hidden) + & {
-            color: #fff;
+            color: white;
             background-color: $blue-3;
             border-color: $blue-3;
             border-radius: 3px;
         }
 
-        .file-input-name:not(.hidden) + & {
-            border-radius: 3px 0 0 3px;
-        }
+        .file-input-name:not(.hidden) + & { border-radius: 3px 0 0 3px; }
     }
 
     &-name {

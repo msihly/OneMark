@@ -21,6 +21,15 @@
 &nbsp;
 
 # Changelog
+## Version 2.07 &nbsp;-&nbsp; (2020-09-29)
+* Added `Banner` component to display across the bottom of the screen
+* Added banner prompting to install the add-on Chrome extension on first visit to homepage
+    * Hidden permanently (via localStorage) after clicking the link to the extension page or the banner close button
+* Added "No bookmarks found" display when the bookmark container is empty
+* Converted several raster images to vectors for improved scaling and reduced media footprint
+* Updates to SCSS color usage and naming schema
+* Fixed `undefined` being returned by the server when no bookmarks are found on homepage load
+
 ## Version 2.06 &nbsp;-&nbsp; (2020-09-28)
 * Added 'Delete' action to multi-select bar
 * Added 'Alert' component

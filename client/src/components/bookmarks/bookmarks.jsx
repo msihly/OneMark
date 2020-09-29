@@ -9,7 +9,7 @@ class Bookmarks extends Component {
 	render() {
         const { bookmarks } = this.props;
         return (
-            <div className="bookmark-container">
+            <div className={`bookmark-container${(bookmarks.length === 0 || bookmarks.filter(b => b.isDisplayed).length === 0) ? " empty" : ""}`}>
                 {bookmarks.length > 0 && bookmarks.map(b => <Bookmark key={b.bookmarkId} bookmark={b} />)}
             </div>
         );

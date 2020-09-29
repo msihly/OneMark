@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import NoImage from "../../images/No-Image.jpg";
+import NoImage from "../../images/no-image.svg";
 
 class ImageInput extends Component {
     constructor(props) {
@@ -9,7 +9,7 @@ class ImageInput extends Component {
         const { initValue } = this.props;
         this.state = {
             imageName: initValue ? initValue.substring(initValue.lastIndexOf("/") + 1) : "",
-            hasImage: initValue ? !/No-Image.*\.jpg$/.test(initValue) : false,
+            hasImage: initValue ? !/no-image.*\.svg$/.test(initValue) : false,
         }
     }
 
