@@ -1,14 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import Portal from "../popovers/portal";
-import Modal from "../popovers/modal";
-import Alert, { Button } from "../popovers/alert";
-import MultiSelectButton from "../multiSelect/button";
-import Tagger from "../tags/tagger";
-import DeleteIcon from "../../images/multi-delete.svg";
-import EditTagsIcon from "../../images/multi-tags.svg";
-import UnselectIcon from "../../images/multi-unselect.svg";
+import { Alert, AlertButton, Modal, Portal } from "../popovers";
+import { MultiSelectButton } from "../multiSelect";
+import { Tagger } from "../tags";
+import * as Media from "../../media";
 
 class MultiSelectBar extends Component {
     deleteBookmarks = () => {
@@ -30,19 +26,19 @@ class MultiSelectBar extends Component {
             <Portal>
                 { bookmarks.length > 0 ? (
                     <div className="multi-select-bar">
-                        <MultiSelectButton handleClick={this.openTagEditor} icon={EditTagsIcon} text="Edit Tags" />
+                        <MultiSelectButton handleClick={this.openTagEditor} icon={Media.MultiTags} text="Edit Tags" />
                         { isTaggerOpen ? (
                             <Modal id="tagger" classes={`pad-ctn-1${isTaggerOpen ? "" : " hidden"}`} hasHeader>
                                 <Tagger bookmarks={bookmarks} />
                             </Modal>
                         ) : null}
-                        <MultiSelectButton handleClick={this.openDeleteAlert} icon={DeleteIcon} text="Delete" />
-                        <MultiSelectButton handleClick={this.unselectAll} icon={UnselectIcon} text="Unselect" />
+                        <MultiSelectButton handleClick={this.openDeleteAlert} icon={Media.MultiDelete} text="Delete" />
+                        <MultiSelectButton handleClick={this.unselectAll} icon={Media.MultiUnselect} text="Unselect" />
                         { isConfirmationOpen ? (
-                            <Alert id="confirm-delete" modalClasses="pad-ctn-2 border-red" iconClasses="red-1-svg" icon={DeleteIcon}
+                            <Alert id="confirm-delete" modalClasses="pad-ctn-2 border-red" iconClasses="red-1-svg" icon={Media.MultiDelete}
                                 heading={["Delete ", <span className="red-2">{bookmarks.length}</span>, ` bookmark${bookmarks.length > 1 ? "s" : ""}`]}
                                 subheading="This process cannot be undone.">
-                                <Button text="Delete" classes="red" handleClick={this.deleteBookmarks} />
+                                <AlertButton text="Delete" classes="red" handleClick={this.deleteBookmarks} />
                             </Alert>
                         ) : null}
                     </div>

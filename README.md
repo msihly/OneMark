@@ -21,6 +21,10 @@
 &nbsp;
 
 # Changelog
+## Version 2.08 &nbsp;-&nbsp; (2020-10-07)
+* Fixed searchbar-induced crash by escaping individual terms
+* Refactored import and export patterns
+
 ## Version 2.07 &nbsp;-&nbsp; (2020-09-29)
 * Added `Banner` component to display across the bottom of the screen
 * Added banner prompting to install the add-on Chrome extension on first visit to homepage

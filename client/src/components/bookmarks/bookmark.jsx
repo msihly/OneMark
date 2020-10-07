@@ -2,23 +2,20 @@ import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import DropMenu from "../popovers/dropMenu";
-import Modal from "../popovers/modal";
-import Editor from "./editor";
-import Info from "./info";
-import Checkbox from "../form/checkbox";
-import NoImage from "../../images/no-image.svg";
-import LoadingImage from "../../images/lazy-load.svg";
+import { DropMenu, Modal } from "../popovers";
+import { Editor, Info } from "./";
+import { Checkbox } from "../form";
+import * as Media from "../../media";
 
 class Bookmark extends Component {
-    state = { image: LoadingImage }
+    state = { image: Media.Loading }
 
     componentDidMount() {
         const { imagePath } = this.props.bookmark;
         const lazyObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
-                    this.setState({ image: /no-image.*\.svg$/i.test(imagePath) ? NoImage : imagePath });
+                    this.setState({ image: /no-image.*\.svg$/i.test(imagePath) ? Media.NoImage : imagePath });
                     lazyObserver.disconnect();
                 }
             });

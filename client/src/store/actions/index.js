@@ -1,7 +1,7 @@
-import * as types from "../actions/types";
-import Auth from "../../utils/auth";
+import * as types from "./types";
 import { toast } from "react-toastify";
 import { getLocalDate } from "../../utils";
+import Auth from "../../utils/auth";
 
 /******************** ACCOUNT ********************/
 export const getAccount = () => async (dispatch) => {

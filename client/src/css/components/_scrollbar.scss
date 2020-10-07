@@ -1,18 +1,18 @@
 ::-webkit-scrollbar {
 	width: 15px;
 	height: 10px;
-	background: rgb(30, 30, 30);
+	background: $black-2;
 }
 
 ::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
-	background: rgb(30, 30, 30);
+	background: $black-2;
 }
 
 ::-webkit-scrollbar-thumb {
 	min-height: 28px;
-	background: rgb(60, 60, 60);
+	background: $grey-1;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: rgb(75, 75, 75);
+	background: $grey-2;
 }

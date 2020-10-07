@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import Portal from "./portal";
+import { Portal } from "./";
 
 class Modal extends Component {
     close = (event) => {

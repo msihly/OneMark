@@ -35,7 +35,7 @@
     border-color: $blue-2;
 
     .Toastify__toast-body::before {
-        content: url("../../images/info.svg");
+        content: url("../../media/info.svg");
         filter: $blue-2-svg;
     }
 
@@ -48,7 +48,7 @@
     border-color: $green-1;
 
     .Toastify__toast-body::before {
-        content: url("../../images/checkmark.svg");
+        content: url("../../media/checkmark.svg");
         filter: $green-1-svg;
     }
 
@@ -61,7 +61,7 @@
     border-color: $orange-2;
 
     .Toastify__toast-body::before {
-        content: url("../../images/warning.svg");
+        content: url("../../media/warning.svg");
         filter: $orange-2-svg;
     }
 
@@ -74,7 +74,7 @@
     border-color: $red-2;
 
     .Toastify__toast-body::before {
-        content: url("../../images/error.svg");
+        content: url("../../media/error.svg");
         filter: $red-2-svg;
     }
 

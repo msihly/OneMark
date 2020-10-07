@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import Tag from "./tag";
+import { Tag } from "./";
 import { regexEscape } from "../../utils";
 
 class TagInput extends Component {

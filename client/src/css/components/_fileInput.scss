@@ -17,7 +17,7 @@
 
         &.del {
             > .file-input-btn {
-                &::before { background-image: url("../../images/delete.svg");}
+                &::before { background-image: url("../../media/delete.svg");}
 
                 &::after {
                     content: "Remove Image";
@@ -59,7 +59,7 @@
             padding-left: 1.5em;
             background: left center no-repeat;
             background-size: 1.25em;
-            background-image: url("../../images/upload.svg");
+            background-image: url("../../media/upload.svg");
             filter: invert(0.8);
         }
 

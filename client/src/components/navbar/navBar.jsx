@@ -2,12 +2,9 @@ import React, { Component } from "react";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import NavMenu from "./navMenu";
-import SearchBar from "./searchBar";
-import SortButton from "./sortButton";
-import Modal from "../popovers/modal";
-import Editor from "../bookmarks/editor";
-import Account from "./account";
+import { Account, NavMenu, SearchBar, SortButton } from "./";
+import { Modal } from "../popovers";
+import { Editor } from "../bookmarks";
 import Auth from "../../utils/auth";
 import { toast } from "react-toastify";
 

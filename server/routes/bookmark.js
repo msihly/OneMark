@@ -70,7 +70,7 @@ try {
             if (!uploadResult.success) { throw new Error(uploadResult.errors); }
             ({ imageId, imagePath, imageSize } = uploadResult);
         } else if (isImageRemoved == "true") {
-            [imageId, imagePath, imageSize] = [2, "../images/no-image.svg", 0];
+            [imageId, imagePath, imageSize] = [2, "../media/no-image.svg", 0];
         } else {
             imagePath = curImagePath;
         }

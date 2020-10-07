@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import Bookmark from "./bookmark";
+import { Bookmark } from "./";
 
 class Bookmarks extends Component {
     componentDidMount() { this.props.getBookmarks(); }

@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import Form from "../form/form";
-import Tabs from "../tabs/tabs";
-import Input from "../form/input";
+import { Form, Input } from "../form";
+import { Tabs } from "../tabs";
 import Auth from "../../utils/auth";
 import { formatDate } from "../../utils";
 import { toast } from "react-toastify";

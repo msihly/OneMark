@@ -18,7 +18,7 @@
             right: 0;
             width: 25%;
             margin: 0 auto;
-            background: url("../../images/no-bookmarks-found.svg") no-repeat center;
+            background: url("../../media/no-bookmarks-found.svg") no-repeat center;
         }
     }
 }
@@ -66,9 +66,7 @@
         object-position: center;
         background-color: $black-1;
 
-        &:hover {
-            animation: movePosition 3s ease-in-out;
-        }
+        &:hover { animation: movePosition 3s ease-in-out; }
     }
 
     .title {
@@ -87,10 +85,9 @@
 }
 
 @keyframes movePosition {
-	0%		{ object-position: center; }
-	25%		{ object-position: left top; }
-    75%     { object-position: right bottom; }
-    100%    { object-position: center; }
+	0%, 100% { object-position: center; }
+	25%	{ object-position: left top; }
+    75% { object-position: right bottom; }
 }
 
 .preview-output {

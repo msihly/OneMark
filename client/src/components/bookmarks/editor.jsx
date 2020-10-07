@@ -1,12 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import Form from "../form/form";
-import Input from "../form/input";
-import ImageInput from "../form/imageInput";
-import TagInput from "../tags/tagInput";
+import { Form, Input, ImageInput } from "../form";
+import { TagInput } from "../tags";
 import { toast } from "react-toastify";
-import NoImage from "../../images/no-image.svg";
+import * as Media from "../../media";
 
 class Editor extends Component {
     handlePreviewClick = () => {
@@ -35,11 +33,11 @@ class Editor extends Component {
         return (
             <React.Fragment>
                 <figure onClick={this.handlePreviewClick} className="preview-output">
-                    <img className="image" src={imageUrl ? (/no-image.*\.svg$/i.test(imageUrl) ? NoImage : imageUrl) : NoImage} alt="" />
+                    <img className="image" src={imageUrl ? (/no-image.*\.svg$/i.test(imageUrl) ? Media.NoImage : imageUrl) : Media.NoImage} alt="" />
                     <figcaption className="title">{title || "No Title"}</figcaption>
                 </figure>
                 <Form handleSubmit={this.handleSubmit} submitText="SUBMIT" submitClasses="btn-hollow submit">
-                    <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={/no-image.*\.svg$/i.test(bookmark.imagePath) ? NoImage : bookmark.imagePath} />
+                    <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={/no-image.*\.svg$/i.test(bookmark.imagePath) ? Media.NoImage : bookmark.imagePath} />
                     <div className="row mg-2 mobile">
                         <div className="column full-width">
                             <Input id={`${id}-pageUrl`} initValue={bookmark.pageUrl ?? ""} type="text" placeholder="Enter URL"

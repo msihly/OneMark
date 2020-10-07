@@ -1,22 +1,7 @@
 import React, { Component, Children, cloneElement } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import Modal from "./modal";
-
-export class Button extends Component {
-    handleClick = () => {
-        const { handleClick, handleClose } = this.props;
-        if (handleClick) { handleClick(); }
-        handleClose();
-    }
-
-    render() {
-        const { text, classes } = this.props;
-        return (
-            <div className={`alert-button ${classes ?? ""}`} onClick={this.handleClick}>{text}</div>
-        );
-    }
-};
+import { AlertButton, Modal } from "./";
 
 class Alert extends Component {
     closeAlert = () => {
@@ -33,7 +18,7 @@ class Alert extends Component {
                     <div className="alert-heading">{heading}</div>
                     { subheading && <div className="alert-subheading">{subheading}</div> }
                     <div className="row j-center">
-                        <Button text="Cancel" classes="grey" handleClose={this.closeAlert} />
+                        <AlertButton text="Cancel" classes="grey" handleClose={this.closeAlert} />
                         {children && Children.map(children, child => cloneElement(child, { handleClose: this.closeAlert }))}
                     </div>
                 </div>

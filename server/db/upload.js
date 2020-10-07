@@ -15,7 +15,7 @@ try {
           maxImageSize = 2097152;
 
     exports.uploadFile = async (files) => {
-        if (files.length === 0) { return { success: true, imageId: 2, imagePath: "../images/no-image.svg", imageSize: 0 }; }
+        if (files.length === 0) { return { success: true, imageId: 2, imagePath: "../media/no-image.svg", imageSize: 0 }; }
 
         let errors = [];
         const name = files[0].originalname;

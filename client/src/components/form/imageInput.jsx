@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import NoImage from "../../images/no-image.svg";
+import * as Media from "../../media";
 
 class ImageInput extends Component {
     constructor(props) {
@@ -33,7 +33,7 @@ class ImageInput extends Component {
             reader.onload = e => updateInput(id, e.target.result, false);
             reader.readAsDataURL(fileInput.files[0]);
         } else {
-            updateInput(id, NoImage, false);
+            updateInput(id, Media.NoImage, false);
         }
     }
 
@@ -41,7 +41,7 @@ class ImageInput extends Component {
         if (this.state.hasImage) {
             event.preventDefault();
             const { id, updateInput } = this.props;
-            updateInput(id, NoImage, true);
+            updateInput(id, Media.NoImage, true);
             this.setState({ imageName: "", hasImage: false });
         }
     }

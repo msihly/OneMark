@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import DropMenu from "../popovers/dropMenu";
-import DropSelect from "../popovers/dropSelect";
-import Checkbox from "../form/checkbox";
-import SearchTermInput from "../navbar/searchTermInput";
+import { DropMenu, DropSelect } from "../popovers";
+import { Checkbox } from "../form";
+import { SearchTermInput } from "../navbar";
 import { toast } from "react-toastify";
 import { regexEscape } from "../../utils";
 

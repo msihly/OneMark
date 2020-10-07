@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions";
-import Form from "../form/form";
-import TagList from "./tagList";
-import TagInput from "./tagInput";
+import { Form } from "../form";
+import { TagInput, TagList } from "./";
 import { toast } from "react-toastify";
 import { arrayIntersect } from "../../utils";
 
