@@ -22,21 +22,15 @@ class TagInput extends Component {
     }
 
     addTag = (tag) => {
-        const [{ id, addTag }, { displayedTags, buttonClass, value }] = [this.props, this.state];
+        const { id, tags, addTag } = this.props;
         addTag(id, tag);
-        this.setState({
-            displayedTags: [...displayedTags, tag],
-            buttonClass: value === tag ? "del" : buttonClass
-        });
+        this.setState({ displayedTags: [...tags, tag], buttonClass: "" });
     }
 
     removeTag = (tag) => {
-        const [{ id, removeTag }, { displayedTags, buttonClass, value }] = [this.props, this.state];
+        const { id, tags, removeTag } = this.props;
         removeTag(id, tag);
-        this.setState({
-            displayedTags: displayedTags.filter(t => t !== tag),
-            buttonClass: value === tag ? "add" : buttonClass
-        });
+        this.setState({ displayedTags: tags.filter(t => t !== tag), buttonClass: "" });
     }
 
     displayTags = (value) => {
@@ -61,8 +55,14 @@ class TagInput extends Component {
     handleButtonClick = () => {
         const { buttonClass, value } = this.state;
         switch (buttonClass) {
-            case "add": this.addTag(value); break;
-            case "del": this.removeTag(value); break;
+            case "add":
+                this.addTag(value);
+                this.setState({ value: "" });
+                break;
+            case "del":
+                this.removeTag(value);
+                this.setState({ value: "" });
+                break;
             default:
         }
     }

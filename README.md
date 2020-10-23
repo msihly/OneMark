@@ -1,26 +1,31 @@
 # What is OneMark?
-### [OneMark](https://onemark.herokuapp.com) is a responsive, image-based bookmark organizer featuring a gallery view, comprehensive search engine, and tagging system. Make sure to install the [Add-On extension for Chrome](https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm) for a proper experience.
+### [OneMark](https://onemark.herokuapp.com) is a responsive, image-based bookmark organizer featuring a gallery view, comprehensive search engine, and tagging system.
+* ### Make sure to install the [Add-On extension for Chrome](https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm) for a proper experience.
 
-&nbsp;
+* ### Check out demo videos on my [portfolio](https://msihly.github.io/msihly)!
 
-### Create and edit bookmarks with a title, link, and an optional image and tags :
-![Bookmark editor example](/images/editor.jpg)
-
-### Search your collection with a fast and comprehensive search engine :
-![Search example](/images/search.jpg)
-
-### Quickly sort your bookmarks by title, date created or modified, number of views, or image size :
-![Bookmark sorting example](/images/sort.jpg)
-
-### View bookmark metadata not found in the editor via the bookmark dropdown menu :
-![Bookmark sorting example](/images/info.jpg)
-
-#### If you have any suggestions, issues to report, or other general comments, please feel free to use the appropriate sections of the GitHub repository or contact me at mohamed.sihly@gmail.com. Thank you for your interest.
+#### *If you have any suggestions, issues to report, or other general comments, please feel free to use the appropriate sections of the GitHub repository or contact me at mohamed.sihly@gmail.com. Thank you for your interest.*
 
 ---
 &nbsp;
 
 # Changelog
+## Version 2.09 &nbsp;-&nbsp; (2020-10-22)
+* Updated `TagInput` to clear input field after adding / deleting entered tag
+* Fixed bookmark advanced search algorithim not properly forming regexes and conditionals when toggling `"Match all terms"` option
+    * Added `compareLogic` utility function to facilitate conditional generation of logical operators
+    * Reorganized and reformatted code for greater clarity
+* Fixed redux store not properly resetting when switching from one account to another within the same browser session
+* Fixed issue with lazy-loading algorithim preventing client-side updates to bookmark images after they've been modified
+* Fixed `ImageInput` not actually clearing when clicking "Remove Image" despite visually seeming to
+    * File input now controlled via `ref`
+* Fixed and simplified `No-Image` detection
+    * Replaced filename stored in database with simple string `"none"`
+    * Replaced regex test with simple string comparison
+* Removed autocompletion from forms
+* Moved `client/src/views` folder to `client/src/components`
+* Miscellaneous code cleanup and optimizations
+
 ## Version 2.08 &nbsp;-&nbsp; (2020-10-07)
 * Fixed searchbar-induced crash by escaping individual terms
 * Refactored import and export patterns

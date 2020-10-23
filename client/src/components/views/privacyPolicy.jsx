@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import TableOfContents from "../components/articles/tableOfContents";
-import { Sections, Section } from "../components/articles/sections";
+import { TableOfContents, Sections, Section } from "../articles";
 
 class PrivacyPolicy extends Component {
     componentDidMount() {

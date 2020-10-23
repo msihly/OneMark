@@ -9,8 +9,9 @@ class ImageInput extends Component {
         const { initValue } = this.props;
         this.state = {
             imageName: initValue ? initValue.substring(initValue.lastIndexOf("/") + 1) : "",
-            hasImage: initValue ? !/no-image.*\.svg$/.test(initValue) : false,
-        }
+            hasImage: initValue !== Media.NoImage,
+        };
+        this.input = React.createRef();
     }
 
     componentDidMount = () => {
@@ -24,7 +25,8 @@ class ImageInput extends Component {
     }
 
     handleFileChange = (event) => {
-        const [fileInput, { id, updateInput }] = [event.target, this.props];
+        const { id, updateInput } = this.props;
+        const fileInput = event.target;
         const isFileAdded = fileInput.files.length > 0;
 
         this.setState({ imageName: fileInput.value.split("\\").pop(), hasImage: isFileAdded });
@@ -33,7 +35,7 @@ class ImageInput extends Component {
             reader.onload = e => updateInput(id, e.target.result, false);
             reader.readAsDataURL(fileInput.files[0]);
         } else {
-            updateInput(id, Media.NoImage, false);
+            updateInput(id, null, false);
         }
     }
 
@@ -41,19 +43,21 @@ class ImageInput extends Component {
         if (this.state.hasImage) {
             event.preventDefault();
             const { id, updateInput } = this.props;
-            updateInput(id, Media.NoImage, true);
+            updateInput(id, null, true);
+            this.input.current.value = "";
             this.setState({ imageName: "", hasImage: false });
         }
     }
 
     render() {
-        const [{ inputName, isImageRemoved }, { imageName, hasImage }] = [this.props, this.state];
+        const { imageName, hasImage } = this.state;
+        const { inputName, isImageRemoved } = this.props;
         return (
             <div className="row mgn-btm">
                 <label onClick={this.handleImageRemoval} className={`file-input-group${hasImage ? " del" : ""}`}>
                     <span className={`file-input-name${hasImage ? "" : " hidden"}`} title={imageName}>{imageName}</span>
                     <span className="file-input-btn"></span>
-                    <input onChange={this.handleFileChange} type="file" name={inputName} className="file-input" accept="image/png, image/jpeg" />
+                    <input ref={this.input} onChange={this.handleFileChange} type="file" name={inputName} className="file-input" accept="image/png, image/jpeg" />
                 </label>
                 <input type="hidden" value={isImageRemoved} name="isImageRemoved" />
             </div>

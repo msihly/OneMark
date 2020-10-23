@@ -16,10 +16,12 @@ class NavBar extends Component {
     openPrivacyPolicy = () => this.props.history.push("/privacy");
 
     logout = async () => {
+        const { resetState, history } = this.props;
         let res = await Auth.logout();
         if (res.success) {
+            resetState();
             toast.success("Logout successful");
-            setTimeout(() => this.props.history.push("/login"), 500);
+            setTimeout(() => history.push("/login"), 500);
         } else { toast.error(res.message); }
     }
 
@@ -69,6 +71,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
     openModal: id => dispatch(actions.modalOpened(id)),
+    resetState: () => dispatch(actions.stateReset()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(NavBar));

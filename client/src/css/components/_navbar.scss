@@ -16,13 +16,9 @@ $nav-padding: 0.5rem;
         box-shadow: 0px 3px 8px rgba(black, 0.25);
         z-index: 5;
 
-        > :first-child {
-            padding-left: 1rem;
-        }
+        > :first-child { padding-left: 1rem; }
 
-        > :last-child {
-            padding-right: 1rem;
-        }
+        > :last-child { padding-right: 1rem; }
     }
 
     &-menu {
@@ -58,9 +54,7 @@ $nav-padding: 0.5rem;
         color: $white-3;
         transition: all 0.1s ease-in-out;
 
-        &:hover {
-            color: white;
-        }
+        &:hover { color: white; }
     }
 }
 
@@ -71,9 +65,7 @@ $nav-padding: 0.5rem;
     width: 100%;
     margin: 0 auto;
 
-    @media #{$media-750-w} {
-        max-width: 60vw;
-    }
+    @media #{$media-750-w} { max-width: 60vw; }
 }
 
 .searchbar {
@@ -108,9 +100,7 @@ $nav-padding: 0.5rem;
         box-sizing: border-box;
         z-index: 5;
 
-        @media #{$media-500-wh} {
-            width: fit-content;
-        }
+        @media #{$media-500-wh} { width: fit-content; }
     }
 
     &-input {
@@ -125,9 +115,7 @@ $nav-padding: 0.5rem;
 }
 
 .create-bookmark {
-    &:hover::before {
-        color: white;
-    }
+    &:hover::before { color: white; }
 
     &::before {
         content: "+";
@@ -139,9 +127,7 @@ $nav-padding: 0.5rem;
         content: "Create";
         text-transform: uppercase;
 
-        @media #{$media-750-w} {
-            content: "";
-        }
+        @media #{$media-750-w} { content: ""; }
     }
 }
 
@@ -156,22 +142,16 @@ $nav-padding: 0.5rem;
         content: "Sort";
         text-transform: uppercase;
 
-        @media #{$media-750-w} {
-            content: "";
-        }
+        @media #{$media-750-w} { content: ""; }
     }
 
     &-btn {
-        > :last-child {
-            padding-left: 1rem;
-        }
+        > :last-child { padding-left: 1rem; }
 
         &.active {
-            background-color: rgba($black-1, 0.65);
+            background-color: rgba($black-2, 0.65);
 
-            &:hover {
-                background-color: rgba($black-1, 0.8);
-            }
+            &:hover { background-color: rgba($black-2, 0.8); }
         }
     }
 }
@@ -182,14 +162,10 @@ $nav-padding: 0.5rem;
         padding-right: 0.2em;
         text-transform: uppercase;
 
-        @media #{$media-750-w} {
-            content: "";
-        }
+        @media #{$media-750-w} { content: ""; }
     }
 
-    &:hover::after {
-        border-color: white;
-    }
+    &:hover::after { border-color: white; }
 }
 
 .sort-menu-btn, .side-menu-btn {
@@ -206,6 +182,6 @@ $nav-padding: 0.5rem;
 
     &:hover {
         color: white;
-        background-color: rgba($black-1, 0.5);
+        background-color: rgba($black-2, 0.6);
     }
 }

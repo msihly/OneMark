@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import * as actions from "../store/actions";
-import NavBar from "../components/navbar/navBar";
-import Bookmarks from "../components/bookmarks/bookmarks";
-import MultiSelectBar from "../components/multiSelect/actionBar";
-import Banner from "../components/popovers/banner";
+import * as actions from "../../store/actions";
+import { NavBar } from "../navbar";
+import { Bookmarks } from "../bookmarks";
+import { MultiSelectBar } from "../multiSelect";
+import { Banner } from "../popovers";
 
 class Home extends Component {
     componentDidMount() {

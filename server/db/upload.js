@@ -15,7 +15,7 @@ try {
           maxImageSize = 2097152;
 
     exports.uploadFile = async (files) => {
-        if (files.length === 0) { return { success: true, imageId: 2, imagePath: "../media/no-image.svg", imageSize: 0 }; }
+        if (files.length === 0) { return { success: true, imageId: 2, imagePath: "none", imageSize: 0 }; }
 
         let errors = [];
         const name = files[0].originalname;
@@ -29,7 +29,7 @@ try {
 
         const imageHash = hash("md5", files[0].buffer);
         const dupeResult = await db.lookupImageHash(imageHash);
-        if (dupeResult) { return { success: true, imageId: dupeResult.imageId, imagePath: dupeResult.imagePath }; }
+        if (dupeResult) { return { success: true, imageId: dupeResult.imageId, imagePath: dupeResult.imagePath, imageSize: dupeResult.imageSize }; }
 
         const path = `uploads/${imageHash.substr(0, 2)}/${imageHash.substr(2, 2)}/${imageHash}.${ext}`;
         const url = `https://${S3_BUCKET}.s3.${S3_REGION}.amazonaws.com/${path}`;

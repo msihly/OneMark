@@ -5,12 +5,12 @@ import { DropMenu, DropSelect } from "../popovers";
 import { Checkbox } from "../form";
 import { SearchTermInput } from "../navbar";
 import { toast } from "react-toastify";
-import { regexEscape } from "../../utils";
+import { compareLogic, regexEscape } from "../../utils";
 
 class SearchBar extends Component {
     state = {
         hasAnd: true,
-        hasWhole: false,
+        hasExact: false,
         searchValue: "",
         typeValue: "Anything",
         containsValue: "contains",
@@ -32,7 +32,7 @@ class SearchBar extends Component {
     }
 
     searchBookmarks = () => {
-        const [{ bookmarks, displayBookmarks }, { searchValue, hasAnd, hasWhole }] = [this.props, this.state];
+        const [{ bookmarks, displayBookmarks }, { searchValue, hasAnd, hasExact }] = [this.props, this.state];
         let filteredBookmarks = null;
 
         try {
@@ -48,25 +48,34 @@ class SearchBar extends Component {
                     /(?<=-tag:)\S*/gi,
                     /(?<=(^|\s)-(?!(title|url|tag):))\S*/gi
                 ];
-                const wholeDelim = hasWhole ? "\\b" : "";
-                const prefix = `${hasAnd ? "(?=.*" : ".*"}${wholeDelim}`;
-                const suffix = `${wholeDelim}${hasAnd ? ")" : ""}.*`;
+                const exactDelim = hasExact ? "\\b" : "";
+                const prefix = `${hasAnd ? "(?=.*" : ".*"}${exactDelim}`;
+                const suffix = `${exactDelim}${hasAnd ? ")" : ""}.*`;
                 const [titles, urls, tags, any, negTitles, negUrls, negTags, negAny] = regexes.map(re => [terms.match(re) || []].map(
-                        arr => arr.length > 0 ? `${prefix}${arr.map(e => regexEscape(e)).join(`${wholeDelim}${hasAnd ? ")(?=.*" : "|"}`)}${suffix}` : ""));
+                        arr => arr.length > 0 ? `${prefix}${arr.map(e => regexEscape(e)).join(`${exactDelim}${hasAnd ? ")(?=.*" : "|"}`)}${suffix}` : ""));
+
                 const hasPositives = [titles, urls, tags, any].flat().some(e => e.length > 0);
                 const hasNegatives = [negTitles, negUrls, negTags, negAny].flat().some(e => e.length > 0);
-                const [reTitle, reURL, reTag, reAny, reNegTitle, reNegURL, reNegTag, reNegAny] = [titles, urls, tags, any, negTitles, negUrls, negTags, negAny].map(arr => RegExp(`^${arr}$`, "i"));
+
+                const [reTitle, reURL, reTag, reAny] = [titles, urls, tags, any].map(arr =>
+                    RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : (hasAnd ? "\\S*" : "")}${hasAnd ? "" : "$"}`, "i"));
+                const [reNegTitle, reNegURL, reNegTag, reNegAny] =[negTitles, negUrls, negTags, negAny].map(arr =>
+                    RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : ""}$`, "i"));
 
                 filteredBookmarks = bookmarks.filter(bk => {
-                    let [title, pageUrl, tags] = [bk.title, bk.pageUrl, bk.tags.length > 0 ? bk.tags : [null]];
-                    return ( !reNegTitle.test(title) && !reNegURL.test(pageUrl) && !tags.some(tag => reNegTag.test(tag)) && ![title, pageUrl, tags].flat().some(term => reNegAny.test(term)) )
-                            && ( reTitle.test(title) || reURL.test(pageUrl) || tags.some(tag => reTag.test(tag)) || [title, pageUrl, tags].flat().some(term => reAny.test(term))
-                            || (!hasPositives && hasNegatives));
+                    const [title, pageUrl, tags] = [bk.title, bk.pageUrl, bk.tags.length > 0 ? bk.tags : [null]];
+                    const any = [title, pageUrl, tags].flat();
+                    return !( reNegTitle.test(title) || reNegURL.test(pageUrl) || tags.some(tag => reNegTag.test(tag)) || any.some(term => reNegAny.test(term)) )
+                            && ( compareLogic(hasAnd ? "and" : "or", reTitle.test(title), reURL.test(pageUrl), tags.some(tag => reTag.test(tag)), any.some(term => reAny.test(term)))
+                            || ( !hasPositives && hasNegatives ));
                 });
             }
 
             displayBookmarks(filteredBookmarks);
-        } catch (e) { toast.error("Error when searching. Please try again"); }
+        } catch (e) {
+            console.log(e);
+            toast.error("Error searching. Please try again");
+        }
     }
 
     render() {
@@ -95,7 +104,7 @@ class SearchBar extends Component {
                             </div>
                             <div className="row mobile multi-checkboxes">
                                 <Checkbox id="adv-search-and" handleClick={this.handleCheckbox} option="hasAnd" text="Match all terms" initValue={true} />
-                                <Checkbox id="adv-search-whole" handleClick={this.handleCheckbox} option="hasWhole" text="Match whole term" initValue={false} />
+                                <Checkbox id="adv-search-exact" handleClick={this.handleCheckbox} option="hasExact" text="Match exact term" initValue={false} />
                             </div>
                         </DropMenu>
                     </React.Fragment>

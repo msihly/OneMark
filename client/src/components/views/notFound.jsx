@@ -1,5 +1,5 @@
 import React from "react";
-import PageNotFound from "../media/page-not-found.svg";
+import { PageNotFound } from "../../media";
 
 const NotFound = () => (
     <div className="notFound">

@@ -33,11 +33,11 @@ class Editor extends Component {
         return (
             <React.Fragment>
                 <figure onClick={this.handlePreviewClick} className="preview-output">
-                    <img className="image" src={imageUrl ? (/no-image.*\.svg$/i.test(imageUrl) ? Media.NoImage : imageUrl) : Media.NoImage} alt="" />
+                    <img className="image" src={imageUrl ? (imageUrl !== "none" && imageUrl) : Media.NoImage} alt="" />
                     <figcaption className="title">{title || "No Title"}</figcaption>
                 </figure>
                 <Form handleSubmit={this.handleSubmit} submitText="SUBMIT" submitClasses="btn-hollow submit">
-                    <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={/no-image.*\.svg$/i.test(bookmark.imagePath) ? Media.NoImage : bookmark.imagePath} />
+                    <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={bookmark.imagePath ? (bookmark.imagePath !== "none" && bookmark.imagePath) : Media.NoImage} />
                     <div className="row mg-2 mobile">
                         <div className="column full-width">
                             <Input id={`${id}-pageUrl`} initValue={bookmark.pageUrl ?? ""} type="text" placeholder="Enter URL"

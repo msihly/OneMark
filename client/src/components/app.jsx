@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../store/actions";
-import { AuthRoute, Home, Login, NotFound, PrivacyPolicy} from "../views";
+import { AuthRoute, Home, Login, NotFound, PrivacyPolicy} from "./views";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/index.scss";

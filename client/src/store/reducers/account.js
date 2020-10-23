@@ -8,6 +8,8 @@ export default function menus(state = {}, action) {
         } case types.ACCOUNT_UPDATED: {
             const { username, email } = action.payload;
             return { ...state, username, email };
+        } case types.RESET: {
+            return {};
         } default: {
             return state;
         }

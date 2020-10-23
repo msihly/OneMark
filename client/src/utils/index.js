@@ -13,6 +13,10 @@ export const checkEmpty = (arr) => {
     return arr.length < 1 ? true : false;
 }
 
+export const compareLogic = (type, ...items) => {
+    return type === "and" ? items.every(Boolean) : (type === "or" ? items.some(Boolean) : "Missing type parameter");
+}
+
 export const countItems = (arr) => {
     const map = arr.reduce((acc, cur) => acc.set(cur, (acc.get(cur) || 0) + 1), new Map());
     return [...map.entries()];

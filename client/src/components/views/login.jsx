@@ -1,10 +1,7 @@
 import React, { Component } from "react";
-import Panels from "../components/tabs/panels";
-import PanelButton from "../components/tabs/panelButton";
-import Form from "../components/form/form";
-import Input from "../components/form/input";
-import Checkbox from "../components/form/checkbox";
-import Auth from "../utils/auth";
+import { Panels, PanelButton } from "../tabs";
+import { Form, Input, Checkbox } from "../form";
+import Auth from "../../utils/auth";
 import { toast } from "react-toastify";
 
 class Login extends Component {

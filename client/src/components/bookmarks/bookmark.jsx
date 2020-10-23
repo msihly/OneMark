@@ -8,14 +8,13 @@ import { Checkbox } from "../form";
 import * as Media from "../../media";
 
 class Bookmark extends Component {
-    state = { image: Media.Loading }
+    state = { lazy: true };
 
     componentDidMount() {
-        const { imagePath } = this.props.bookmark;
         const lazyObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
-                    this.setState({ image: /no-image.*\.svg$/i.test(imagePath) ? Media.NoImage : imagePath });
+                    this.setState({ lazy: false });
                     lazyObserver.disconnect();
                 }
             });
@@ -52,11 +51,11 @@ class Bookmark extends Component {
     }
 
 	render() {
-		const { bookmark, bookmark: { bookmarkId, isDisplayed, title }, isEditorOpen, isInfoOpen } = this.props;
+		const { bookmark, bookmark: { bookmarkId, isDisplayed, imagePath, title }, isEditorOpen, isInfoOpen } = this.props;
 		return (
 			<figure onClick={this.openBookmark} onMouseDown={this.handleMouseDown} className={`bookmark${isDisplayed ? "" : " hidden"}`}>
 				<figcaption className="title">{title}</figcaption>
-				<img className="image" src={this.state.image} alt="" />
+				<img className="image" src={this.state.lazy ? Media.Loading : imagePath} alt="" />
                 <Checkbox id={`${bookmarkId}-multi-select`} handleClick={this.handleMultiSelect} classes="multi-select-checkbox" />
 				<DropMenu id={bookmarkId} isWrapped>
 					<div handleClick={this.openInfo}>Info</div>

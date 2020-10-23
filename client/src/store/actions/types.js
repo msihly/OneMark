@@ -1,3 +1,6 @@
+/* RESET STATE */
+export const RESET = "RESET";
+
 /* ACCOUNT */
 export const ACCOUNT_RETRIEVED = "ACCOUNT_RETRIEVED";
 export const ACCOUNT_UPDATED = "ACCOUNT_UPDATED";

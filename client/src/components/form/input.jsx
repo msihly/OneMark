@@ -53,7 +53,8 @@ class Input extends Component {
     }
 
     render() {
-        const [{ isRow, isTransparent, value, type, name, classes, label, title, placeholder, hasErrorCheck, isRequired, isDisabled }, { hasError, errorDesc }] = [this.props, this.state];
+        const { hasError, errorDesc } = this.state;
+        const { isRow, isTransparent, value, type, name, classes, label, title, placeholder, hasErrorCheck, isRequired, isDisabled, hasAutoComplete } = this.props;
         return (
             <React.Fragment>
                 <ConditionalWrap condition={isRow} wrap={children => <div className="row">{children}</div>}>
@@ -67,7 +68,7 @@ class Input extends Component {
                             <label className={`error-label${hasError ? "" : " invisible"}`}>{errorDesc}</label>
                         ) : null }
                         <input onInput={this.handleInput} value={value ?? null} type={type} name={name ?? null} className={`${classes ?? ""}${isTransparent ? " t-input" : ""}`}
-                            placeholder={placeholder ?? null} required={isRequired ?? null} disabled={isDisabled ?? null} />
+                            placeholder={placeholder ?? null} required={isRequired ?? null} disabled={isDisabled ?? null} autoComplete={hasAutoComplete ?? "off"} />
                         { hasErrorCheck && !isTransparent ? (
                             <label className={`error-label${hasError ? "" : " invisible"}`}>{errorDesc}</label>
                         ) : hasErrorCheck && isTransparent ? (

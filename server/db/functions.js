@@ -208,7 +208,7 @@ exports.getImagePath = async (imageId) => {
 }
 
 exports.lookupImageHash = async (imageHash) => {
-    let sql = `SELECT      i.ImageID AS imageId, i.ImagePath AS imagePath
+    let sql = `SELECT      i.ImageID AS imageId, i.ImagePath AS imagePath, i.ImageSize AS imageSize
                 FROM        Images AS i
                 WHERE       i.ImageHash = ?;`;
     let [rows, fields] = await conn.query(sql, [imageHash]);

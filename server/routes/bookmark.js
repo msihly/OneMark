@@ -2,7 +2,7 @@ try {
     const db = require("../db/functions.js");
     const app = require("../index.js").app;
     const { uploadFile } = require("../db/upload.js");
-    const { $try, getArrayDiff, getIsoDate, handleErrors, validateBookmark, validateSession } = require("../utils");
+    const { getArrayDiff, getIsoDate, handleErrors, validateBookmark, validateSession } = require("../utils");
 
     app.get("/api/bookmarks", handleErrors(async (req, res) => {
         validateSession(req);
@@ -57,25 +57,22 @@ try {
         tags = JSON.parse(tags);
         if (!validateBookmark(res, title, pageUrl)) { throw new Error("Invalid bookmark"); }
 
-        const bookmark = await db.getBookmark(bookmarkId);
+        const curBookmark = await db.getBookmark(bookmarkId);
         const curTags = await db.getAllBookmarkTags(bookmarkId);
-        let { imageId, imagePath: curImagePath, imageSize, title: curTitle, pageUrl: curPageUrl, dateCreated } = bookmark;
+        let { imageId, imagePath, imagePath: curImagePath, imageSize, title: curTitle, pageUrl: curPageUrl, dateCreated } = curBookmark;
 
-        const hasDiffs = (title == curTitle && pageUrl == curPageUrl && getArrayDiff(tags, curTags).length === 0);
-        if (hasDiffs && req.files.length === 0 && isImageRemoved == "false") { throw new Error("No changes made"); }
+        const hasNoDiffs = (title == curTitle && pageUrl == curPageUrl && getArrayDiff(tags, curTags).length === 0);
+        if (hasNoDiffs && req.files.length === 0 && isImageRemoved === "false") { throw new Error("No changes made"); }
 
-        let imagePath;
         if (req.files.length > 0) {
             let uploadResult = await uploadFile(req.files);
             if (!uploadResult.success) { throw new Error(uploadResult.errors); }
             ({ imageId, imagePath, imageSize } = uploadResult);
-        } else if (isImageRemoved == "true") {
-            [imageId, imagePath, imageSize] = [2, "../media/no-image.svg", 0];
-        } else {
-            imagePath = curImagePath;
+        } else if (isImageRemoved === "true") {
+            [imageId, imagePath, imageSize] = [2, "none", 0];
         }
 
-        if (hasDiffs && imagePath === curImagePath) { throw new Error("No changes made"); }
+        if (hasNoDiffs && imagePath === curImagePath) { throw new Error("No changes made"); }
 
         let dateModified = await db.editBookmark(bookmarkId, req.session.uid, title, pageUrl, imageId, tags);
         return res.send({ success: true, bookmark: { bookmarkId, title, pageUrl, imagePath, imageSize, dateCreated, dateModified, tags } });

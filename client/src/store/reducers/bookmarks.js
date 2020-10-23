@@ -51,6 +51,8 @@ const bookmark = (state = [], action) => {
         } case types.BOOKMARK_VIEWED: {
             const { bookmarkId } = action.payload;
             return state.map(bookmark => bookmark.bookmarkId === bookmarkId ? { ...bookmark, views: +bookmark.views + 1 } : bookmark);
+        } case types.RESET: {
+            return [];
         } default: {
             return state;
         }

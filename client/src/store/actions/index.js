@@ -2,6 +2,13 @@ import * as types from "./types";
 import { toast } from "react-toastify";
 import { getLocalDate } from "../../utils";
 import Auth from "../../utils/auth";
+import * as Media from "../../media";
+
+/******************** RESET STATE ********************/
+export const stateReset = () => ({
+    type: types.RESET,
+    payload: {}
+});
 
 /******************** ACCOUNT ********************/
 export const getAccount = () => async (dispatch) => {
@@ -95,7 +102,13 @@ export const createBookmark = (formData) => async (dispatch) => {
     try {
         let res = await(await fetch("/api/bookmark", { method: "POST", body: formData })).json();
         if (!res.success) { throw new Error(res.message); }
-        await dispatch(bookmarkCreated({ ...res.bookmark, dateCreated: getLocalDate(res.bookmark.dateCreated), dateModified: getLocalDate(res.bookmark.dateModified) }));
+        const { bookmark, bookmark: { dateCreated, dateModified, imagePath } } = res;
+        await dispatch(bookmarkCreated({
+            ...bookmark,
+            dateCreated: getLocalDate(dateCreated),
+            dateModified: getLocalDate(dateModified),
+            imagePath: imagePath === "none" ? Media.NoImage : imagePath
+        }));
         toast.success("Bookmark created");
         return true;
     } catch (e) {
@@ -134,7 +147,12 @@ export const editBookmark = (formData) => async (dispatch) => {
     try {
         let res = await (await fetch(`/api/bookmark/${formData.get("bookmarkId")}`, { method: "PUT", body: formData })).json();
         if (!res.success) { throw new Error(res.message); };
-        await dispatch(bookmarkEdited({ ...res.bookmark, dateModified: getLocalDate(res.bookmark.dateModified) }));
+        const { bookmark, bookmark: { dateModified, imagePath } } = res;
+        await dispatch(bookmarkEdited({
+            ...bookmark,
+            dateModified: getLocalDate(dateModified),
+            imagePath: imagePath === "none" ? Media.NoImage : imagePath
+        }));
         toast.success("Bookmark edited");
         return true;
     } catch (e) {
@@ -160,13 +178,14 @@ export const getBookmarks = () => async (dispatch) => {
     try {
         let res = await (await fetch("/api/bookmarks", { method: "GET" })).json();
         if (!res.success) { throw new Error(res.message); };
-        let bookmarks = res.bookmarks.map(bookmark => { return {
-            ...bookmark,
-            dateCreated: getLocalDate(bookmark.dateCreated),
-            dateModified: getLocalDate(bookmark.dateModified),
+        const bookmarks = res.bookmarks.map(bk => ({
+            ...bk,
+            dateCreated: getLocalDate(bk.dateCreated),
+            dateModified: getLocalDate(bk.dateModified),
+            imagePath: bk.imagePath === "none" ? Media.NoImage : bk.imagePath,
             isDisplayed: true,
             isSelected: false
-        } });
+        }));
 
         await dispatch(bookmarksRetrieved(bookmarks));
         dispatch(bookmarksSorted());

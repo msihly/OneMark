@@ -59,9 +59,7 @@
         color: $white-3;
         animation: animateZoom 0.6s;
 
-        @media #{$media-750-w} {
-            max-width: 485px;
-        }
+        @media #{$media-750-w} { max-width: 485px; }
 
         @media #{$media-500-wh} {
             max-width: 98vw;
