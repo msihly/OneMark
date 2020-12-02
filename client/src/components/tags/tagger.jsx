@@ -27,7 +27,7 @@ class Tagger extends Component {
         const { bookmarks } = this.props;
         return (
             <div className="tagger">
-                <Form handleSubmit={this.handleSubmit} submitText="Edit Tags" submitClasses="btn-hollow submit">
+                <Form onSubmit={this.handleSubmit} submitText="Edit Tags" submitClasses="btn-hollow submit">
                     <div className="column a-center">
                         <h3>Current Tags</h3>
                         <TagList tags={bookmarks.flatMap(bookmark => bookmark.tags)} />

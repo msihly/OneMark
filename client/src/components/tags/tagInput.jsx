@@ -72,7 +72,7 @@ class TagInput extends Component {
         return (
             <div className="column">
                 <div className="row">
-                    <input onInput={this.handleSearch} value={value} type="text" placeholder="Tags" className="placeholder tag-search" />
+                    <input onChange={this.handleSearch} value={value} type="text" placeholder="Tags" className="placeholder tag-search" />
                     <span onClick={this.handleButtonClick} className={`tag-search-btn ${buttonClass}`}></span>
                 </div>
                 <div className="tags">{displayedTags && displayedTags.map((tag, idx) => <Tag key={idx} value={tag} handleRemoval={this.removeTag} />)}</div>

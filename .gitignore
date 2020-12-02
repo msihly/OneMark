@@ -20,5 +20,5 @@ npm-debug.log*
 *.psd
 *.ai
 *.db
-client/src/media/components
+_components/
 sql/

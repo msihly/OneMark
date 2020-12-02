@@ -1,37 +1,45 @@
-import React, { Component } from "react";
+import React, { Children, cloneElement, useEffect, useState } from "react";
 
-class Tabs extends Component {
-    state = { activeTab: 0 }
+export const Tab = ({ index, isActive, label, switchTab }) => (
+    <div onClick={() => switchTab(index)} className={`tab-button${isActive ? " active" : ""}`}>
+        {label}
+    </div>
+);
 
-    switchTab = (index) => this.setState({activeTab: index});
+export const Tabs = ({ children, containerClasses, initTab, isColumnar, tabClasses }) => {
+    children = Children.toArray(children);
 
-    render() {
-        const [{ children }, { activeTab }] = [this.props, this.state];
-        return (
-            <React.Fragment>
-                <div className="tab-buttons">
-                    {children && children.map((child, idx) => <Tab switchTab={this.switchTab} index={idx} activeTab={activeTab} label={child.props.label} /> )}
-                </div>
-                <div className="tab-content">
-                    { children && children[activeTab].props.children }
-                </div>
-            </React.Fragment>
-        );
-    }
-}
+    const [activeTab, setActiveTab] = useState(0);
 
-class Tab extends Component {
-    handleClick = () => {
-        const { index, switchTab } = this.props;
-        switchTab(index);
-    }
+    const activeChild = children ? children[activeTab]?.props : null;
 
-    render() {
-        const { label, activeTab, index } = this.props;
-        return (
-            <div onClick={this.handleClick} className={`tab-button${activeTab === index ? " active" : ""}`}>{label}</div>
-        );
-    }
-}
+    const getTabClasses = () => {
+        let className = "tab-content";
+        if (activeChild.className) className += ` ${activeChild.className}`;
+        if (tabClasses) className += ` ${tabClasses}`;
+        return className;
+    };
 
-export default Tabs;
+    useEffect(() => {
+        if (initTab !== undefined && initTab !== null) setActiveTab(initTab);
+    }, [initTab]);
+
+    return (
+        <div className={`${containerClasses ?? ""}${isColumnar ? " row" : " column"}`}>
+            <div className={`tab-buttons${isColumnar ? " column" : " row"}`}>
+                {children && Children.map(children, (child, index) =>
+                    cloneElement(child, {
+                        key: index,
+                        index: child.props?.index ?? index,
+                        isActive: activeTab === index,
+                        label: child.props.label,
+                        switchTab: setActiveTab,
+                    })
+                )}
+            </div>
+            <div className={getTabClasses()}>
+                {activeChild && activeChild.children}
+            </div>
+        </div>
+    );
+};

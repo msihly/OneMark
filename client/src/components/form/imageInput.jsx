@@ -67,7 +67,7 @@ class ImageInput extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
     value: Object(state.inputs.find(input => input.id === ownProps.id)).value,
-    isImageRemoved: Object(state.inputs.find(input => input.id === ownProps.id)).isImageRemoved,
+    isImageRemoved: Object(state.inputs.find(input => input.id === ownProps.id)).isImageRemoved ?? false,
 });
 
 const mapDispatchToProps = dispatch => ({

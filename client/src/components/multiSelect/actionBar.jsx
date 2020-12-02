@@ -28,7 +28,7 @@ class MultiSelectBar extends Component {
                     <div className="multi-select-bar">
                         <MultiSelectButton handleClick={this.openTagEditor} icon={Media.MultiTags} text="Edit Tags" />
                         { isTaggerOpen ? (
-                            <Modal id="tagger" classes={`pad-ctn-1${isTaggerOpen ? "" : " hidden"}`} hasHeader>
+                            <Modal id="tagger" classes={`pad-ctn-1${isTaggerOpen ? "" : " hidden"}`} hasHeader hasBackdrop>
                                 <Tagger bookmarks={bookmarks} />
                             </Modal>
                         ) : null}

@@ -1,32 +1,79 @@
 .tab {
     &-buttons {
         align-self: flex-start;
-        min-width: fit-content;
-        height: 100%;
-        border-right: 1px solid #222;
         box-sizing: border-box;
+
+        &.column { height: 100%; }
+
+        &.row {
+            width: 100%;
+            overflow-x: auto;
+
+            &::before, &::after {
+                content: "";
+                flex: 1;
+            }
+        }
     }
 
     &-button {
-        padding: 1rem;
+        padding: 1em;
         border: 3px solid transparent;
         font-weight: 400;
-        color: $white-3;
+        color: var(--text-color);
+        text-align: center;
+        white-space: nowrap;
         cursor: pointer;
+        user-select: none;
         transition: all 0.2s ease-in-out;
 
-        &:hover {
-            background-color: #272727;
+        &:hover { background-color: var(--foreground-color-highlight); }
+
+        @media #{$media-500-wh} {
+            padding: 0.5em;
         }
 
         &.active {
-            border-left-color: $blue-2;
+            @media #{$media-500-wh} { max-width: fit-content; }
+
+            .column > & { border-left-color: var(--accent-color); }
+
+            .row > & { border-bottom-color: var(--accent-color); }
         }
     }
 
     &-content {
+        display: flex;
+        flex-direction: column;
         align-self: flex-start;
         width: inherit;
-        padding: 1rem;
+        overflow: auto;
     }
+}
+
+.side-scroller {
+    scroll-behavior: smooth;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar { display: none; }
+}
+
+.scroll {
+    &-left, &-right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        margin: auto 0.5rem;
+        padding: 0.4rem;
+        width: 0.7rem;
+        height: 0.7rem;
+        background-color: var(--accent-color);
+        fill: var(--accent-fill-color);
+        cursor: pointer;
+
+        &:hover { background-color: var(--accent-color-highlight); }
+    }
+
+    &-left { transform: rotate(180deg); }
 }

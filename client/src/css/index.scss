@@ -6,11 +6,10 @@
 @include font("Roboto", 500);
 @include font("Roboto", 700);
 
-// COMPONENTS
-@import "./components/scrollbar";
+// COMMON
+@import "./common/index";
 
 // VIEWS
-@import "./common";
 @import "./views/login";
 @import "./views/home";
 @import "./views/policy";

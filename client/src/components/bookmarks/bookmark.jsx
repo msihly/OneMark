@@ -1,92 +1,63 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import { connect } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
 import { DropMenu, Modal } from "../popovers";
-import { Editor, Info } from "./";
+import { Editor, Info } from ".";
 import { Checkbox } from "../form";
 import * as Media from "../../media";
 
-class Bookmark extends Component {
-    state = { lazy: true };
+const Bookmark = ({ bookmark, bookmark: { bookmarkId, isDisplayed, imagePath, pageUrl, title } }) => {
+    const dispatch = useDispatch();
 
-    componentDidMount() {
+    const isEditorOpen = useSelector(state => state.modals.find(modal => modal.id === `${bookmarkId}-edit`)?.isOpen ?? false);
+    const isInfoOpen = useSelector(state => state.modals.find(modal => modal.id === `${bookmarkId}-info`)?.isOpen ?? false);
+
+    const [isLazy, setIsLazy] = useState(true);
+
+    const bookmarkRef = useRef(null);
+
+    const openBookmark = () => {
+        window.open(pageUrl);
+        dispatch(actions.bookmarkViewed(bookmarkId));
+    };
+
+    useEffect(() => {
         const lazyObserver = new IntersectionObserver(entries => {
             entries.forEach(e => {
                 if (e.isIntersecting) {
-                    this.setState({ lazy: false });
+                    setIsLazy(false);
                     lazyObserver.disconnect();
                 }
             });
         }, { root: document.querySelector(".bookmark-container"), rootMargin: "200px" });
-        lazyObserver.observe(ReactDOM.findDOMNode(this));
-    }
 
-    handleMouseDown = (event) => { if (event.button === 1) { this.openBookmark(); } }
+        lazyObserver.observe(bookmarkRef.current);
+    }, [bookmarkRef]);
 
-    handleMultiSelect = () => {
-        const { bookmark: { bookmarkId }, selectBookmark } = this.props;
-        selectBookmark(bookmarkId);
-    }
+    return (
+        <figure ref={bookmarkRef} className={`bookmark${isDisplayed ? "" : " hidden"}`} onClick={openBookmark}
+            onMouseDown={event => event.button === 1 && openBookmark()}>
+            <figcaption className="title">{title}</figcaption>
+            <img className="image" src={isLazy ? Media.Loading : imagePath} alt="" />
+            <Checkbox id={`${bookmarkId}-multi-select`} classes="multi-select-checkbox"
+                handleClick={() => dispatch(actions.bookmarkSelected(bookmarkId))} />
+            <DropMenu id={bookmarkId} isWrapped>
+                <div onClick={() => dispatch(actions.modalOpened(`${bookmarkId}-info`))}>Info</div>
+                <div onClick={() => dispatch(actions.modalOpened(`${bookmarkId}-edit`))}>Edit</div>
+                <div onClick={() => dispatch(actions.deleteBookmark(bookmark))}>Delete</div>
+            </DropMenu>
+            {isEditorOpen && (
+                <Modal id={`${bookmarkId}-edit`} classes={`pad-ctn-2${isEditorOpen ? "" : " hidden"}`} hasHeader hasBackdrop>
+                    <Editor id={bookmarkId} bookmark={bookmark} />
+                </Modal>
+            )}
+            {isInfoOpen && (
+                <Modal id={`${bookmarkId}-info`} classes={`pad-ctn-1${isInfoOpen ? "" : " hidden"}`} hasBackdrop>
+                    <Info bookmark={bookmark} />
+                </Modal>
+            )}
+        </figure>
+    );
+};
 
-    openBookmark = () => {
-        const { bookmark: { bookmarkId, pageUrl }, addView } = this.props;
-        window.open(pageUrl);
-        addView(bookmarkId);
-    }
-
-    removeBookmark = () => {
-        const { bookmark, deleteBookmark } = this.props;
-        deleteBookmark(bookmark);
-    }
-
-    openEditor = () => {
-        const { bookmark: { bookmarkId }, openModal } = this.props;
-        openModal(`${bookmarkId}-edit`);
-    }
-
-    openInfo = () => {
-        const { bookmark: { bookmarkId }, openModal } = this.props;
-        openModal(`${bookmarkId}-info`);
-    }
-
-	render() {
-		const { bookmark, bookmark: { bookmarkId, isDisplayed, imagePath, title }, isEditorOpen, isInfoOpen } = this.props;
-		return (
-			<figure onClick={this.openBookmark} onMouseDown={this.handleMouseDown} className={`bookmark${isDisplayed ? "" : " hidden"}`}>
-				<figcaption className="title">{title}</figcaption>
-				<img className="image" src={this.state.lazy ? Media.Loading : imagePath} alt="" />
-                <Checkbox id={`${bookmarkId}-multi-select`} handleClick={this.handleMultiSelect} classes="multi-select-checkbox" />
-				<DropMenu id={bookmarkId} isWrapped>
-					<div handleClick={this.openInfo}>Info</div>
-					<div handleClick={this.openEditor}>Edit</div>
-					<div handleClick={this.removeBookmark}>Delete</div>
-				</DropMenu>
-				{isEditorOpen ? (
-					<Modal id={`${bookmarkId}-edit`} classes={`pad-ctn-2${isEditorOpen ? "" : " hidden"}`} hasHeader>
-                        <Editor id={bookmarkId} bookmark={bookmark} />
-					</Modal>
-				) : null}
-                {isInfoOpen ? (
-                    <Modal id={`${bookmarkId}-info`} classes={`pad-ctn-1${isInfoOpen ? "" : " hidden"}`}>
-                        <Info bookmark={bookmark} />
-                    </Modal>
-                ) : null}
-			</figure>
-		);
-	}
-}
-
-const mapStateToProps = (state, ownProps) => ({
-    isEditorOpen: Object(state.modals.find(modal => modal.id === `${ownProps.bookmark.bookmarkId}-edit`)).isOpen ?? false,
-    isInfoOpen: Object(state.modals.find(modal => modal.id === `${ownProps.bookmark.bookmarkId}-info`)).isOpen ?? false,
-});
-
-const mapDispatchToProps = dispatch => ({
-    addView: bookmarkId => dispatch(actions.viewBookmark(bookmarkId)),
-    deleteBookmark: bookmark => dispatch(actions.deleteBookmark(bookmark)),
-    openModal: id => dispatch(actions.modalOpened(id)),
-    selectBookmark: bookmarkId => dispatch(actions.bookmarkSelected(bookmarkId)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Bookmark);
+export default Bookmark;

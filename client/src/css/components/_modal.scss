@@ -52,9 +52,8 @@
         max-width: 700px;
         max-height: 98vh;
         margin: 1em auto;
-        border: 2px solid $black-2;
         border-radius: 6px;
-        box-shadow: 2px 2px 16px 0px rgba(black, 0.8);
+        box-shadow: 2px 2px 16px 0px black;
         background-color: $black-1;
         color: $white-3;
         animation: animateZoom 0.6s;

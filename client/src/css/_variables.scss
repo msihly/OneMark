@@ -17,6 +17,7 @@ $blue-1: rgb(40, 70, 150);
 $blue-2: rgb(20, 90, 170);
 $blue-3: rgb(0, 115, 190);
 $blue-2-svg: invert(26%) sepia(90%) saturate(1460%) hue-rotate(196deg) brightness(85%) contrast(93%);
+$blue-gradient: linear-gradient(to top, rgb(20 110 200), rgb(40 145 180));
 
 $green-1: rgb(10, 130, 10);
 $green-2: rgb(40, 160, 40);
@@ -50,18 +51,20 @@ $symbol-arrow-down: "\2191";
 $symbol-arrow-up: "\2193";
 
 // THEME
-$theme-color: $blue-3;
-$theme-image-panel: url("../../media/panel-white-mountain.jpg");
-$theme-image-wrapper: url("../../media/purple-mountain.jpg");
+$theme-color: #{$blue-2};
+$theme-gradient: #{$blue-gradient};
 
-.light {
-    --foreground-color: black;
-    --background-color: #eee;
-}
-
-.dark {
-    --foreground-color: #eee;
-    --background-color: black;
+:root {
+    --accent-color: #{$blue-2};
+    --accent-color-highlight: #{$blue-3};
+    --accent-fill-color: #{$white-3};
+    --accent-fill-color-highlight: white;
+    --background-color: #{$black-1};
+    --background-color-highlight: #{$black-2};
+    --foreground-color: #{$black-2};
+    --foreground-color-highlight:#{$black-3};
+    --text-color: #{$white-3};
+    --text-color-highlight: white;
 }
 
 // MEDIA QUERIES

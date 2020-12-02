@@ -1,97 +1,128 @@
 @use "../variables" as *;
 
-.login, #portal-root {
-    background-color: black;
+.login {
+    --background-color: #{$black-1};
+    --foreground-color: #{$black-3};
+    --text-color: #{$white-3};
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    background-image: url("../../media/login-bg.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: var(--background-color);
+    color: var(--text-color);
     overflow: hidden;
 
-    .lg-background {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        left: 0;
-        background-image: $theme-image-wrapper;
-        background-position: center;
-        overflow: hidden;
+    &-wrapper {
+        border-radius: 0.5rem;
+        max-width: 20rem;
+        width: 100%;
+        background-color: rgba(black, 0.9);
+        color: white;
+        box-shadow: 0 0 10px 4px rgba($black-1, 0.5);
     }
 
-    .lg {
+    &-panel {
         display: flex;
-        width: 856px;
-        height: 690px;
-        background: white;
-        box-shadow: 0 50px 65px 0 rgba(black, 0.35);
-
-        @media #{$media-900-w} {
-            width: 753px;
-            height: 607px;
-        }
-
-        @media #{$media-750-w} {
-            width: 100%;
-            height: 100%;
-        }
-
-        &-wrapper {
-            position: absolute;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(3px);
-            box-sizing: border-box;
-            transition: 0.3s all;
-
-            @media #{$media-750-w} {
-                align-items: flex-end;
-            }
-        }
-
-        &-panel {
-            &-image {
-                order: 0;
-                width: 416px;
-                height: 100%;
-                background-color: $black-1;
-                background-image: $theme-image-panel;
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;
-                overflow: hidden;
-                box-sizing: border-box;
-                transition: 0.3s all;
-
-                @media #{$media-750-w} {
-                    display: none;
-                }
-            }
-
-            &-form {
-                order: 1;
-                width: 440px;
-                margin-top: 2rem;
-                box-sizing: border-box;
-                transition: 0.2s all;
-
-                @media #{$media-900-w} {
-                    margin-top: 0.5rem;
-                }
-
-                @media #{$media-750-w} {
-                    margin-top: 0;
-                }
-
-                @media #{$media-650-h} {
-                    padding: 2rem;
-                }
-            }
-        }
-
-        &-text {
-            font-size: 14px;
-            font-weight: 500;
-            color: #333;
-        }
+        flex-direction: column;
+        align-items: center;
     }
+
+    &-form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 1.5rem;
+    }
+
+    button {
+        border-radius: 0.4rem;
+        background: $theme-gradient;
+
+        &:hover { filter: brightness(1.2); }
+    }
+
+    // .lg {
+    //     display: flex;
+    //     width: 856px;
+    //     height: 690px;
+    //     background: white;
+    //     box-shadow: 0 50px 65px 0 rgba(black, 0.35);
+
+    //     @media #{$media-900-w} {
+    //         width: 753px;
+    //         height: 607px;
+    //     }
+
+    //     @media #{$media-750-w} {
+    //         width: 100%;
+    //         height: 100%;
+    //     }
+
+    //     &-background {
+    //         position: absolute;
+    //         top: 0;
+    //         bottom: 0;
+    //         right: 0;
+    //         left: 0;
+    //         background-image: $theme-image-wrapper;
+    //         background-position: center;
+    //         overflow: hidden;
+    //     }
+
+    //     &-wrapper {
+    //         position: absolute;
+    //         display: flex;
+    //         justify-content: center;
+    //         align-items: center;
+    //         width: 100%;
+    //         height: 100%;
+    //         backdrop-filter: blur(3px);
+    //         box-sizing: border-box;
+    //         transition: 0.3s all;
+
+    //         @media #{$media-750-w} { align-items: flex-end; }
+    //     }
+
+    //     &-panel {
+    //         &-image {
+    //             order: 0;
+    //             width: 416px;
+    //             height: 100%;
+    //             background-color: $black-1;
+    //             background-image: $theme-image-panel;
+    //             background-size: cover;
+    //             background-position: center;
+    //             background-repeat: no-repeat;
+    //             overflow: hidden;
+    //             box-sizing: border-box;
+    //             transition: 0.3s all;
+
+    //             @media #{$media-750-w} { display: none; }
+    //         }
+
+    //         &-form {
+    //             order: 1;
+    //             width: 440px;
+    //             margin-top: 2rem;
+    //             box-sizing: border-box;
+    //             transition: 0.2s all;
+
+    //             @media #{$media-900-w} { margin-top: 0.5rem; }
+
+    //             @media #{$media-750-w} { margin-top: 0; }
+
+    //             @media #{$media-650-h} { padding: 2rem; }
+    //         }
+    //     }
+
+    //     &-text {
+    //         font-size: 14px;
+    //         font-weight: 500;
+    //         color: #333;
+    //     }
+    // }
 }

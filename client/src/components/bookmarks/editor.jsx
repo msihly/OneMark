@@ -36,14 +36,12 @@ class Editor extends Component {
                     <img className="image" src={imageUrl ? (imageUrl !== "none" && imageUrl) : Media.NoImage} alt="" />
                     <figcaption className="title">{title || "No Title"}</figcaption>
                 </figure>
-                <Form handleSubmit={this.handleSubmit} submitText="SUBMIT" submitClasses="btn-hollow submit">
+                <Form onSubmit={this.handleSubmit} submitText="Submit" submitClasses="submit">
                     <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={bookmark.imagePath ? (bookmark.imagePath !== "none" && bookmark.imagePath) : Media.NoImage} />
                     <div className="row mg-2 mobile">
                         <div className="column full-width">
-                            <Input id={`${id}-pageUrl`} initValue={bookmark.pageUrl ?? ""} type="text" placeholder="Enter URL"
-                                name="pageUrl" label="Link" isRow hasErrorCheck isRequired />
-                            <Input id={`${id}-title`} initValue={bookmark.title ?? ""} type="text" placeholder="Enter Title"
-                                name="title" label="Title" isRow hasErrorCheck isRequired />
+                            <Input id={`${id}-pageUrl`} initValue={bookmark.pageUrl ?? ""} type="text" placeholder="Enter URL" name="pageUrl" label="Link" isRow hasErrorCheck isRequired />
+                            <Input id={`${id}-title`} initValue={bookmark.title ?? ""} type="text" placeholder="Enter Title" name="title" label="Title" isRow hasErrorCheck isRequired />
                         </div>
                         <TagInput id={`${id}-tags`} initValue={bookmark.tags ?? []} name="tags" />
                     </div>

@@ -1,21 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 
-class Form extends Component {
-    handleSubmit = (event) => {
+const Form = ({ children, classes, onSubmit, submitText, submitClasses }) => {
+    const handleSubmit = event => {
         event.preventDefault();
-        const [{ handleSubmit }, formData] = [this.props, new FormData(event.target)];
-        handleSubmit(formData);
-    }
+        onSubmit(new FormData(event.target));
+    };
 
-    render() {
-        const { children, submitText, submitClasses } = this.props;
-        return (
-            <form onSubmit={this.handleSubmit} enctype="multipart/form-data">
-                {children}
-                <button className={`${submitClasses ?? "btn-hollow"}`} type="submit">{submitText}</button>
-            </form>
-        );
-    }
-}
+    return (
+        <form className={classes ?? null} onSubmit={handleSubmit} encType="multipart/form-data">
+            {children}
+            <button type="submit" className={submitClasses ?? null}>{submitText}</button>
+        </form>
+    );
+};
 
 export default Form;

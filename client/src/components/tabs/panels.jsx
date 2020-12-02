@@ -1,36 +1,33 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Fragment, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
 
-class Panels extends Component {
-    componentDidMount = () => {
-        const { id, initValue, createPanel } = this.props;
-        createPanel(id, initValue ?? 0);
-    }
+export const Panel = ({ children, ...props }) => <div {...props}>{children}</div>;
 
-    componentWillUnmount = () => {
-        const { id, deletePanel } = this.props;
-        deletePanel(id);
-    }
+export const PanelContainer = ({ children, id, initValue = 0 }) => {
+    const dispatch = useDispatch();
 
-    render() {
-        const { children, activePanel } = this.props;
-        return (
-            <React.Fragment>
-                { children && children[activePanel] }
-            </React.Fragment>
-        );
-    }
-}
+    const activePanel = useSelector(state => state.panels.find(panel => panel.id === id)?.value);
 
-const mapStateToProps = (state, ownProps) => ({
-    activePanel: Object(state.panels.find(panel => panel.id === ownProps.id)).value,
-});
+    useEffect(() => {
+        dispatch(actions.panelCreated(id, initValue));
 
-const mapDispatchToProps = dispatch => ({
-    createPanel: (id, value) => dispatch(actions.panelCreated(id, value)),
-    updatePanel: (id, value) => dispatch(actions.panelUpdated(id, value)),
-    deletePanel: id => dispatch(actions.panelDeleted(id)),
-});
+        return () => dispatch(actions.panelDeleted(id));
+    }, [dispatch, id, initValue]);
 
-export default connect(mapStateToProps, mapDispatchToProps)(Panels);
+    return (
+        <Fragment>
+            {children && children[activePanel]}
+        </Fragment>
+    );
+};
+
+export const PanelSwitch = ({ children, classes, panelIndex, parent }) => {
+    const dispatch = useDispatch();
+
+    return (
+        <span className={classes ?? "text-btn"} onClick={() => dispatch(actions.panelUpdated(parent, panelIndex))}>
+            {children}
+        </span>
+    );
+};

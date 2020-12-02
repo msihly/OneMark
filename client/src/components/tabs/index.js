@@ -1,3 +1,2 @@
-export { default as PanelButton } from "./panelButton";
-export { default as Panels } from "./panels";
-export { default as Tabs } from "./tabs";
+export { Panel, PanelContainer, PanelSwitch } from "./panels";
+export { Tab, Tabs } from "./tabs";

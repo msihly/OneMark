@@ -10,6 +10,12 @@
 &nbsp;
 
 # Changelog
+## Version 2.10 &nbsp;-&nbsp; (2020-12-02)
+* Redesigned login page
+* Started refactoring components to React Hooks
+    * Fixed old warnings / bugs relating to deprecation
+* Updated SCSS structuring and some design elements
+
 ## Version 2.09 &nbsp;-&nbsp; (2020-10-22)
 * Updated `TagInput` to clear input field after adding / deleting entered tag
 * Fixed bookmark advanced search algorithim not properly forming regexes and conditionals when toggling `"Match all terms"` option

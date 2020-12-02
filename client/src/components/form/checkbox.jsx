@@ -1,50 +1,34 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
 
-class Checkbox extends Component {
-    constructor(props) {
-        super(props);
-        const { id, initValue, createCheckbox } = this.props;
-        createCheckbox(id, initValue);
-    }
+const Checkbox = ({ classes, handleClick, id, initValue, inputName, option, text}) => {
+    const dispatch = useDispatch();
 
-    componentWillUnmount() {
-        const { id, deleteCheckbox } = this.props;
-        deleteCheckbox(id);
-    }
+    const isChecked = useSelector(state => state.inputs.find(input => input.id === id)?.value ?? false);
 
-    toggleCheckbox = (event) => {
+    useEffect(() => {
+        dispatch(actions.inputCreated(id, initValue));
+
+        return () => dispatch(actions.inputDeleted(id));
+    }, [dispatch, id, initValue]);
+
+    const toggleCheckbox = event => {
         event.preventDefault();
         event.stopPropagation();
-        const { id, isChecked, option, handleClick, updateCheckbox } = this.props;
-        updateCheckbox(id, !isChecked);
-        if (handleClick && option) { handleClick(option); }
-        else if (handleClick) { handleClick(!isChecked); }
-    }
 
-    render() {
-        const { classes, inputName, isChecked, text } = this.props;
-        return (
-            <label onClick={this.toggleCheckbox} className={`checkbox-ctn${isChecked ? " checked" : ""} ${classes ?? ""}`}>
-                <input type="checkbox" name={inputName ?? null} checked={isChecked} />
-                <span className="checkbox"></span>
-                {text ? (
-                    <label className="lb-title checkbox-title">{text}</label>
-                ) : null}
-            </label>
-        );
-    }
-}
+        dispatch(actions.inputUpdated(id, !isChecked));
 
-const mapStateToProps = (state, ownProps) => ({
-    isChecked: Object(state.inputs.find(input => input.id === ownProps.id)).value,
-});
+        handleClick && handleClick(option ?? !isChecked);
+    };
 
-const mapDispatchToProps = dispatch => ({
-    createCheckbox: (id, value) => dispatch(actions.inputCreated(id, value)),
-    updateCheckbox: (id, value) => dispatch(actions.inputUpdated(id, value)),
-    deleteCheckbox: (id) => dispatch(actions.inputDeleted(id)),
-});
+    return (
+        <label onClick={toggleCheckbox} className={`checkbox-ctn${isChecked ? " checked" : ""}${classes ? " " + classes : ""}`}>
+            <input type="checkbox" name={inputName ?? null} checked={isChecked} readOnly />
+            <span className="checkbox"></span>
+            {text && <label className="lb-title checkbox-title">{text}</label>}
+        </label>
+    );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Checkbox);
+export default Checkbox;

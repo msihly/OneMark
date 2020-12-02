@@ -1,96 +1,81 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Fragment, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
+import { validate } from "../../utils";
 
-class Input extends Component {
-    state = {
-        hasError: false,
-        errorDesc: "Valid"
-    }
+const ConditionalWrap = ({ condition, wrap, children }) => condition ? wrap(children) : <Fragment>{children}</Fragment>;
 
-    componentDidMount = () => {
-        const { id, initValue, createInput } = this.props;
-        createInput(id, initValue ?? "");
-    }
+const Input = ({ classes, autoComplete, groupClasses, hasErrorCheck, id, isDisabled, initValue, isRequired, isRow, isTransparent, label, name, placeholder, title, type }) => {
+    const dispatch = useDispatch();
 
-    componentWillUnmount = () => {
-        const { id, deleteInput } = this.props;
-        deleteInput(id);
-    }
+    const [hasError, setHasError] = useState(false);
+    const [errorDesc, setErrorDesc] = useState("Valid");
 
-    handleInput = (event) => {
-        const { id, hasErrorCheck, updateInput } = this.props;
-        const ele = event.target;
-        const cursorPos = ele.selectionStart;
-        window.requestAnimationFrame(() => {
-            ele.selectionStart = cursorPos;
-            ele.selectionEnd = cursorPos;
-        });
+    const value = useSelector(state => state.inputs.find(input => input.id === id)?.value ?? null);
 
-        updateInput(id, event.target.value);
-        if (hasErrorCheck) { this.checkError(event.target.value); }
-    }
+    const checkValidity = value => {
+        if (isRequired && !value) return "Field is required";
 
-    checkError = (value) => {
-        const errorDesc = this.checkValidity(value);
-        this.setState({hasError: errorDesc === "Valid" ? false : true, errorDesc});
-    }
-
-    checkValidity = (value) => {
-        const { name, isRequired } = this.props;
-        if (isRequired && !value) { return "Field is required"; }
         switch (name) {
             case "title":
-                if (value.length > 255) { return "Title cannot be more than 255 characters"; }
-                break;
+                return value.length > 255 ? "Title cannot be more than 255 characters" : "Valid";
             case "pageUrl":
-                if (value.length > 2083) { return "Page URL cannot be more than 2083 characters"; }
-                else if (!/^[A-Za-z][A-Za-z\d.+-]*:\/*(?:\w+(?::\w+)?@)?[^\s/]+(?::\d+)?(?:\/[\w#!:.?+=&%@\-/]*)?$/.test(value)) { return "Invalid URL"; }
-                break;
+                return value.length > 2083 ? "Page URL cannot be more than 2083 characters" : !validate("url", value) ? "Invalid URL" : "Valid";
             default:
+                return "Valid";
         }
-        return "Valid";
-    }
+    };
 
-    render() {
-        const { hasError, errorDesc } = this.state;
-        const { isRow, isTransparent, value, type, name, classes, label, title, placeholder, hasErrorCheck, isRequired, isDisabled, hasAutoComplete } = this.props;
-        return (
-            <React.Fragment>
-                <ConditionalWrap condition={isRow} wrap={children => <div className="row">{children}</div>}>
-                    { isRow ? (
-                        <label className="lb-title horizontal" title={title ?? null}>{label}</label>
-                    ) : null }
-                    <div className={`form-group${!hasErrorCheck ? " no-error": ""}${isRow ? " full-width" : ""}${isTransparent ? " rev" : ""}`}>
-                        { !isRow && !isTransparent ? (
-                            <label title={title ?? null}>{label}</label>
-                        ) : !isRow && isTransparent ? (
-                            <label className={`error-label${hasError ? "" : " invisible"}`}>{errorDesc}</label>
-                        ) : null }
-                        <input onInput={this.handleInput} value={value ?? null} type={type} name={name ?? null} className={`${classes ?? ""}${isTransparent ? " t-input" : ""}`}
-                            placeholder={placeholder ?? null} required={isRequired ?? null} disabled={isDisabled ?? null} autoComplete={hasAutoComplete ?? "off"} />
-                        { hasErrorCheck && !isTransparent ? (
-                            <label className={`error-label${hasError ? "" : " invisible"}`}>{errorDesc}</label>
-                        ) : hasErrorCheck && isTransparent ? (
-                            <label className={isTransparent ? "lb-title" : ""} title={title ?? null}>{label}</label>
-                        ) : null }
-                    </div>
-                </ConditionalWrap>
-            </React.Fragment>
-        );
-    }
-}
+    const checkError = value => {
+        const desc = checkValidity(value);
+        setHasError(desc !== "Valid");
+        setErrorDesc(desc);
+    };
 
-const ConditionalWrap = ({ condition, wrap, children }) => ( condition ? wrap(children) : children );
+    const handleInput = event => {
+        const { target, target: { value } } = event;
+        const cursorPos = target.selectionStart;
 
-const mapStateToProps = (state, ownProps) => ({
-    value: Object(state.inputs.find(input => input.id === ownProps.id)).value
-});
+        window.requestAnimationFrame(() => {
+            target.selectionStart = cursorPos;
+            target.selectionEnd = cursorPos;
+        });
 
-const mapDispatchToProps = dispatch => ({
-    createInput: (id, value) => dispatch(actions.inputCreated(id, value)),
-    updateInput: (id, value) => dispatch(actions.inputUpdated(id, value)),
-    deleteInput: (id) => dispatch(actions.inputDeleted(id))
-});
+        dispatch(actions.inputUpdated(id, value));
+        hasErrorCheck && checkError(value);
+    };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Input);
+    const getGroupClasses = () => {
+        let className = "form-group";
+        if (groupClasses) className += " " + groupClasses;
+        if (!hasErrorCheck) className += " no-error";
+        if (isRow) className += " full-width";
+        if (isTransparent) className += " rev";
+        return className;
+    };
+
+    useEffect(() => {
+        dispatch(actions.inputCreated(id, initValue ?? ""));
+
+        return () => dispatch(actions.inputDeleted(id));
+    }, [dispatch, id, initValue]);
+
+    return (
+        <ConditionalWrap condition={isRow} wrap={children => <div className="row">{children}</div>}>
+            {isRow && <label className="lb-title horizontal" title={title ?? null}>{label}</label>}
+            <div className={getGroupClasses()}>
+                {!isRow && (isTransparent
+                    ? hasErrorCheck && <label className={`error-label${hasError ? "" : " invisible"}`}>{errorDesc}</label>
+                    : label && <label title={title ?? null}>{label}</label>)}
+                <input autoComplete={autoComplete ?? "off"} className={`${classes ?? ""}${isTransparent ? " t-input" : ""}`}
+                    disabled={isDisabled ?? null} name={name ?? null} onChange={handleInput} placeholder={placeholder ?? null}
+                    required={isRequired ?? null} type={type} value={value ?? ""} />
+                {hasErrorCheck && (isTransparent
+                    ? label && <label className={isTransparent ? "lb-title" : null} title={title ?? null}>{label}</label>
+                    : <label className={`error-label${hasError ? "" : " invisible"}`}>{errorDesc}</label>)}
+            </div>
+        </ConditionalWrap>
+    );
+};
+
+export default Input;

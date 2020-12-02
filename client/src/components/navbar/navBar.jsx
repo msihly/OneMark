@@ -30,11 +30,11 @@ class NavBar extends Component {
 		return (
 			<nav className="navbar">
 				<div onClick={this.openEditor} className="nav-btn create-bookmark">
-                    { isEditorOpen ? (
-                        <Modal id="bookmark-create" classes={`pad-ctn-2${isEditorOpen ? "" : " hidden"}`} hasHeader>
+                    { isEditorOpen && (
+                        <Modal id="bookmark-create" classes={`pad-ctn-2${isEditorOpen ? "" : " hidden"}`} hasHeader hasBackdrop>
                             <Editor id="bookmark-create" bookmark={{}} />
                         </Modal>
-                    ) : null }
+                    )}
                 </div>
 				<SearchBar hasAdvanced />
 				<NavMenu id="sort-menu" classes="sort-menu">
@@ -50,14 +50,14 @@ class NavBar extends Component {
                     <SortButton type="Image Size" direction="asc" />
                 </NavMenu>
 				<NavMenu id="side-menu" classes="side-menu down-arrow">
-                    <div handleClick={this.openAccount} className="side-menu-btn">ACCOUNT</div>
-                    { isAccountOpen ? (
-                        <Modal id="account" classes="account-modal" hasHeader>
+                    <div onClick={this.openAccount} className="side-menu-btn">ACCOUNT</div>
+                    { isAccountOpen && (
+                        <Modal id="account" classes="account-modal" hasBackdrop>
                             <Account />
                         </Modal>
-                    ) : null }
-                    <div handleClick={this.openPrivacyPolicy} className="side-menu-btn">PRIVACY</div>
-                    <div handleClick={this.logout} className="side-menu-btn">LOGOUT</div>
+                    )}
+                    <div onClick={this.openPrivacyPolicy} className="side-menu-btn">PRIVACY</div>
+                    <div onClick={this.logout} className="side-menu-btn">LOGOUT</div>
                 </NavMenu>
 			</nav>
 		);

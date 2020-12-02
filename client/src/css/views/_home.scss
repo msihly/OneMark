@@ -10,16 +10,4 @@
 
 @import "../components/fileInput";
 @import "../components/navbar";
-@import "../components/modal";
-@import "../components/tabs";
-@import "../components/menu";
 @import "../components/multiSelect";
-
-.account-modal {
-    flex-flow: row;
-    align-items: flex-start;
-    max-width: 600px;
-    max-height: 450px;
-    width: 100%;
-    height: 100%;
-}

@@ -41,15 +41,16 @@
     &-btn, &-name {
         padding: 0.3em 0.5em 0.4em 0.5em;
         height: 0.9em;
+        line-height: 1;
+        font-family: "Roboto";
     }
 
     &-btn {
-        border: 2px solid #ccc;
-        background: none;
-        color: #ccc;
-        font-family: Roboto;
+        border: 2px solid $blue-2;
+        border-radius: 3px;
+        background-color: $blue-2;
+        color: $white-2;
         font-weight: 500;
-        line-height: 1;
         white-space: nowrap;
         cursor: pointer;
         transition: all 0.1s;
@@ -73,7 +74,6 @@
             color: white;
             background-color: $blue-3;
             border-color: $blue-3;
-            border-radius: 3px;
         }
 
         .file-input-name:not(.hidden) + & { border-radius: 3px 0 0 3px; }
@@ -81,14 +81,14 @@
 
     &-name {
         display: inline-block;
+        border: 2px solid $blue-3;
+        border-left: none;
+        border-radius: 0 3px 3px 0;
+        color: $white-2;
         vertical-align: top;
         text-align: center;
         text-overflow: ellipsis;
         white-space: nowrap;
-        color: #ccc;
-        border: 2px solid $blue-3;
-        border-left: none;
-        border-radius: 0 3px 3px 0;
         overflow: hidden;
         transition: all 0.1s;
     }

@@ -19,7 +19,7 @@ class NavMenu extends Component {
                         return !isValidElement(child) ? child : cloneElement(child, { key, onClick: (event) => {
                             event.stopPropagation();
                             closeMenu(id);
-                            child.props.handleClick();
+                            child.props.onClick();
                         } });
                     })}
 				</div>

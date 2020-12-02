@@ -1,64 +1,61 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
-import { Form, Input } from "../form";
-import { Tabs } from "../tabs";
-import Auth from "../../utils/auth";
-import { formatDate } from "../../utils";
 import { toast } from "react-toastify";
+import { Form, Input } from "../form";
+import { Tab, Tabs } from "../tabs";
+import { formatDate } from "../../utils";
+import Auth from "../../utils/auth";
 
-class Account extends Component {
-    handleAccountSubmit = async (formData) => {
-        let success = await this.props.updateAccount(formData);
+const Account = () => {
+    const dispatch = useDispatch();
+
+    const username = useSelector(state => state.account.username);
+    const email = useSelector(state => state.account.email);
+    const dateCreated = useSelector(state => state.account.dateCreated);
+    const accountType = useSelector(state => state.account.accountType);
+
+    const handleAccountSubmit = async (formData) => {
+        const success = await dispatch(actions.accountUpdated(formData));
         success ? toast.success("Account updated") : toast.error("Error updating account");
-    }
+    };
 
-    handlePasswordSubmit = async (formData) => {
-        try {
-            let res = await (await fetch("/api/user/password", { method: "PUT", body: formData })).json();
-            if (!res.success) { Auth.setStatus(false); throw new Error(res.message); };
-            toast.success("Password updated");
-        } catch (e) { toast.error(e.message); }
-    }
+    const handlePasswordSubmit = async (formData) => {
+        const res = await (await fetch("/api/user/password", { method: "PUT", body: formData })).json();
 
-    render() {
-        const { username, email, dateCreated, accountType } = this.props;
-        return (
-            <Tabs>
-                <label label="Account Info">
-                    <Form handleSubmit={this.handleAccountSubmit} submitText="Save Changes">
-                        <div class="row mobile">
-                            <Input id="account-username" type="text" name="username" label="Username" initValue={username} hasErrorCheck isRequired />
-                            <Input id="account-email" type="email" name="email" label="Email" initValue={email} hasErrorCheck isRequired />
-                        </div>
-                        <div class="row mobile">
-                            <Input id="account-date-created" type="text" label="Date Created" title={formatDate(dateCreated, "datetime")}
-                                initValue={formatDate(dateCreated)} isDisabled />
-                            <Input id="account-type" type="text" label="Account Type" initValue={accountType} isDisabled />
-                        </div>
-                    </Form>
-                </label>
-                <label label="Password">
-                    <Form handleSubmit={this.handlePasswordSubmit} submitText="Change Password">
-                        <Input id="account-password-current" type="password" name="currentPassword" classes="med-width" label="Current Password" hasErrorCheck isRequired />
-                        <Input id="account-password-new" type="password" name="newPassword" classes="med-width" label="New Password" hasErrorCheck isRequired />
-                        <Input id="account-password-confirm" type="password" name="passwordConf" classes="med-width" label="Confirm Password" hasErrorCheck isRequired />
-                    </Form>
-                </label>
-            </Tabs>
-        );
-    }
-}
+        if (res.success) toast.success("Password updated");
+        else {
+            toast.error(res.message);
+            Auth.setStatus(false);
+        }
+    };
 
-const mapStateToProps = (state) => ({
-    username: state.account.username,
-    email: state.account.email,
-    dateCreated: state.account.dateCreated,
-    accountType: state.account.accountType,
-});
+    return (
+        <Tabs tabClasses="pad-ctn-1 full-width">
+            <Tab label="Account Info">
+                <Form submitText="Save" classes="center" onSubmit={handleAccountSubmit}>
+                    <Input id="account-username" name="username" label="Username" initValue={username}
+                        type="text" hasErrorCheck isRequired />
+                    <Input id="account-email" name="email" label="Email" initValue={email}
+                        type="email" hasErrorCheck isRequired />
+                    <Input id="account-date-created" label="Date Created" title={formatDate(dateCreated, "datetime")} initValue={formatDate(dateCreated)}
+                        type="text" isDisabled />
+                    <Input id="account-type" type="text" label="Account Type" initValue={accountType}
+                        isDisabled />
+                </Form>
+            </Tab>
+            <Tab label="Password">
+                <Form submitText="Save" classes="center" onSubmit={handlePasswordSubmit}>
+                    <Input id="account-password-current" name="currentPassword" label="Current Password"
+                        type="password" autoComplete="current-password" hasErrorCheck isRequired />
+                    <Input id="account-password-new" name="newPassword" label="New Password"
+                        type="password" autoComplete="new-password" hasErrorCheck isRequired />
+                    <Input id="account-password-confirm" name="passwordConf" label="Confirm Password"
+                        type="password" autoComplete="new-password" hasErrorCheck isRequired />
+                </Form>
+            </Tab>
+        </Tabs>
+    );
+};
 
-const mapDispatchToProps = dispatch => ({
-    updateAccount: (username, email) => dispatch(actions.updateAccount(username, email)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Account);
+export default Account;

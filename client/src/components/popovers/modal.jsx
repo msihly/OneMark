@@ -1,38 +1,32 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React from "react";
+import { useDispatch } from "react-redux";
 import * as actions from "../../store/actions";
 import { Portal } from "./";
 
-class Modal extends Component {
-    close = (event) => {
+const Modal = ({ children, classes, hasHeader, hasBackdrop, id }) => {
+    const dispatch = useDispatch();
+
+    const closeModal = (event) => {
         event.stopPropagation();
-        const { closeModal, id } = this.props;
-        closeModal(id);
-    }
+        dispatch(actions.modalClosed(id));
+    };
 
-    handleClick = (event) => event.stopPropagation();
+    const handleClick = (event) => event.stopPropagation();
 
-    render() {
-        const { children, classes, hasHeader} = this.props;
-        return (
-            <Portal>
-                <div onMouseDown={this.close} onMouseUp={this.handleClick} onClick={this.handleClick} className="modal-container dark">
-                    <div onMouseDown={this.handleClick} onMouseUp={this.handleClick} onClick={this.handleClick} className={`modal-content ${classes ?? ""}`}>
-                        {hasHeader ? (
-                            <div className="modal-header">
-                                <span onClick={this.close} className="close">&times;</span>
-                            </div>
-                        ) : null}
-                        {children}
-                    </div>
+    return (
+        <Portal>
+            <div onMouseDown={closeModal} onMouseUp={handleClick} onClick={handleClick} className={`modal-container${hasBackdrop ? " dark" : ""}`}>
+                <div onMouseDown={handleClick} onMouseUp={handleClick} onClick={handleClick} className={`modal-content ${classes ?? ""}`}>
+                    {hasHeader && (
+                        <div className="modal-header">
+                            <span onClick={closeModal} className="close">&times;</span>
+                        </div>
+                    )}
+                    {children}
                 </div>
-            </Portal>
-        );
-    }
+            </div>
+        </Portal>
+    );
 }
 
-const mapDispatchToProps = dispatch => ({
-	closeModal: id => dispatch(actions.modalClosed(id)),
-});
-
-export default connect(null, mapDispatchToProps)(Modal);
+export default Modal;

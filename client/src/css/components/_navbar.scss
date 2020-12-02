@@ -35,7 +35,7 @@ $nav-padding: 0.5rem;
             max-height: 80vh;
             border-radius: 0 0 8px 8px;
             color: $white-3;
-            background-color: rgba($black-1, 0.85);
+            background-color: rgba(black, 0.85);
             box-shadow: -2px 2px 8px 0 rgba(black, 0.3);
             font-size: 1em;
             font-weight: 500;
@@ -134,7 +134,8 @@ $nav-padding: 0.5rem;
 .sort-menu {
     &::before {
         content: "#{$symbol-arrow-down}#{$symbol-arrow-up}";
-        padding: 0 5px 5px 0;
+        font-family: monospace;
+        margin-right: 0.4rem;
         cursor: pointer;
     }
 
@@ -149,9 +150,9 @@ $nav-padding: 0.5rem;
         > :last-child { padding-left: 1rem; }
 
         &.active {
-            background-color: rgba($black-2, 0.65);
+            background-color: rgba($black-2, 0.85);
 
-            &:hover { background-color: rgba($black-2, 0.8); }
+            &:hover { background-color: rgba($black-3, 0.85); }
         }
     }
 }
@@ -172,16 +173,16 @@ $nav-padding: 0.5rem;
     display: flex;
     justify-content: space-between;
     padding: 0.7rem 1.2rem;
-    width: 100%;
     max-width: -webkit-fill-available;
+    width: 100%;
     white-space: nowrap;
     text-transform: uppercase;
-    cursor: pointer;
     user-select: none;
+    cursor: pointer;
     transition: all 0.2s ease-out;
 
     &:hover {
         color: white;
-        background-color: rgba($black-2, 0.6);
+        background-color: rgba($black-2, 0.85);
     }
 }

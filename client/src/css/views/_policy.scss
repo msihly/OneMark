@@ -1,8 +1,12 @@
 .privacy-policy {
+    --background-color: #{$white-3};
+    --text-color: #{$black-1};
+
     padding: 1rem;
-    background-color: white;
-    font-size: 16px;
+    background-color: var(--background-color);
+    color: var(--text-color);
     font-family: "Roboto", "Open Sans", sans-serif;
+    font-size: 16px;
 
     a {
         color: $blue-3;
