@@ -1,6 +1,6 @@
 {
     "name": "api",
-    "version": "2.10",
+    "version": "1.0.0",
     "author": "Mohamed Sihly",
     "description": "Express backend for OneMark",
     "main": "./server/index.js",

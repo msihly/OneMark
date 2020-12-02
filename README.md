@@ -14,6 +14,7 @@
 * Redesigned login page
 * Started refactoring components to React Hooks
     * Fixed old warnings / bugs relating to deprecation
+* Fixed certain valid URLs being rejected due to weak RegEx
 * Updated SCSS structuring and some design elements
 
 ## Version 2.09 &nbsp;-&nbsp; (2020-10-22)
