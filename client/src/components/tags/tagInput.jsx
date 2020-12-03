@@ -1,95 +1,68 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
 import { Tag } from "./";
 import { regexEscape } from "../../utils";
 
-class TagInput extends Component {
-    state = {
-        displayedTags: this.props.initValue ?? [],
-        buttonClass: "",
-        value: ""
-    }
+const TagInput = ({ id, initValue = [] }) => {
+    const dispatch = useDispatch();
 
-    componentDidMount = () => {
-        const { id, initValue, createInput } = this.props;
-        createInput(id, initValue ?? []);
-    }
+    const [displayedTags, setDisplayedTags ] = useState(initValue);
+    const [buttonClass, setButtonClass ] = useState("");
+    const [value, setValue ] = useState("");
 
-    componentWillUnmount = () => {
-        const { id, deleteInput } = this.props;
-        deleteInput(id);
-    }
+    const tags = useSelector(state => state.inputs.find(input => input.id === id)?.value);
 
-    addTag = (tag) => {
-        const { id, tags, addTag } = this.props;
-        addTag(id, tag);
-        this.setState({ displayedTags: [...tags, tag], buttonClass: "" });
-    }
+    useEffect(() => {
+        dispatch(actions.inputCreated(id, initValue));
 
-    removeTag = (tag) => {
-        const { id, tags, removeTag } = this.props;
-        removeTag(id, tag);
-        this.setState({ displayedTags: tags.filter(t => t !== tag), buttonClass: "" });
-    }
+        return () => dispatch(actions.inputDeleted(id));
+    }, [dispatch, id, initValue]);
 
-    displayTags = (value) => {
-        const { tags } = this.props;
+    const addTag = tag => {
+        dispatch(actions.tagAdded(id, tag));
+        setDisplayedTags([...tags, tag]);
+        setButtonClass("");
+    };
+
+    const removeTag = tag => {
+        dispatch(actions.tagRemoved(id, tag));
+        setDisplayedTags(tags.filter(t => t !== tag));
+        setButtonClass("");
+    };
+
+    const displayTags = (value) => {
         if (value) {
             const re = new RegExp(regexEscape(value), "i");
-            this.setState({
-                displayedTags: tags.filter(tag => re.test(tag)),
-                buttonClass: tags.includes(value) ? "del" : "add"
-            });
+            setDisplayedTags(tags.filter(tag => re.test(tag)));
+            setButtonClass(tags.includes(value) ? "del" : "add");
         } else {
-            this.setState({displayedTags: tags, buttonClass: ""});
+            setDisplayedTags(tags);
+            setButtonClass("");
         }
-    }
+    };
 
-    handleSearch = (event) => {
-        const { value } = event.target;
-        this.setState({ value });
-        this.displayTags(value);
-    }
-
-    handleButtonClick = () => {
-        const { buttonClass, value } = this.state;
-        switch (buttonClass) {
-            case "add":
-                this.addTag(value);
-                this.setState({ value: "" });
-                break;
-            case "del":
-                this.removeTag(value);
-                this.setState({ value: "" });
-                break;
-            default:
+    const handleButtonClick = () => {
+        if (buttonClass.length > 0) {
+            buttonClass === "add" ? addTag(value) : removeTag(value);
+            setValue("");
         }
-    }
+    };
 
-    render() {
-        const { displayedTags, buttonClass, value } = this.state;
-        return (
-            <div className="column">
-                <div className="row">
-                    <input onChange={this.handleSearch} value={value} type="text" placeholder="Tags" className="placeholder tag-search" />
-                    <span onClick={this.handleButtonClick} className={`tag-search-btn ${buttonClass}`}></span>
-                </div>
-                <div className="tags">{displayedTags && displayedTags.map((tag, idx) => <Tag key={idx} value={tag} handleRemoval={this.removeTag} />)}</div>
+    const handleSearch = event => {
+        setValue(event.target.value);
+        displayTags(event.target.value);
+    };
+
+    return (
+        <div className="column">
+            <div className="row">
+                <input className="placeholder tag-search" placeholder="Tags" onChange={handleSearch} value={value} type="text" />
+                <span className={`tag-search-btn ${buttonClass}`} onClick={handleButtonClick}></span>
             </div>
-        );
-    }
+            <div className="tags">{displayedTags && displayedTags.map((tag, idx) => <Tag key={idx} value={tag} handleRemoval={removeTag} />)}</div>
+        </div>
+    );
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    tags: Object(state.inputs.find(input => input.id === ownProps.id)).value,
-});
-
-const mapDispatchToProps = dispatch => ({
-    createInput: (id, value) => dispatch(actions.inputCreated(id, value)),
-    addTag: (id, value) => dispatch(actions.tagAdded(id, value)),
-    removeTag: (id, value) => dispatch(actions.tagRemoved(id, value)),
-    deleteInput: (id) => dispatch(actions.inputDeleted(id))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(TagInput);
+export default TagInput;

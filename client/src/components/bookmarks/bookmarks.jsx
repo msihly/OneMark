@@ -1,27 +1,22 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
 import { Bookmark } from "./";
 
-class Bookmarks extends Component {
-    componentDidMount() { this.props.getBookmarks(); }
+const Bookmarks = () => {
+    const dispatch = useDispatch();
 
-	render() {
-        const { bookmarks } = this.props;
-        return (
-            <div className={`bookmark-container${bookmarks.filter(b => b.isDisplayed).length === 0 ? " empty" : ""}`}>
-                {bookmarks.length > 0 && bookmarks.map(b => <Bookmark key={b.bookmarkId} bookmark={b} />)}
-            </div>
-        );
-	}
-}
+    useEffect(() => {
+        dispatch(actions.getBookmarks())
+    }, [dispatch]);
 
-const mapStateToProps = state => ({
-	bookmarks: state.bookmarks,
-});
+    const bookmarks = useSelector(state => state.bookmarks);
 
-const mapDispatchToProps = dispatch => ({
-    getBookmarks: () => dispatch(actions.getBookmarks()),
-});
+    return (
+        <div className={`bookmark-container${bookmarks.filter(b => b.isDisplayed).length === 0 ? " empty" : ""}`}>
+            {bookmarks.length > 0 && bookmarks.map(b => <Bookmark key={b.bookmarkId} bookmark={b} />)}
+        </div>
+    );
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Bookmarks);
+export default Bookmarks;

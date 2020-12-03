@@ -10,20 +10,22 @@
     margin: 0 auto;
     width: fit-content;
     height: 3rem;
-    border: 3px double $blue-2;
-    border-radius: 0.6rem;
+    border-top: 3px solid $blue-2;
+    border-bottom: 2px solid mix($blue-1, black, 50%);
+    border-radius: 0.4rem;
     background-color: $black-1;
     color: $white-2;
+    box-shadow: 1px 1px 10px 0 mix($blue-1, black, 50%);
     font-weight: 400;
     font-size: 1.2em;
     z-index: 5;
 
-    &.blue { border-color: $blue-2; }
-    &.green { border-color: $green-1; }
-    &.red { border-color: $red-2; }
-    &.orange { border-color: $orange-1; }
-    &.purple { border-color: $purple-1; }
-    &.yellow { border-color: $yellow-3; }
+    &.blue { border-top-color: $blue-2; }
+    &.green { border-top-color: $green-1; }
+    &.red { border-top-color: $red-2; }
+    &.orange { border-top-color: $orange-1; }
+    &.purple { border-top-color: $purple-1; }
+    &.yellow { border-top-color: $yellow-3; }
 
     span.close {
         position: absolute;

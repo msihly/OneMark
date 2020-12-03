@@ -1,26 +1,17 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React from "react";
+import { useDispatch } from "react-redux";
 import * as actions from "../../store/actions";
 
-class SortButton extends Component {
-    handleClick = () => {
-        const { type, direction, sortBookmarks } = this.props;
-        sortBookmarks(`${type}-${direction}`);
-    }
+const SortButton = ({ direction, type }) => {
+    const dispatch = useDispatch();
 
-    render() {
-        const { type, direction } = this.props;
-        return (
-            <div onClick={this.handleClick} className={`sort-menu-btn${localStorage.getItem("sort") === `${type}-${direction}` ? " active" : ""}`}>
-                <span>{type}</span>
-                <span>{direction === "desc" ? "\u2193" : "\u2191"}</span>
-            </div>
-        );
-    }
-}
+    return (
+        <div className={`sort-menu-btn${localStorage.getItem("sort") === `${type}-${direction}` ? " active" : ""}`}
+            onClick={() => dispatch(actions.bookmarksSorted(`${type}-${direction}`))}>
+            <span>{type}</span>
+            <span>{direction === "desc" ? "\u2193" : "\u2191"}</span>
+        </div>
+    );
+};
 
-const mapDispatchToProps = dispatch => ({
-    sortBookmarks: (sortCase) => dispatch(actions.bookmarksSorted(sortCase)),
-});
-
-export default connect(null, mapDispatchToProps)(SortButton);
+export default SortButton;

@@ -1,53 +1,42 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
+import { Banner } from "../popovers";
+import { Link } from "../articles";
 import { NavBar } from "../navbar";
 import { Bookmarks } from "../bookmarks";
 import { MultiSelectBar } from "../multiSelect";
-import { Banner } from "../popovers";
 
-class Home extends Component {
-    componentDidMount() {
-        const { getAccount, openBanner } = this.props;
+const Home = () => {
+    const dispatch = useDispatch();
+
+    const isBannerOpen = useSelector(state => state.modals.find(modal => modal.id === "extension-prompt")?.isOpen ?? false);
+
+    const disableExtBanner = () => localStorage.setItem("hideExtBanner", true);
+
+    const hideBanner = () => {
+        disableExtBanner();
+        dispatch(actions.modalClosed("extension-prompt"));
+    };
+
+    useEffect(() => {
         document.title = "Home - OneMark";
-        getAccount();
-        if (!localStorage.getItem("hideExtBanner")) { openBanner("extension-prompt"); }
-    }
+        dispatch(actions.getAccount());
+        if (!localStorage.getItem("hideExtBanner")) dispatch(actions.modalOpened("extension-prompt"));
+    }, [dispatch]);
 
-    hideBanner = () => {
-        const { closeBanner } = this.props;
-        this.disableExtBanner();
-        closeBanner("extension-prompt");
-    }
+    return (
+        <div className="common home dark">
+            <NavBar />
+            <Bookmarks />
+            <MultiSelectBar />
+            {isBannerOpen && (
+                <Banner id="extension-prompt" handleClose={disableExtBanner}>
+                    <p>Install the <Link href="https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm" onClick={hideBanner} isNewTab>add-on extension for Chrome</Link> for the optimal experience!</p>
+                </Banner>
+            )}
+        </div>
+    );
+};
 
-    disableExtBanner = () => localStorage.setItem("hideExtBanner", true);
-
-    render() {
-        const { isBannerOpen } = this.props;
-        return (
-            <div className="common home dark">
-                <NavBar />
-                <Bookmarks />
-                <MultiSelectBar />
-                { isBannerOpen ? (
-                    <Banner id="extension-prompt" handleClose={this.disableExtBanner}>
-                        <p>Install the <a href="https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm"
-                            onClick={this.hideBanner} target="_blank" rel="noopener noreferrer"> add-on extension for Chrome</a> for the optimal experience!</p>
-                    </Banner>
-                ) : null }
-            </div>
-        );
-    }
-}
-
-const mapStateToProps = (state) => ({
-    isBannerOpen: Object(state.modals.find(modal => modal.id === "extension-prompt")).isOpen ?? false,
-});
-
-const mapDispatchToProps = dispatch => ({
-    closeBanner: id => dispatch(actions.modalClosed(id)),
-    getAccount: () => dispatch(actions.getAccount()),
-    openBanner: id => dispatch(actions.modalOpened(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

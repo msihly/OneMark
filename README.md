@@ -1,6 +1,6 @@
 # What is OneMark?
 ### [OneMark](https://onemark.herokuapp.com) is a responsive, image-based bookmark organizer featuring a gallery view, comprehensive search engine, and tagging system.
-* ### Make sure to install the [Add-On extension for Chrome](https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm) for a proper experience.
+* ### Make sure to install the [Add-On extension for Chrome](https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm) to automatically generate bookmarks with URL, title, and screenshot in 2 clicks.
 
 * ### Check out demo videos on my [portfolio](https://msihly.github.io/msihly)!
 
@@ -10,6 +10,12 @@
 &nbsp;
 
 # Changelog
+## Version 2.11 &nbsp;-&nbsp; (2020-12-03)
+* Completed refactoring to React Hooks
+* Added `utils/hooks.js` for common custom hooks
+* Added `components/articles/link.jsx` to handle opening links in new tabs with proper referrer attributes
+* Minor SCSS updates
+
 ## Version 2.10 &nbsp;-&nbsp; (2020-12-02)
 * Redesigned login page
 * Started refactoring components to React Hooks

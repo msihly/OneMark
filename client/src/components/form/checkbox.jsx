@@ -2,10 +2,10 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
 
-const Checkbox = ({ classes, handleClick, id, initValue, inputName, option, text}) => {
+const Checkbox = ({ classes, handleClick, id, initValue = false, inputName, option, text}) => {
     const dispatch = useDispatch();
 
-    const isChecked = useSelector(state => state.inputs.find(input => input.id === id)?.value ?? false);
+    const isChecked = useSelector(state => state.inputs.find(input => input.id === id)?.value ?? initValue);
 
     useEffect(() => {
         dispatch(actions.inputCreated(id, initValue));

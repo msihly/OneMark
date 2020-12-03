@@ -1,68 +1,56 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { Fragment } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
 import { Form, Input, ImageInput } from "../form";
 import { TagInput } from "../tags";
 import { toast } from "react-toastify";
 import * as Media from "../../media";
 
-class Editor extends Component {
-    handlePreviewClick = () => {
-        const { pageUrl } = this.props;
-        if (pageUrl) { window.open(pageUrl); }
-    }
+const Editor = ({ bookmark, id }) => {
+    const dispatch = useDispatch();
 
-    handleSubmit = async (formData) => {
-        const { bookmark, tags, createBookmark, editBookmark, sortBookmarks } = this.props;
-        if ([...formData].length === 0) { return toast.error("FormData is empty"); }
+    const handleSubmit = async (formData) => {
+        if ([...formData].length === 0) return toast.error("FormData is empty");
+
         formData.append("tags", JSON.stringify(tags));
 
         if (Object.keys(bookmark).length > 0) {
             formData.append("bookmarkId", bookmark.bookmarkId)
-            let success = await editBookmark(formData);
-            if (!success) { return toast.error("Error editing bookmark"); }
+            const success = await dispatch(actions.editBookmark(formData));
+            if (!success) return toast.error("Error editing bookmark");
         } else {
-            let success = await createBookmark(formData);
-            if (!success) { return toast.error("Error creating bookmark"); }
+            const success = await dispatch(actions.createBookmark(formData));
+            if (!success) return toast.error("Error creating bookmark");
         }
-        sortBookmarks();
-    }
 
-    render() {
-        const { id, bookmark, imageUrl, title } = this.props;
-        return (
-            <React.Fragment>
-                <figure onClick={this.handlePreviewClick} className="preview-output">
-                    <img className="image" src={imageUrl ? (imageUrl !== "none" && imageUrl) : Media.NoImage} alt="" />
-                    <figcaption className="title">{title || "No Title"}</figcaption>
-                </figure>
-                <Form onSubmit={this.handleSubmit} submitText="Submit" submitClasses="submit">
-                    <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={bookmark.imagePath ? (bookmark.imagePath !== "none" && bookmark.imagePath) : Media.NoImage} />
-                    <div className="row mg-2 mobile">
-                        <div className="column full-width">
-                            <Input id={`${id}-pageUrl`} initValue={bookmark.pageUrl ?? ""} type="text" placeholder="Enter URL" name="pageUrl" label="Link" isRow hasErrorCheck isRequired />
-                            <Input id={`${id}-title`} initValue={bookmark.title ?? ""} type="text" placeholder="Enter Title" name="title" label="Title" isRow hasErrorCheck isRequired />
-                        </div>
-                        <TagInput id={`${id}-tags`} initValue={bookmark.tags ?? []} name="tags" />
+        dispatch(actions.bookmarksSorted());
+    };
+
+    const imageUrl = useSelector(state => state.inputs.find(input => input.id === `${id}-image`)?.value);
+    const pageUrl = useSelector(state => state.inputs.find(input => input.id === `${id}-pageUrl`)?.value);
+    const title = useSelector(state => state.inputs.find(input => input.id === `${id}-title`)?.value);
+    const tags = useSelector(state => state.inputs.find(input => input.id === `${id}-tags`)?.value);
+
+    return (
+        <Fragment>
+            <figure className="preview-output" onClick={() => pageUrl && window.open(pageUrl)}>
+                <img className="image" src={imageUrl ? (imageUrl !== "none" && imageUrl) : Media.NoImage} alt="" />
+                <figcaption className="title">{title || "No Title"}</figcaption>
+            </figure>
+            <Form onSubmit={handleSubmit} submitText="Submit" submitClasses="submit">
+                <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={bookmark.imagePath ? (bookmark.imagePath !== "none" && bookmark.imagePath) : Media.NoImage} />
+                <div className="row mg-2 mobile">
+                    <div className="column full-width">
+                        <Input id={`${id}-pageUrl`} name="pageUrl" label="Link" placeholder="Enter URL" initValue={bookmark.pageUrl ?? ""}
+                            type="text"  isRow hasErrorCheck isRequired />
+                        <Input id={`${id}-title`} name="title" label="Title" placeholder="Enter Title" initValue={bookmark.title ?? ""}
+                            type="text" isRow hasErrorCheck isRequired />
                     </div>
-                </Form>
-            </React.Fragment>
-        );
-    }
-}
+                    <TagInput id={`${id}-tags`} name="tags" initValue={bookmark.tags ?? []} />
+                </div>
+            </Form>
+        </Fragment>
+    );
+};
 
-const mapStateToProps = (state, ownProps) => ({
-    isImageRemoved: Object(state.inputs.find(input => input.id === `${ownProps.id}-image`)).isImageRemoved,
-    imageUrl: Object(state.inputs.find(input => input.id === `${ownProps.id}-image`)).value,
-    pageUrl: Object(state.inputs.find(input => input.id === `${ownProps.id}-pageUrl`)).value,
-    title: Object(state.inputs.find(input => input.id === `${ownProps.id}-title`)).value,
-    tags: Object(state.inputs.find(input => input.id === `${ownProps.id}-tags`)).value,
-});
-
-const mapDispatchToProps = dispatch => ({
-    createBookmark: bookmark => dispatch(actions.createBookmark(bookmark)),
-    editBookmark: bookmark => dispatch(actions.editBookmark(bookmark)),
-    sortBookmarks: sortCase => dispatch(actions.bookmarksSorted(sortCase)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Editor);
+export default Editor;

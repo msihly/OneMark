@@ -1,79 +1,60 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as actions from "../../store/actions";
 import * as Media from "../../media";
 
-class ImageInput extends Component {
-    constructor(props) {
-        super(props);
-        const { initValue } = this.props;
-        this.state = {
-            imageName: initValue ? initValue.substring(initValue.lastIndexOf("/") + 1) : "",
-            hasImage: initValue !== Media.NoImage,
-        };
-        this.input = React.createRef();
-    }
+const ImageInput = ({ id, initValue, inputName }) => {
+    const inputRef = useRef(null);
 
-    componentDidMount = () => {
-        const { id, initValue, createInput } = this.props;
-        createInput(id, initValue);
-    }
+    const dispatch = useDispatch();
 
-    componentWillUnmount = () => {
-        const { id, deleteInput } = this.props;
-        deleteInput(id);
-    }
+    useEffect(() => {
+        dispatch(actions.imageInputCreated(id, initValue));
 
-    handleFileChange = (event) => {
-        const { id, updateInput } = this.props;
+        return () => dispatch(actions.inputDeleted(id));
+    }, [dispatch, id, initValue]);
+
+    const [imageName, setImageName] = useState(initValue ? initValue.substring(initValue.lastIndexOf("/") + 1) : "");
+    const [hasImage, setHasImage] = useState(initValue !== Media.NoImage);
+
+    const isImageRemoved = useSelector(state => state.inputs.find(input => input.id === id)?.isImageRemoved ?? false);
+
+    const handleFileChange = event => {
         const fileInput = event.target;
         const isFileAdded = fileInput.files.length > 0;
 
-        this.setState({ imageName: fileInput.value.split("\\").pop(), hasImage: isFileAdded });
+        setImageName(fileInput.value.split("\\").pop());
+        setHasImage(isFileAdded);
+
         if (isFileAdded) {
             const reader = new FileReader();
-            reader.onload = e => updateInput(id, e.target.result, false);
+            reader.onload = e => dispatch(actions.imageInputUpdated(id, e.target.result, false));
             reader.readAsDataURL(fileInput.files[0]);
         } else {
-            updateInput(id, null, false);
+            dispatch(actions.imageInputUpdated(id, null, false));
         }
-    }
+    };
 
-    handleImageRemoval = (event) => {
-        if (this.state.hasImage) {
+    const handleImageRemoval = event => {
+        if (hasImage) {
             event.preventDefault();
-            const { id, updateInput } = this.props;
-            updateInput(id, null, true);
-            this.input.current.value = "";
-            this.setState({ imageName: "", hasImage: false });
+            dispatch(actions.imageInputUpdated(id, null, true));
+            inputRef.current.value = "";
+            setImageName("");
+            setHasImage(false);
         }
-    }
+    };
 
-    render() {
-        const { imageName, hasImage } = this.state;
-        const { inputName, isImageRemoved } = this.props;
-        return (
-            <div className="row mgn-btm">
-                <label onClick={this.handleImageRemoval} className={`file-input-group${hasImage ? " del" : ""}`}>
-                    <span className={`file-input-name${hasImage ? "" : " hidden"}`} title={imageName}>{imageName}</span>
-                    <span className="file-input-btn"></span>
-                    <input ref={this.input} onChange={this.handleFileChange} type="file" name={inputName} className="file-input" accept="image/png, image/jpeg" />
-                </label>
-                <input type="hidden" value={isImageRemoved} name="isImageRemoved" />
-            </div>
-        );
-    }
+    return (
+        <div className="row mgn-btm">
+            <label className={`file-input-group${hasImage ? " del" : ""}`} onClick={handleImageRemoval}>
+                <span className={`file-input-name${hasImage ? "" : " hidden"}`} title={imageName}>{imageName}</span>
+                <span className="file-input-btn" />
+                <input ref={inputRef} name={inputName} className="file-input" onChange={handleFileChange} type="file" accept="image/png, image/jpeg" />
+            </label>
+            <input name="isImageRemoved" value={isImageRemoved} type="hidden" />
+        </div>
+    );
 }
 
-const mapStateToProps = (state, ownProps) => ({
-    value: Object(state.inputs.find(input => input.id === ownProps.id)).value,
-    isImageRemoved: Object(state.inputs.find(input => input.id === ownProps.id)).isImageRemoved ?? false,
-});
-
-const mapDispatchToProps = dispatch => ({
-    createInput: (id, value) => dispatch(actions.imageInputCreated(id, value)),
-    updateInput: (id, value, isImageRemoved) => dispatch(actions.imageInputUpdated(id, value, isImageRemoved)),
-    deleteInput: (id) => dispatch(actions.inputDeleted(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ImageInput);
+export default ImageInput;

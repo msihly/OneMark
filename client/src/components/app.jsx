@@ -1,9 +1,9 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import * as actions from "../store/actions";
-import { AuthRoute, Home, Login, NotFound, PrivacyPolicy} from "./views";
 import { toast } from "react-toastify";
+import { AuthRoute, Home, Login, NotFound, PrivacyPolicy} from "./views";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/index.scss";
 
@@ -19,27 +19,27 @@ toast.configure({
     toastClassName: "Toastify__toast--dark"
 });
 
-class App extends Component {
-	componentDidMount() { window.addEventListener("click", this.props.closeMenus); }
+const App = () => {
+    const dispatch = useDispatch();
 
-    componentWillUnmount() { window.removeEventListener("click", this.props.closeMenus); }
+    useEffect(() => {
+        const closeMenus = () => dispatch(actions.externalClick());
 
-	render() {
-		return (
-            <BrowserRouter>
-                <Switch>
-                    <AuthRoute exact path="/" component={Home} />
-                    <Route path="/login" component={Login} />
-                    <Route path="/privacy" component={PrivacyPolicy} />
-                    <Route path="*" component={NotFound}/>
-                </Switch>
-            </BrowserRouter>
-		);
-	}
+        window.addEventListener("click", closeMenus);
+
+        return () => window.removeEventListener("click", closeMenus);
+    }, [dispatch]);
+
+    return (
+        <BrowserRouter>
+            <Switch>
+                <AuthRoute exact path="/" component={Home} />
+                <Route path="/login" component={Login} />
+                <Route path="/privacy" component={PrivacyPolicy} />
+                <Route path="*" component={NotFound}/>
+            </Switch>
+        </BrowserRouter>
+    );
 }
 
-const mapDispatchToProps = dispatch => ({
-	closeMenus: () => dispatch(actions.externalClick()),
-});
-
-export default connect(null, mapDispatchToProps)(App);
+export default App;

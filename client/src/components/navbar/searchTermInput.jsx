@@ -1,24 +1,14 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 
-class SearchTermInput extends Component {
-    state = { searchValue: "" }
+const SearchTermInput = ({ handleSubmit }) => {
+    const [searchValue, setSearchValue] = useState("");
 
-    handleAdd = () => {
-        const [{ handleSubmit }, { searchValue }] = [this.props, this.state];
-        handleSubmit(searchValue);
-    }
-
-    handleInput = (event) => this.setState({searchValue: event.target.value});
-
-    render() {
-        const { searchValue } = this.state;
-        return (
-            <div className="row mg-1 flex-child grow mgn-btm">
-                <input onChange={this.handleInput} value={searchValue} className="adv-search-input" type="text" />
-                <span onClick={this.handleAdd} className="add-btn"></span>
-            </div>
-        );
-    }
-}
+    return (
+        <div className="row mg-1 flex-child grow mgn-btm">
+            <input className="adv-search-input" onChange={event => setSearchValue(event.target.value)} value={searchValue} type="text" />
+            <span className="add-btn" onClick={() => handleSubmit(searchValue)} />
+        </div>
+    );
+};
 
 export default SearchTermInput;
