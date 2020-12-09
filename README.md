@@ -12,7 +12,8 @@
 # Changelog
 ## Version 2.12 &nbsp;-&nbsp; (2020-12-09)
 * Fixed infinite loop in bookmark creator modal caused by `TagInput` component receiving a non-primitive default value (empty array []) for the `initValue` prop after refactoring to Hooks in (Version 2.11)
-*
+* Updated `Tabs` component to conditionally use the `SideScroller` component for horizontal scrolling in row mode
+* Moved `AlertButton` component into `Alert` component
 
 ## Version 2.11 &nbsp;-&nbsp; (2020-12-03)
 * Completed refactoring to React Hooks
