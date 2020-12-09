@@ -28,7 +28,7 @@ const NavBar = ({ history }) => {
             <div className="nav-btn create-bookmark" onClick={() => dispatch(actions.modalOpened("bookmark-create"))}>
                 {isEditorOpen && (
                     <Modal id="bookmark-create" classes={`pad-ctn-2${isEditorOpen ? "" : " hidden"}`} hasHeader hasBackdrop>
-                        <Editor id="bookmark-create" bookmark={null} />
+                        <Editor id="bookmark-create" bookmark={{}} />
                     </Modal>
                 )}
             </div>

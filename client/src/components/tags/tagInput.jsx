@@ -17,7 +17,6 @@ const TagInput = ({ id, initValue = defaultValue }) => {
 
     useEffect(() => {
         dispatch(actions.inputCreated(id, initValue));
-        console.log({initValue});
 
         return () => dispatch(actions.inputDeleted(id));
     }, [dispatch, id, initValue]);
