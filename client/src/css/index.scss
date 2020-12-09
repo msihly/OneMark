@@ -7,7 +7,7 @@
 @include font("Roboto", 700);
 
 // COMMON
-@import "./common/index";
+@import "./common";
 
 // VIEWS
 @import "./views/login";

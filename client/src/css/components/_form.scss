@@ -14,21 +14,34 @@ form {
 label, input { transition: all 0.2s; }
 
 input {
-    padding: 0.5em;
-    margin-bottom: 0.2rem;
     border: 1px solid $black-3;
     border-radius: 3px;
+    margin-bottom: 0.2rem;
+    padding: 0.5em;
     background-color: $black-3;
     color: $white-3;
     overflow: hidden;
     text-overflow: ellipsis;
 
-    &.med-width { max-width: 15rem; }
+    @keyframes autofill {
+        0%, 100% {
+            -webkit-text-fill-color: $white-3;
+            box-shadow: 0 0 0 1rem inset $black-2;
+            background-clip: text;
+        }
+    }
+
+    &:-webkit-autofill {
+        transition-delay: 1s;
+        animation: autofill 0s both;
+    }
 
     &[type="button"], &[type="submit"] {
         border: none;
         border-radius: 25px;
     }
+
+    &.med-width { max-width: 15rem; }
 }
 
 label {

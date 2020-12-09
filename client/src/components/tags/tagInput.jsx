@@ -4,7 +4,9 @@ import * as actions from "../../store/actions";
 import { Tag } from "./";
 import { regexEscape } from "../../utils";
 
-const TagInput = ({ id, initValue = [] }) => {
+const defaultValue = [];
+
+const TagInput = ({ id, initValue = defaultValue }) => {
     const dispatch = useDispatch();
 
     const [displayedTags, setDisplayedTags ] = useState(initValue);
@@ -15,6 +17,7 @@ const TagInput = ({ id, initValue = [] }) => {
 
     useEffect(() => {
         dispatch(actions.inputCreated(id, initValue));
+        console.log({initValue});
 
         return () => dispatch(actions.inputDeleted(id));
     }, [dispatch, id, initValue]);

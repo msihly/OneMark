@@ -38,15 +38,15 @@ const Editor = ({ bookmark, id }) => {
                 <figcaption className="title">{title || "No Title"}</figcaption>
             </figure>
             <Form onSubmit={handleSubmit} submitText="Submit" submitClasses="submit">
-                <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={bookmark.imagePath ? (bookmark.imagePath !== "none" && bookmark.imagePath) : Media.NoImage} />
+                <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={bookmark?.imagePath ? (bookmark.imagePath !== "none" && bookmark.imagePath) : Media.NoImage} />
                 <div className="row mg-2 mobile">
                     <div className="column full-width">
-                        <Input id={`${id}-pageUrl`} name="pageUrl" label="Link" placeholder="Enter URL" initValue={bookmark.pageUrl ?? ""}
+                        <Input id={`${id}-pageUrl`} name="pageUrl" label="Link" placeholder="Enter URL" initValue={bookmark?.pageUrl ?? ""}
                             type="text"  isRow hasErrorCheck isRequired />
-                        <Input id={`${id}-title`} name="title" label="Title" placeholder="Enter Title" initValue={bookmark.title ?? ""}
+                        <Input id={`${id}-title`} name="title" label="Title" placeholder="Enter Title" initValue={bookmark?.title ?? ""}
                             type="text" isRow hasErrorCheck isRequired />
                     </div>
-                    <TagInput id={`${id}-tags`} name="tags" initValue={bookmark.tags ?? []} />
+                    <TagInput id={`${id}-tags`} name="tags" initValue={bookmark?.tags} />
                 </div>
             </Form>
         </Fragment>

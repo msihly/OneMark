@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as actions from "../store/actions";
 import { toast } from "react-toastify";
-import { AuthRoute, Home, Login, NotFound, PrivacyPolicy} from "./views";
+import { AuthRoute, Home, Login, NotFound, PrivacyPolicy } from "./views";
 import "react-toastify/dist/ReactToastify.css";
 import "../css/index.scss";
 
@@ -24,7 +24,6 @@ const App = () => {
 
     useEffect(() => {
         const closeMenus = () => dispatch(actions.externalClick());
-
         window.addEventListener("click", closeMenus);
 
         return () => window.removeEventListener("click", closeMenus);

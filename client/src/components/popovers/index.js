@@ -1,5 +1,4 @@
-export { default as Alert } from "./alert";
-export { default as AlertButton } from "./alertButton";
+export { default as Alert, AlertButton } from "./alert";
 export { default as Banner } from "./banner";
 export { default as DropMenu } from "./dropMenu";
 export { default as DropSelect } from "./dropSelect";

@@ -17,21 +17,6 @@ html, body {
     height: inherit;
 }
 
-@keyframes autofill {
-    0%, 100% {
-        -webkit-text-fill-color: $white-3;
-        box-shadow: 0 0 0 1rem inset $black-2;
-        background-clip: text;
-    }
-}
-
-input {
-    &:-webkit-autofill {
-        transition-delay: 1s;
-        animation: autofill 0s both;
-    }
-}
-
 figure { margin: 0; }
 
 h1, h2, h3 { margin: 0.5rem 0; }

@@ -11,8 +11,8 @@ import Auth from "../../utils/auth";
 const NavBar = ({ history }) => {
     const dispatch = useDispatch();
 
-    const isEditorOpen = useSelector(state => state.modals.find(modal => modal.id === "bookmark-create")?.isOpen || false);
-    const isAccountOpen = useSelector(state => state.modals.find(modal => modal.id === "account")?.isOpen || false);
+    const isEditorOpen = useSelector(state => state.modals.find(modal => modal.id === "bookmark-create")?.isOpen ?? false);
+    const isAccountOpen = useSelector(state => state.modals.find(modal => modal.id === "account")?.isOpen ?? false);
 
     const logout = async () => {
         const res = await Auth.logout();
@@ -28,7 +28,7 @@ const NavBar = ({ history }) => {
             <div className="nav-btn create-bookmark" onClick={() => dispatch(actions.modalOpened("bookmark-create"))}>
                 {isEditorOpen && (
                     <Modal id="bookmark-create" classes={`pad-ctn-2${isEditorOpen ? "" : " hidden"}`} hasHeader hasBackdrop>
-                        <Editor id="bookmark-create" bookmark={{}} />
+                        <Editor id="bookmark-create" bookmark={null} />
                     </Modal>
                 )}
             </div>
