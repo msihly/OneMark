@@ -1,47 +1,65 @@
-import React, { Children, cloneElement, useEffect, useState } from "react";
-import { ConditionalWrap, SideScroller } from "../wrappers";
+import React, { Children, cloneElement, createContext, useContext, useEffect, useState } from "react";
+import { ConditionalWrap, SideScroller } from "components/wrappers";
 
-export const Tab = ({ index, isActive, label, switchTab }) => (
-    <div onClick={() => switchTab(index)} className={`tab-button${isActive ? " active" : ""}`}>
-        {label}
-    </div>
-);
+export const TabContext = createContext();
 
-export const Tabs = ({ children, containerClasses, hasScrollPlaceholder, initTab, isColumnar, tabClasses }) => {
-    children = Children.toArray(children);
+export const Tab = ({ index, label }) => {
+    const { activeTab, setActiveTab } = useContext(TabContext);
 
+    return (
+        <div onClick={() => setActiveTab(index)} className={`tab-button${activeTab === index ? " active" : ""}`}>
+            {label}
+        </div>
+    );
+};
+
+export const Tabs = ({ children, containerClasses, hasScrollPlaceholder, initTab, isChips, isColumnar, tabClasses, tabContainerClasses }) => {
     const [activeTab, setActiveTab] = useState(0);
 
-    const activeChild = children ? children[activeTab]?.props : null;
+    const activeChild = Children.toArray(children)[activeTab]?.props ?? null;
+
+    useEffect(() => { if (initTab !== undefined && initTab !== null) setActiveTab(initTab); }, [initTab]);
+
+    const wrapInScroller = children => (
+        <SideScroller classes={tabContainerClasses} hasPlaceholder={hasScrollPlaceholder}>
+            {children}
+        </SideScroller>
+    );
+
+    // BEGIN - Classes
+    const getContainerClasses = () => {
+        let className = `tab-container${isColumnar ? " row" : " column"}`;
+        if (containerClasses) className += ` ${containerClasses}`;
+        return className.trim();
+    };
 
     const getTabClasses = () => {
         let className = "tab-content";
-        if (activeChild.className) className += ` ${activeChild.className}`;
         if (tabClasses) className += ` ${tabClasses}`;
-        return className;
+        if (activeChild.className) className += ` ${activeChild.className}`;
+        return className.trim();
     };
 
-    useEffect(() => {
-        if (initTab !== undefined && initTab !== null) setActiveTab(initTab);
-    }, [initTab]);
+    const getTabButtonClasses = () => {
+        let className = `tab-buttons ${isColumnar ? "column" : "row"}`;
+        if (!isColumnar && tabContainerClasses) className += ` ${tabContainerClasses}`;
+        if (isChips) className += ` chips`;
+        return className.trim();
+    };
+    // END - Classes
 
     return (
-        <div className={`${containerClasses ?? ""}${isColumnar ? " row" : " column"}`}>
-            <ConditionalWrap condition={!isColumnar} wrap={children => <SideScroller hasPlaceholder={hasScrollPlaceholder}>{children}</SideScroller>}>
-                <div className={`tab-buttons${isColumnar ? " column" : " row"}`}>
-                    {children && Children.map(children, (child, index) =>
-                        cloneElement(child, {
-                            key: index,
-                            index: child.props?.index ?? index,
-                            isActive: activeTab === index,
-                            label: child.props.label,
-                            switchTab: setActiveTab,
-                        })
-                        )}
+        <div className={getContainerClasses()}>
+            <ConditionalWrap condition={!isColumnar} wrap={c => wrapInScroller(c)}>
+                <div className={getTabButtonClasses()}>
+                    <TabContext.Provider value={{ activeTab, setActiveTab }}>
+                        {Children.map(children, (child, index) => cloneElement(child, { key: index, index: child.props?.index ?? index }))}
+                    </TabContext.Provider>
                 </div>
             </ConditionalWrap>
+
             <div className={getTabClasses()}>
-                {activeChild && activeChild.children}
+                {activeChild?.children}
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import React from "react";
-import { countItems } from "../../utils";
+import { countItems } from "utils";
 
 const TagList = ({ tags }) => {
     const tagsFreq = countItems(tags);

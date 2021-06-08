@@ -1,15 +1,19 @@
-import React from "react";
+import React, { createContext } from "react";
 
-const Form = ({ children, classes, onSubmit, submitText, submitClasses }) => {
-    const handleSubmit = event => {
+export const FormContext = createContext();
+
+const Form = ({ children, classes = null, idPrefix, labelClasses, onSubmit, submitText, submitClasses = "submit" }) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        onSubmit(new FormData(event.target));
+        return await onSubmit(new FormData(event.target));
     };
 
     return (
-        <form className={classes ?? null} onSubmit={handleSubmit} encType="multipart/form-data">
-            {children}
-            <button type="submit" className={submitClasses ?? null}>{submitText}</button>
+        <form className={classes} onSubmit={handleSubmit} encType="multipart/form-data">
+            <FormContext.Provider value={{ idPrefix, labelClasses }}>
+                {children}
+            </FormContext.Provider>
+            {submitText && <button type="submit" className={submitClasses}>{submitText}</button>}
         </form>
     );
 };

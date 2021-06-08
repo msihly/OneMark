@@ -1,9 +1,12 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
-import * as Media from "../../media";
+import { FormContext } from "components/form";
+import * as actions from "store/actions";
 
-const ImageInput = ({ id, initValue, inputName }) => {
+const ImageInput = ({ id, initValue, inputName, style }) => {
+    const context = useContext(FormContext);
+    id = context?.idPrefix ? `${context.idPrefix}-${id}` : id;
+
     const inputRef = useRef(null);
 
     const dispatch = useDispatch();
@@ -15,9 +18,9 @@ const ImageInput = ({ id, initValue, inputName }) => {
     }, [dispatch, id, initValue]);
 
     const [imageName, setImageName] = useState(initValue ? initValue.substring(initValue.lastIndexOf("/") + 1) : "");
-    const [hasImage, setHasImage] = useState(initValue !== Media.NoImage);
+    const [hasImage, setHasImage] = useState(initValue ? true : false);
 
-    const isImageRemoved = useSelector(state => state.inputs.find(input => input.id === id)?.isImageRemoved ?? false);
+    const isImageRemoved = useSelector(state => state.inputs.find(i => i.id === id))?.isImageRemoved ?? false;
 
     const handleFileChange = event => {
         const fileInput = event.target;
@@ -26,13 +29,11 @@ const ImageInput = ({ id, initValue, inputName }) => {
         setImageName(fileInput.value.split("\\").pop());
         setHasImage(isFileAdded);
 
-        if (isFileAdded) {
-            const reader = new FileReader();
-            reader.onload = e => dispatch(actions.imageInputUpdated(id, e.target.result, false));
-            reader.readAsDataURL(fileInput.files[0]);
-        } else {
-            dispatch(actions.imageInputUpdated(id, null, false));
-        }
+        if (!isFileAdded) return dispatch(actions.imageInputUpdated(id, null, false));
+
+        const reader = new FileReader();
+        reader.onload = e => dispatch(actions.imageInputUpdated(id, e.target.result, false));
+        reader.readAsDataURL(fileInput.files[0]);
     };
 
     const handleImageRemoval = event => {
@@ -46,7 +47,7 @@ const ImageInput = ({ id, initValue, inputName }) => {
     };
 
     return (
-        <div className="row mgn-btm">
+        <div className="file-input-row" {...{ style }}>
             <label className={`file-input-group${hasImage ? " del" : ""}`} onClick={handleImageRemoval}>
                 <span className={`file-input-name${hasImage ? "" : " hidden"}`} title={imageName}>{imageName}</span>
                 <span className="file-input-btn" />

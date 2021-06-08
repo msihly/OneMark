@@ -3,24 +3,19 @@
     flex-flow: row wrap;
     align-content: baseline;
     width: 100%;
-    height: calc(100vh - 3.3rem);
-    overflow: auto;
+    background-color: $black-2;
 
-    &.empty {
-        background-color: rgba(black, 0.8);
-
-        &::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            max-width: 30rem;
-            margin: 0 auto;
-            background: url("../../media/no-bookmarks-found.svg") no-repeat center;
-        }
+    &.empty::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: 30rem;
+        margin: 0 auto;
+        background: url("../../media/no-bookmarks-found.svg") no-repeat center;
     }
 }
 
@@ -68,6 +63,8 @@
         background-color: $black-1;
 
         &:hover { animation: movePosition 3s ease-in-out; }
+
+        &.no-image { object-fit: scale-down; }
     }
 
     .title {
@@ -94,20 +91,11 @@
 .preview-output {
     @extend .bookmark;
     position: relative;
-    width: 640px;
-    max-width: 100%;
-    height: 360px;
+    border: 1px solid $black-3;
     margin: 0 auto 1rem auto;
-    border: 1px solid #2F2F2F;
-    background: #171717;
+    max-width: 100%;
+    width: 24rem;
+    height: 13.5rem;
+    background: $black-2;
     cursor: pointer;
-
-    @media #{$media-750-w} {
-        height: 230px;
-    }
-
-    @media #{$media-500-wh} {
-        max-height: 9em;
-        max-width: 16em;
-    }
 }

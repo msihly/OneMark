@@ -1,13 +1,28 @@
-.home, #portal-root {
-    background-image: url("../../media/background-prism-white.png");
-    background-repeat: repeat;
+.home {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background-color);
     font-weight: 600;
     overflow-x: hidden;
 
+    .navbar { order: 0; }
+
+    main {
+        flex: 1;
+        order: 1;
+        height: stretch;
+        overflow-y: auto;
+    }
+}
+
+.home, #portal-root {
     @import "../components/tags";
     @import "../components/bookmark";
 }
 
-@import "../components/fileInput";
+.account-modal { border-top-color: transparent; }
+
+@import "../components/forms/fileInput";
 @import "../components/navbar";
+@import "../components/popovers/floatingMenu";
 @import "../components/multiSelect";

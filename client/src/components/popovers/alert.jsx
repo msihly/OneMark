@@ -1,41 +1,49 @@
-import React, { Children, cloneElement } from "react";
+import React, { cloneElement } from "react";
 import { useDispatch } from "react-redux";
-import * as actions from "../../store/actions";
+import * as actions from "store/actions";
 import { Modal } from "./";
+import { renderArrayString } from "utils";
 
-export const AlertButton = ({ text, classes, onClick, handleClose }) => {
-    const handleClick = () => {
-        if (onClick) onClick();
-        handleClose();
-    };
-
-    return (
-        <div className={`alert-button ${classes ?? ""}`} onClick={handleClick}>
-            {text}
-        </div>
-    );
-};
-
-const Alert = ({ children, id, modalClasses, iconClasses, icon, heading, subheading }) => {
+const Alert = ({ id, modalClasses = null, iconClasses = "", icon, heading, subheading, children, buttons, hasCancelButton = true }) => {
     const dispatch = useDispatch();
 
     const closeAlert = () => dispatch(actions.modalClosed(id));
 
+    const getIconClasses = () => `alert-icon ${iconClasses}`.trim();
+
     return (
-        <Modal id={id} classes={modalClasses ?? null}>
+        <Modal id={id} classes={modalClasses}>
             <div className="alert">
-                {icon && typeof icon === "string" ?
-                    <img src={icon} className={`alert-icon ${iconClasses ?? ""}`} alt="" />
-                    : cloneElement(icon, { className: `alert-icon ${iconClasses ?? ""}` })}
-                <div className="alert-heading">{heading}</div>
-                {subheading && <div className="alert-subheading">{subheading}</div>}
+                {icon && (typeof icon === "string" ?
+                    <img src={icon} className={getIconClasses()} alt="" />
+                    : cloneElement(icon, { className: getIconClasses() }))}
+
+                <div className="alert-heading">{renderArrayString(heading)}</div>
+
+                {subheading && <div className="alert-subheading">{renderArrayString(subheading)}</div>}
+
+                {children}
+
                 <div className="row j-center">
-                    <AlertButton text="Cancel" classes="grey" handleClose={closeAlert} />
-                    {children && Children.map(children, child => cloneElement(child, { handleClose: closeAlert }))}
+                    {hasCancelButton && <AlertButton key="0" text="Cancel" classes="grey" handleClose={closeAlert} />}
+                    {buttons && buttons.map((b, i) => cloneElement(b, { key: i + 1, handleClose: closeAlert }))}
                 </div>
             </div>
         </Modal>
     );
-}
+};
+
+export const AlertButton = ({ text, classes = "", onClick, handleClose }) => {
+    const handleClick = () => {
+        if (onClick) return onClick(handleClose);
+        handleClose();
+    };
+
+    return (
+        <div className={`alert-button ${classes}`.trim()} onClick={handleClick}>
+            {text}
+        </div>
+    );
+};
 
 export default Alert;

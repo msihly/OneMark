@@ -11,7 +11,6 @@ $nav-padding: 0.5rem;
         justify-content: space-between;
         margin: 0;
         padding: $nav-padding 0;
-        height: $nav-height;
         background-color: $black-1;
         box-shadow: 0px 3px 8px rgba(black, 0.25);
         z-index: 5;
@@ -30,13 +29,13 @@ $nav-padding: 0.5rem;
             position: absolute;
             display: flex;
             flex-direction: column;
-            top: $nav-height + $nav-padding;
+            top: 3rem;
             right: 0;
             max-height: 80vh;
             border-radius: 0 0 8px 8px;
             color: $white-3;
-            background-color: rgba(black, 0.85);
-            box-shadow: -2px 2px 8px 0 rgba(black, 0.3);
+            background-color: rgba($black-1, 0.95);
+            box-shadow: 2px 6px 8px 0 rgba(black, 0.3);
             font-size: 1em;
             font-weight: 500;
             overflow: auto;
@@ -63,34 +62,47 @@ $nav-padding: 0.5rem;
     display: flex;
     max-width: 50vw;
     width: 100%;
-    margin: 0 auto;
+    margin: 0.2rem auto;
 
     @media #{$media-750-w} { max-width: 60vw; }
 }
 
 .searchbar {
-    margin: 0.2rem auto;
-    padding: 0.4rem 2rem 0.4rem 1rem;
+    margin: 0;
+    padding: 0.4rem 1rem;
     width: inherit;
     border: none;
-    border-radius: 30px;
+    border-radius: 30px 0 0 30px;
     font-size: 1rem;
     color: $white-3;
-    background-color: #222;
+    background-color: $black-3;
     outline: none;
     text-overflow: ellipsis;
 }
 
 .adv-search {
     &-btn {
-        position: absolute;
-        right: 0;
-        padding: 0 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: fit-content;
+        border-radius: 0 2rem 2rem 0;
+        background-color: $black-2;
+        fill: $white-2;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+
+        &:hover { filter: brightness(1.2); }
+
+        svg {
+            margin: 0.4rem;
+            padding: 0.1rem;
+        }
     }
 
     &-content {
         position: absolute;
-        top: $nav-height + $nav-padding;
+        top: 3rem;
         width: 100%;
         padding: 0.75rem;
         border-radius: 0.5rem;
@@ -101,6 +113,23 @@ $nav-padding: 0.5rem;
         z-index: 5;
 
         @media #{$media-500-wh} { width: fit-content; }
+
+        .adv-search-group {
+            display: flex;
+            flex-direction: row;
+            margin-bottom: 0.5rem;
+
+            > *:not(:last-child) { margin-right: 0.3rem; }
+
+            input { border: none; }
+
+            .dropdown {
+                margin-bottom: 0;
+                width: 12em;
+            }
+
+            .add-btn { border-radius: 3px; }
+        }
     }
 
     &-input {
@@ -145,14 +174,31 @@ $nav-padding: 0.5rem;
 
         @media #{$media-750-w} { content: ""; }
     }
+}
 
-    &-btn {
-        > :last-child { padding-left: 1rem; }
+.sort-row {
+    display: flex;
+    align-items: center;
+    padding: 0.7rem 1.2rem;
+    width: stretch;
+    white-space: nowrap;
+    user-select: none;
+
+    .sort-title { flex-grow: 1; }
+
+    .sort-button {
+        border-radius: 50%;
+        margin-left: 0.6em;
+        padding: 0.35em;
+        width: 1.5em;
+        height: 1.5em;
+        background-color: $black-3;
+        fill: $white-3;
+        cursor: pointer;
+        transition: all 0.2s ease-out;
 
         &.active {
-            background-color: rgba($black-2, 0.85);
-
-            &:hover { background-color: rgba($black-3, 0.85); }
+            background-color: var(--accent-color);
         }
     }
 }

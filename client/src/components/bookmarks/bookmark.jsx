@@ -1,20 +1,32 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
-import { DropMenu, Modal } from "../popovers";
-import { Editor, Info } from ".";
-import { Checkbox } from "../form";
-import * as Media from "../../media";
+import * as actions from "store/actions";
+import { Modal } from "components/popovers";
+import { DropMenu, DropButton } from "components/dropdowns";
+import { Checkbox } from "components/form";
+import { Editor, Info } from "./";
+import * as Media from "media";
 
-const Bookmark = ({ bookmark, bookmark: { bookmarkId, isDisplayed, imagePath, pageUrl, title } }) => {
+const Bookmark = ({ bookmarkId }) => {
+    const history = useHistory();
+
+    const bookmarkRef = useRef(null);
+
     const dispatch = useDispatch();
 
-    const isEditorOpen = useSelector(state => state.modals.find(modal => modal.id === `${bookmarkId}-edit`)?.isOpen ?? false);
-    const isInfoOpen = useSelector(state => state.modals.find(modal => modal.id === `${bookmarkId}-info`)?.isOpen ?? false);
+    const { isDisplayed, imageUrl, pageUrl, title } = useSelector(state => state.bookmarks.find(b => b.bookmarkId === bookmarkId)) ?? { };
+
+    const modals = useSelector(state => state.modals);
+    const [isEditorOpen, isInfoOpen] = [`${bookmarkId}-edit`, `${bookmarkId}-info`].map(id => modals.find(m => m.id === id)?.isOpen ?? false);
 
     const [isLazy, setIsLazy] = useState(true);
 
-    const bookmarkRef = useRef(null);
+    const deleteBookmark = () => {
+        const formData = new FormData();
+        formData.append("bookmarkIds", JSON.stringify([bookmarkId]));
+        dispatch(actions.deleteBookmarks(formData, history));
+    };
 
     const openBookmark = () => {
         window.open(pageUrl);
@@ -29,7 +41,7 @@ const Bookmark = ({ bookmark, bookmark: { bookmarkId, isDisplayed, imagePath, pa
                     lazyObserver.disconnect();
                 }
             });
-        }, { root: document.querySelector(".bookmark-container"), rootMargin: "200px" });
+        }, { root: document.querySelector(".bookmark-container"), rootMargin: "300px" });
 
         lazyObserver.observe(bookmarkRef.current);
     }, [bookmarkRef]);
@@ -38,22 +50,28 @@ const Bookmark = ({ bookmark, bookmark: { bookmarkId, isDisplayed, imagePath, pa
         <figure ref={bookmarkRef} className={`bookmark${isDisplayed ? "" : " hidden"}`} onClick={openBookmark}
             onMouseDown={event => event.button === 1 && openBookmark()}>
             <figcaption className="title">{title}</figcaption>
-            <img className="image" src={isLazy ? Media.Loading : imagePath} alt="" />
+
+            <img src={isLazy ? Media.ImageLoading : (imageUrl ?? Media.NoImage)}
+                className={`image${(!isLazy && !imageUrl) ? " no-image" : ""}`} alt="" />
+
             <Checkbox id={`${bookmarkId}-multi-select`} classes="multi-select-checkbox"
                 handleClick={() => dispatch(actions.bookmarkSelected(bookmarkId))} />
-            <DropMenu id={bookmarkId} isWrapped>
-                <div onClick={() => dispatch(actions.modalOpened(`${bookmarkId}-info`))}>Info</div>
-                <div onClick={() => dispatch(actions.modalOpened(`${bookmarkId}-edit`))}>Edit</div>
-                <div onClick={() => dispatch(actions.deleteBookmark(bookmark))}>Delete</div>
+
+            <DropMenu id={`bk-menu-${bookmarkId}`} isWrapped>
+                <DropButton label="Info" icon={<Media.InfoSVG />} onClick={() => dispatch(actions.modalOpened(`${bookmarkId}-info`))} />
+                <DropButton label="Edit" icon={<Media.PencilSVG />} onClick={() => dispatch(actions.modalOpened(`${bookmarkId}-edit`))} />
+                <DropButton label="Delete" icon={<Media.TrashcanSVG />} onClick={deleteBookmark} />
             </DropMenu>
+
             {isEditorOpen && (
-                <Modal id={`${bookmarkId}-edit`} classes={`pad-ctn-2${isEditorOpen ? "" : " hidden"}`} hasHeader hasBackdrop>
-                    <Editor id={bookmarkId} bookmark={bookmark} />
+                <Modal id={`${bookmarkId}-edit`} classes="pad-ctn-2" hasHeader hasBackdrop>
+                    <Editor {...{ bookmarkId }} />
                 </Modal>
             )}
+
             {isInfoOpen && (
-                <Modal id={`${bookmarkId}-info`} classes={`pad-ctn-1${isInfoOpen ? "" : " hidden"}`} hasBackdrop>
-                    <Info bookmark={bookmark} />
+                <Modal id={`${bookmarkId}-info`} classes="pad-ctn-1" hasBackdrop>
+                    <Info {...{ bookmarkId }} />
                 </Modal>
             )}
         </figure>

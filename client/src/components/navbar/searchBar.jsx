@@ -1,11 +1,17 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
-import { DropMenu, DropSelect } from "../popovers";
-import { Checkbox } from "../form";
-import { SearchTermInput } from "../navbar";
+import * as actions from "store/actions";
 import { toast } from "react-toastify";
-import { compareLogic, regexEscape } from "../../utils";
+import { DropMenu, DropSelect, makeSelectOption } from "components/dropdowns";
+import { Checkbox } from "components/form";
+import { compareLogic, regexEscape } from "utils";
+import * as Media from "media";
+
+const SEARCH_TYPE_OPTIONS = ["Anything", "URL", "Title", "Tag"].map(e => makeSelectOption(e));
+
+const SEARCH_CONTAINS_OPTIONS = ["contains", "does not contain"].map(e => makeSelectOption(e));
+
+const typeSwitch = (type) => ({ "Anything": "", "URL": "url:", "Title": "title:", "Tag": "tag:" })[type];
 
 const SearchBar = ({ hasAdvanced }) => {
     const dispatch = useDispatch();
@@ -15,12 +21,12 @@ const SearchBar = ({ hasAdvanced }) => {
     const [hasAnd, setHasAnd] = useState(true);
     const [hasExact, setHasExact] = useState(false);
     const [searchValue, setSearchValue] = useState("");
-    const [typeValue, setTypeValue] = useState("Anything");
-    const [containsValue, setContainsValue] = useState("contains");
+    const [advSearchValue, setAdvSearchValue] = useState("");
+    const [typeValue, setTypeValue] = useState(SEARCH_TYPE_OPTIONS[0].form);
+    const [containsValue, setContainsValue] = useState(SEARCH_CONTAINS_OPTIONS[0].form);
 
-    const addTerm = (value) => {
-        const typeSwitch = (type) => ({ "Anything": "", "URL": "url:", "Title": "title:", "Tag": "tag:" })[type];
-        const term = `${containsValue === "does not contain" ? "-" : ""}${typeSwitch(typeValue)}${value}`;
+    const addTerm = () => {
+        const term = `${containsValue === "does not contain" ? "-" : ""}${typeSwitch(typeValue)}${advSearchValue}`;
         setSearchValue(`${searchValue} ${term}`);
     };
 
@@ -53,7 +59,7 @@ const SearchBar = ({ hasAdvanced }) => {
                 const hasNegatives = [negTitles, negUrls, negTags, negAny].flat().some(e => e.length > 0);
 
                 const [reTitle, reURL, reTag, reAny] = [titles, urls, tags, any].map(arr =>
-                    RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : (hasAnd ? "\\S*" : "")}${hasAnd ? "" : "$"}`, "i"));
+                    RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : (hasAnd ? "\\S*" : "$")}`, "i"));
                 const [reNegTitle, reNegURL, reNegTag, reNegAny] =[negTitles, negUrls, negTags, negAny].map(arr =>
                     RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : ""}$`, "i"));
 
@@ -69,7 +75,7 @@ const SearchBar = ({ hasAdvanced }) => {
             dispatch(actions.bookmarksFiltered(filteredBookmarks));
         } catch (e) {
             console.log(e);
-            toast.error("Error searching. Please try again");
+            toast.error("Search Error: Check console for details");
         }
     }, [dispatch, hasAnd, hasExact, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -77,34 +83,30 @@ const SearchBar = ({ hasAdvanced }) => {
         <div onClick={event => event.stopPropagation()} className="search-group">
             <input className="searchbar placeholder" placeholder="Search..."
                 onChange={event => setSearchValue(event.target.value)} value={searchValue} type="text" />
-            {hasAdvanced && (
-                <Fragment>
-                    <DropMenu id="adv-search" toggleClasses="adv-search-btn nav-btn down-arrow" contentClasses="adv-search-content" retainOnClick>
-                        <h4>Advanced Search</h4>
-                        <div className="row mg-1 mobile">
-                            <div className="row mg-1 mgn-btm">
-                                <DropSelect id="adv-search-type" handleSelect={setTypeValue} initValue={typeValue} parent="adv-search">
-                                    <div>Anything</div>
-                                    <div>URL</div>
-                                    <div>Title</div>
-                                    <div>Tag</div>
-                                </DropSelect>
-                                <DropSelect id="adv-search-contains" handleSelect={setContainsValue} initValue={containsValue} parent="adv-search">
-                                    <div>contains</div>
-                                    <div>does not contain</div>
-                                </DropSelect>
-                            </div>
-                            <SearchTermInput handleSubmit={addTerm} />
-                        </div>
-                        <div className="row mobile multi-checkboxes">
-                            <Checkbox id="adv-search-and" text="Match all terms" handleClick={isChecked => setHasAnd(isChecked)} initValue={true} />
-                            <Checkbox id="adv-search-exact" text="Match exact term" handleClick={isChecked => setHasExact(isChecked)} initValue={false} />
-                        </div>
-                    </DropMenu>
-                </Fragment>
-            )}
+
+            {hasAdvanced && (<>
+                <DropMenu id="adv-search" toggleBody={<Media.ChevronSVG />} toggleClasses="adv-search-btn" contentClasses="adv-search-content" retainOnClick>
+                    <h4>Advanced Search</h4>
+
+                    <div className="adv-search-group">
+                        <DropSelect id="adv-search-type" handleSelect={({ value }) => setTypeValue(value)} src={SEARCH_TYPE_OPTIONS} parent="adv-search" hasFormGroup={false} hasNone={false} />
+
+                        <DropSelect id="adv-search-contains" handleSelect={({ value }) => setContainsValue(value)} src={SEARCH_CONTAINS_OPTIONS} parent="adv-search" hasFormGroup={false} hasNone={false} />
+
+                        <input className="adv-search-input" onChange={event => setAdvSearchValue(event.target.value)} value={advSearchValue} type="text" />
+                        <span className="add-btn" onClick={addTerm}>
+                            <Media.PlusSVG />
+                        </span>
+                    </div>
+
+                    <div className="row mobile multi-checkboxes">
+                        <Checkbox id="adv-search-and" text="Match all terms" handleClick={isChecked => setHasAnd(isChecked)} initValue={true} />
+                        <Checkbox id="adv-search-exact" text="Match exact term" handleClick={isChecked => setHasExact(isChecked)} initValue={false} />
+                    </div>
+                </DropMenu>
+            </>)}
         </div>
     );
-}
+};
 
 export default SearchBar;

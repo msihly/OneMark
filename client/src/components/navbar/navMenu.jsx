@@ -1,6 +1,6 @@
 import React, { cloneElement, isValidElement } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
+import * as actions from "store/actions";
 
 const NavMenu = ({ children, classes, id }) => {
     const dispatch = useDispatch();
@@ -14,7 +14,7 @@ const NavMenu = ({ children, classes, id }) => {
 
     return (
         <div className="nav-menu">
-            <div className={`nav-btn ${classes ? classes : ""}`} onClick={toggleMenu} />
+            <div className={`nav-btn ${classes ?? ""}`.trim()} onClick={toggleMenu} />
             <div className={`nav-menu-content${isOpen ? "" : " hidden"}`}>
                 {children.map((child, key) => {
                     return !isValidElement(child) ? child : cloneElement(child, { key, onClick: event => {

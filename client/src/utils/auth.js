@@ -1,44 +1,43 @@
-class Auth {
-    constructor() {
-        localStorage.setItem("isAuthenticated", this.getStatus() ?? false);
-    }
+import { toast } from "react-toastify";
 
-    getStatus() {
-        return JSON.parse(localStorage.getItem("isAuthenticated"));
-    }
+export const fetchAuthed = async (apiPath, options) => {
+    const res = await (await fetch(apiPath, {
+        ...options,
+        headers: { ...options?.headers, "Authorization": `Bearer ${localStorage.getItem("accessToken")}` }
+    })).json();
 
-    async login(formData) {
-        try {
-            let res = await(await fetch("/api/user/login", { method: "POST", body: formData ?? {} })).json();
-            this.setStatus(res.success);
-            return res;
-        } catch (e) { console.error(e.message); return false; }
-    }
+    if (!res?.success) throw new Error(res?.success === false ? res.message : res);
 
-    localLogout() {
-        this.setStatus(false);
-        window.location.reload();
-    }
+    if (res?.refreshedAccessToken) localStorage.setItem("accessToken", res.refreshedAccessToken);
 
-    async logout() {
-        try {
-            let res = await(await fetch("/api/user/logout", { method: "DELETE" })).json();
-            if (res.success) { this.setStatus(false); }
-            return res;
-        } catch (e) { console.error(e.message); return false; }
-    }
+    return res;
+};
 
-    async register(formData) {
-        try {
-            let res = await(await fetch("/api/user/register", { method: "POST", body: formData })).json();
-            this.setStatus(res.success);
-            return res;
-        } catch (e) { console.error(e.message); return false; }
-    }
+export const handleErrors = (fn, { hasToast = false, isAuth = false, history } = {}) => async (...args) => {
+    try {
+        return await fn(...args);
+    } catch (e) {
+        if (e.message === "Unauthorized access: Access level") return history?.push("/");
 
-    setStatus(status) {
-        localStorage.setItem("isAuthenticated", status);
-    }
-}
+        const isAuthError = e.message.includes("Unauthorized access");
 
-export default new Auth();
+        if (isAuth && isAuthError) {
+            localStorage.removeItem("accessToken");
+            return history?.push("/login");
+        }
+
+        (hasToast && !isAuthError) ? toast.error(e.message) : console.error(e.message);
+
+        return { success: false, message: e.message };
+    }
+};
+
+export const login = async ({ formData, accessToken } = {}) => {
+    return await (await fetch("/api/user/login", {
+        method: "POST",
+        body: formData ?? {},
+        headers: accessToken ? { "Authorization": `Bearer ${accessToken}` } : {}
+    }).catch(e => console.error(e.message))).json();
+};
+
+export const logout = async () => await (await fetch("/api/user/logout", { method: "DELETE" }).catch(e => console.error(e.message))).json();

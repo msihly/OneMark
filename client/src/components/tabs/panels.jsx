@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
+import * as actions from "store/actions";
 
 export const Panel = ({ children, ...props }) => <div {...props}>{children}</div>;
 

@@ -1,108 +1,119 @@
+const { app } = require("../index.js");
+const db = require("../db");
+const { getArrayDiff, getIsoDate, handleErrors, parseJSON, validateForm } = require("../utils");
+const { authenticateUser } = require("../utils/auth.js");
+const { uploadImage } = require("../utils/upload.js");
+
+const reqs = {
+    pageUrl: { name: "Page URL", isRequired: true, type: "url", maxLen: 2083 },
+    title: { name: "Title", isRequired: true, maxLen: 2083 },
+};
+
 try {
-    const db = require("../db/functions.js");
-    const app = require("../index.js").app;
-    const { uploadFile } = require("../db/upload.js");
-    const { getArrayDiff, getIsoDate, handleErrors, validateBookmark, validateSession } = require("../utils");
-
+    /* ----------------------------------- GET ---------------------------------- */
     app.get("/api/bookmarks", handleErrors(async (req, res) => {
-        validateSession(req);
-        const bookmarks = await db.getAllBookmarks(req.session.uid);
-        return res.send({ success: true, bookmarks });
+        const refreshedAccessToken = await authenticateUser(req);
+
+        const bookmarks = await db.getUserBookmarks(req.user.userId);
+        return res.send({ success: true, bookmarks, refreshedAccessToken });
     }));
 
+    /* ---------------------------------- POST ---------------------------------- */
     app.post("/api/bookmark", handleErrors(async (req, res) => {
-        validateSession(req);
-        let { title, pageUrl, tags } = req.body;
-        tags = JSON.parse(tags);
-        if (!validateBookmark(res, title, pageUrl)) { throw new Error("Invalid bookmark"); }
+        const refreshedAccessToken = await authenticateUser(req);
 
-        const uploadResult = await uploadFile(req.files);
-        if (!uploadResult.success) { throw new Error(uploadResult.errors); }
-        const { imageId, imagePath, imageSize } = uploadResult;
+        const { title, pageUrl } = req.body;
+        for (const key in req.body) if (!validateForm(reqs, key, req.body[key], res)) return;
 
-        const date = getIsoDate();
-        const bookmarkId = await db.uploadBookmark(req.session.uid, imageId, title, pageUrl, date, date);
-        if (tags.length > 0) { await db.addBookmarkTags(bookmarkId, tags); }
+        if (await db.checkBookmarkExists(req.user.userId, pageUrl) !== false) return res.send({ success: false, message: "Bookmark already exists" });
 
-        return res.send({ success: true, bookmark: { bookmarkId, title, pageUrl, imagePath, imageSize, dateCreated: date, dateModified: date, views: 0, tags } });
-    }));
-
-    app.post("/api/ext/bookmark", handleErrors(async (req, res) => {
-        if (!req.headers.authorization) { throw new Error("No authorization header set"); }
-        const token = req.headers.authorization.split(" ")[1];
-        const userId = await db.validateToken(token);
-        if (!userId) { throw new Error("Invalid AuthToken provided"); }
-
-        let { title, pageUrl, tags } = req.body;
-        tags = JSON.parse(tags);
-        if (!validateBookmark(res, title, pageUrl)) { throw new Error("Invalid bookmark"); }
-        if (await db.checkBookmarkExists(userId, pageUrl) !== false) { throw new Error("Bookmark already exists"); }
-
-        const uploadResult = await uploadFile(req.files);
-        if (!uploadResult.success) { throw new Error(uploadResult.errors); }
-        const { imageId, imagePath, imageSize } = uploadResult;
+        const { imageId, imageUrl, imageSize } = await uploadImage(req.files[0]);
 
         const date = getIsoDate();
-        const bookmarkId = await db.uploadBookmark(userId, imageId, title, pageUrl, date, date);
-        if (!bookmarkId) { throw new Error("Failed to upload bookmark"); }
-        if (tags.length > 0) { await db.addBookmarkTags(bookmarkId, tags); }
+        const bookmarkId = await db.createBookmark(req.user.userId, imageId, title, pageUrl, date, date);
 
-        return res.send({ success: true, bookmark: { bookmarkId, title, pageUrl, imagePath, imageSize, dateCreated: date, dateModified: date, views: 0, tags } });
+        const tags = parseJSON(req.body.tags);
+        if (tags.length > 0) await db.addBookmarkTags([bookmarkId], tags);
+
+        return res.send({
+            success: true,
+            bookmark: {
+                bookmarkId,
+                title,
+                pageUrl,
+                imageUrl,
+                imageSize,
+                dateCreated: date,
+                dateModified: date,
+                views: 0,
+                tags
+            },
+            refreshedAccessToken
+        });
     }));
 
+    /* ----------------------------------- PUT ---------------------------------- */
     app.put("/api/bookmark/:id", handleErrors(async (req, res) => {
-        validateSession(req);
-        let { bookmarkId, title, pageUrl, tags, isImageRemoved } = req.body;
-        bookmarkId = +bookmarkId;
-        tags = JSON.parse(tags);
-        if (!validateBookmark(res, title, pageUrl)) { throw new Error("Invalid bookmark"); }
+        const refreshedAccessToken = await authenticateUser(req);
 
-        const curBookmark = await db.getBookmark(bookmarkId);
-        const curTags = await db.getAllBookmarkTags(bookmarkId);
-        let { imageId, imagePath, imagePath: curImagePath, imageSize, title: curTitle, pageUrl: curPageUrl, dateCreated } = curBookmark;
+        // req.params.id is unused; bookmarkId extracted from body; // DEBUG
+        const { bookmarkId, title, pageUrl, isImageRemoved } = req.body;
+        const tags = parseJSON(req.body.tags);
 
-        const hasNoDiffs = (title == curTitle && pageUrl == curPageUrl && getArrayDiff(tags, curTags).length === 0);
-        if (hasNoDiffs && req.files.length === 0 && isImageRemoved === "false") { throw new Error("No changes made"); }
+        for (const key in req.body) if (!validateForm(reqs, key, req.body[key], res)) return;
 
-        if (req.files.length > 0) {
-            let uploadResult = await uploadFile(req.files);
-            if (!uploadResult.success) { throw new Error(uploadResult.errors); }
-            ({ imageId, imagePath, imageSize } = uploadResult);
-        } else if (isImageRemoved === "true") {
-            [imageId, imagePath, imageSize] = [2, "none", 0];
-        }
+        const [bk, updatedTags] = await Promise.all([db.getBookmarks([bookmarkId]), db.compareBookmarkTags(bookmarkId, tags)]);
+        if (!updatedTags) return res.send({ success: false, message: "Error in tag comparison" });
+        const { addedTags, removedTags } = updatedTags;
 
-        if (hasNoDiffs && imagePath === curImagePath) { throw new Error("No changes made"); }
+        const hasTagDiffs = addedTags.length !== 0 || removedTags.length !== 0;
+        const hasNoDiffs = (title == bk.title && pageUrl == bk.pageUrl && !hasTagDiffs);
 
-        let dateModified = await db.editBookmark(bookmarkId, req.session.uid, title, pageUrl, imageId, tags);
-        return res.send({ success: true, bookmark: { bookmarkId, title, pageUrl, imagePath, imageSize, dateCreated, dateModified, tags } });
+        if (hasNoDiffs && req.files.length === 0 && isImageRemoved === "false") return res.send({ success: false, message: "No changes made" });
+
+        const { imageId, imageUrl, imageSize } = isImageRemoved === "true" ? { imageId: null, imageUrl: null, imageSize: 0 } : await uploadImage(req.files[0]);
+        const isImageModified = isImageRemoved === "true" || imageUrl !== bk.imageUrl;
+
+        if (hasNoDiffs && !isImageModified) return res.send({ success: false, message: "No changes made" });
+
+        const dateModified = await db.editBookmark(bookmarkId, req.user.userId, title, pageUrl, isImageModified ? imageId : undefined);
+        if (hasTagDiffs) await db.editBookmarkTags([bookmarkId], addedTags, removedTags, false);
+
+        const bookmark = { bookmarkId, title, pageUrl, dateModified };
+        if (isImageModified) {
+            bookmark.imageUrl = imageUrl;
+            bookmark.imageSize = imageSize;
+        };
+
+        return res.send({ success: true, bookmark, refreshedAccessToken });
     }));
 
     app.put("/api/bookmark/:id/view", handleErrors(async (req, res) => {
-        validateSession(req);
-        await db.addView(req.params.id, req.session.uid);
-        return res.send({ success: true, message: `Bookmark #${req.params.id} view count incremented` });
+        const refreshedAccessToken = await authenticateUser(req);
+
+        await db.addView(req.params.id, req.user.userId);
+
+        return res.send({ success: true, refreshedAccessToken });
     }));
 
     app.put("/api/bookmarks/tags", handleErrors(async (req, res) => {
-        validateSession(req);
-        let { bookmarkIds, addedTags, removedTags } = req.body;
-        [bookmarkIds, addedTags, removedTags] = [JSON.parse(bookmarkIds), JSON.parse(addedTags), JSON.parse(removedTags)];
-        let dateModified = await db.editMultiBookmarkTags(bookmarkIds, addedTags, removedTags);
-        return res.send({ success: true, bookmarkIds, addedTags, removedTags, dateModified });
+        const refreshedAccessToken = await authenticateUser(req);
+
+        const [bookmarkIds, addedTags, removedTags] =
+            [req.body.bookmarkIds, req.body.addedTags, req.body.removedTags].map(e => parseJSON(e));
+
+        const dateModified = await db.editBookmarkTags(bookmarkIds, addedTags, removedTags);
+
+        return res.send({ success: true, bookmarkIds, addedTags, removedTags, dateModified, refreshedAccessToken });
     }));
 
+    /* --------------------------------- DELETE --------------------------------- */
     app.delete("/api/bookmarks", handleErrors(async (req, res) => {
-        validateSession(req);
-        let { bookmarkIds } = req.body;
-        bookmarkIds = JSON.parse(bookmarkIds);
-        await db.deleteBookmarks(bookmarkIds);
-        return res.send({ success: true, bookmarkIds });
-    }));
+        const refreshedAccessToken = await authenticateUser(req);
 
-    app.delete("/api/bookmark/:id", handleErrors(async (req, res) => {
-        validateSession(req);
-        await db.deleteBookmark(req.params.id);
-        return res.send({ success: true, message: `Bookmark #${req.params.id} deleted`});
+        const bookmarkIds = parseJSON(req.body.bookmarkIds);
+        await db.deleteBookmarks(bookmarkIds);
+
+        return res.send({ success: true, bookmarkIds, refreshedAccessToken });
     }));
 } catch (e) { console.error(e); }

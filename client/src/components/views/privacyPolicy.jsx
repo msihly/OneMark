@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, Sections, Section, TableOfContents } from "../articles";
+import { Link, Sections, Section, TableOfContents } from "components/articles";
 
 const PrivacyPolicy = () => {
     useEffect(() => {document.title = "Privacy Policy - OneMark"}, []);

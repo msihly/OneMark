@@ -1,37 +1,26 @@
 import React, { Fragment } from "react";
-import { useDispatch } from "react-redux";
-import * as actions from "../../store/actions";
-import { formatBytes, formatDate } from "../../utils";
+import { useDispatch, useSelector } from "react-redux";
+import * as actions from "store/actions";
+import { VertTable, VertTableRow } from "components/articles";
+import { formatBytes, formatDate, getLocalDateTime } from "utils";
 
-const Info = ({ bookmark: { bookmarkId, dateCreated, dateModified, imageSize, views } }) => {
+const Info = ({ bookmarkId }) => {
     const dispatch = useDispatch();
+
+    const { dateCreated, dateModified, imageSize, views } = useSelector(state => state.bookmarks.find(b => b.bookmarkId === bookmarkId)) ?? { };
+
+    const created = getLocalDateTime(dateCreated);
+    const modified = getLocalDateTime(dateModified);
 
     return (
         <Fragment>
-            <table className="table-vert right">
-                <tbody>
-                    <tr>
-                        <th>Date Created</th>
-                        <td>-</td>
-                        <td title={formatDate(dateCreated, "datetime")}>{formatDate(dateCreated)}</td>
-                    </tr>
-                    <tr>
-                        <th>Date Modified</th>
-                        <td>-</td>
-                        <td title={formatDate(dateModified, "datetime")}>{formatDate(dateModified)}</td>
-                    </tr>
-                    <tr>
-                        <th>Image Size</th>
-                        <td>-</td>
-                        <td title={`${imageSize} bytes`}>{formatBytes(imageSize)}</td>
-                    </tr>
-                    <tr>
-                        <th>View Count</th>
-                        <td>-</td>
-                        <td>{views}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <VertTable>
+                <VertTableRow left="Date Created" right={formatDate(created)} rightTitle={formatDate(created, "datetime")} />
+                <VertTableRow left="Date Modified" right={formatDate(modified)} rightTitle={formatDate(modified, "datetime")} />
+                <VertTableRow left="Image Size" right={formatBytes(imageSize)} rightTitle={`${imageSize} bytes`} />
+                <VertTableRow left="View Count" right={views} />
+            </VertTable>
+
             <div className="row">
                 <button className="close" onClick={() => dispatch(actions.modalClosed(`${bookmarkId}-info`))}>Close</button>
             </div>

@@ -1,52 +1,55 @@
 import React, { Fragment } from "react";
+import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
-import { Form, Input, ImageInput } from "../form";
-import { TagInput } from "../tags";
+import * as actions from "store/actions";
+import { Form, Input, ImageInput } from "components/form";
+import { TagInput } from "components/tags";
 import { toast } from "react-toastify";
-import * as Media from "../../media";
+import * as Media from "media";
 
-const Editor = ({ bookmark, id }) => {
+const Editor = ({ bookmarkId }) => {
+    const history = useHistory();
+
     const dispatch = useDispatch();
+
+    const bookmark = useSelector(state => state.bookmarks.find(b => b.bookmarkId === bookmarkId));
+
+    const imageUrl = useSelector(state => state.inputs.find(i => i.id === "image"))?.value;
+    const pageUrl = useSelector(state => state.inputs.find(i => i.id === "pageUrl"))?.value;
+    const title = useSelector(state => state.inputs.find(i => i.id === "title"))?.value;
+    const tags = useSelector(state => state.inputs.find(i => i.id === "tags"))?.value;
 
     const handleSubmit = async (formData) => {
         if ([...formData].length === 0) return toast.error("FormData is empty");
 
         formData.append("tags", JSON.stringify(tags));
+        if (bookmarkId !== undefined) formData.append("bookmarkId", bookmarkId);
 
-        if (Object.keys(bookmark).length > 0) {
-            formData.append("bookmarkId", bookmark.bookmarkId)
-            const success = await dispatch(actions.editBookmark(formData));
-            if (!success) return toast.error("Error editing bookmark");
-        } else {
-            const success = await dispatch(actions.createBookmark(formData));
-            if (!success) return toast.error("Error creating bookmark");
-        }
-
-        dispatch(actions.bookmarksSorted());
+        const res = await dispatch(bookmark ? actions.editBookmark(formData, history) : actions.createBookmark(formData, history));
+        if (res?.success) dispatch(actions.modalClosed(bookmarkId !== undefined ? `${bookmarkId}-edit` : "bookmark-create"));
     };
-
-    const imageUrl = useSelector(state => state.inputs.find(input => input.id === `${id}-image`)?.value);
-    const pageUrl = useSelector(state => state.inputs.find(input => input.id === `${id}-pageUrl`)?.value);
-    const title = useSelector(state => state.inputs.find(input => input.id === `${id}-title`)?.value);
-    const tags = useSelector(state => state.inputs.find(input => input.id === `${id}-tags`)?.value);
 
     return (
         <Fragment>
             <figure className="preview-output" onClick={() => pageUrl && window.open(pageUrl)}>
-                <img className="image" src={imageUrl ? (imageUrl !== "none" && imageUrl) : Media.NoImage} alt="" />
+                <img className={`image${imageUrl ? "" : " no-image"}`} src={imageUrl ?? Media.NoImage} alt="" />
                 <figcaption className="title">{title || "No Title"}</figcaption>
             </figure>
-            <Form onSubmit={handleSubmit} submitText="Submit" submitClasses="submit">
-                <ImageInput id={`${id}-image`} inputName="imageUrl" initValue={bookmark?.imagePath ? (bookmark.imagePath !== "none" && bookmark.imagePath) : Media.NoImage} />
+
+            <Form onSubmit={handleSubmit} submitText="Submit" submitClasses="submit" labelClasses="small glow">
+                <ImageInput id="image" inputName="imageUrl" initValue={bookmark?.imageUrl} style={{ justifyContent: "center" }} />
+
                 <div className="row mg-2 mobile">
                     <div className="column full-width">
-                        <Input id={`${id}-pageUrl`} name="pageUrl" label="Link" placeholder="Enter URL" initValue={bookmark?.pageUrl ?? ""}
-                            type="text"  isRow hasErrorCheck isRequired />
-                        <Input id={`${id}-title`} name="title" label="Title" placeholder="Enter Title" initValue={bookmark?.title ?? ""}
-                            type="text" isRow hasErrorCheck isRequired />
+                        <Input id="title" name="title" label="Title" placeholder initValue={bookmark?.title} hasErrorCheck isRequired />
+
+                        <Input id="pageUrl" name="pageUrl" label="Page URL" placeholder initValue={bookmark?.pageUrl} hasErrorCheck isRequired />
                     </div>
-                    <TagInput id={`${id}-tags`} name="tags" initValue={bookmark?.tags} />
+
+                    <div className="column">
+                        <label className="small glow">Tags</label>
+                        <TagInput id="tags" name="tags" initValue={bookmark?.tags} />
+                    </div>
                 </div>
             </Form>
         </Fragment>

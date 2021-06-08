@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import * as actions from "../../store/actions";
+import * as actions from "store/actions";
 import { Portal } from "./";
 
 const Modal = ({ children, classes, hasHeader, hasBackdrop, id }) => {

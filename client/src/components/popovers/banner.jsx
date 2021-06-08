@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import * as actions from "../../store/actions";
-import { Portal } from "../popovers";
+import * as actions from "store/actions";
+import { Portal } from "components/popovers";
 
 const Banner = ({ children, classes, handleClose, id }) => {
     const dispatch = useDispatch();

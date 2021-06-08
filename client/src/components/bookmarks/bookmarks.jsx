@@ -1,21 +1,24 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
+import React, { useContext, useMemo } from "react";
+import { useSelector } from "react-redux";
+import { SortContext } from "components/views";
 import { Bookmark } from "./";
+import { sortArray } from "utils";
+
+const NUMERICAL_ATTRIBUTES = ["imageSize", "views"];
 
 const Bookmarks = () => {
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(actions.getBookmarks())
-    }, [dispatch]);
+    const { sortKey, sortDir } = useContext(SortContext);
 
     const bookmarks = useSelector(state => state.bookmarks);
 
+    const sorted = useMemo(() =>
+        sortArray(bookmarks, sortKey, sortDir === "desc", NUMERICAL_ATTRIBUTES.includes(sortKey))
+    , [bookmarks, sortKey, sortDir]);
+
     return (
-        <div className={`bookmark-container${bookmarks.filter(b => b.isDisplayed).length === 0 ? " empty" : ""}`}>
-            {bookmarks.length > 0 && bookmarks.map(b => <Bookmark key={b.bookmarkId} bookmark={b} />)}
-        </div>
+        <main className={`bookmark-container${sorted.filter(b => b.isDisplayed).length === 0 ? " empty" : ""}`}>
+            {sorted?.map(({ bookmarkId }) => <Bookmark {...{ key: `bk-${bookmarkId}`, bookmarkId }} />)}
+        </main>
     );
 };
 

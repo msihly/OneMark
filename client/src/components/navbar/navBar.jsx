@@ -1,62 +1,60 @@
 import React from "react";
-import { withRouter } from "react-router-dom";
+import { useHistory } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
+import * as actions from "store/actions";
 import { toast } from "react-toastify";
-import { Account, NavMenu, SearchBar, SortButton } from "./";
-import { Modal } from "../popovers";
-import { Editor } from "../bookmarks";
-import Auth from "../../utils/auth";
+import { Modal } from "components/popovers";
+import { Editor } from "components/bookmarks";
+import { Account, NavMenu, SearchBar, SortRow } from "./";
 
-const NavBar = ({ history }) => {
+const NavBar = () => {
+    const history = useHistory();
+
     const dispatch = useDispatch();
 
-    const isEditorOpen = useSelector(state => state.modals.find(modal => modal.id === "bookmark-create")?.isOpen ?? false);
-    const isAccountOpen = useSelector(state => state.modals.find(modal => modal.id === "account")?.isOpen ?? false);
+    const isEditorOpen = useSelector(state => state.modals.find(m => m.id === "bookmark-create"))?.isOpen ?? false;
+    const isAccountOpen = useSelector(state => state.modals.find(m => m.id === "account"))?.isOpen ?? false;
 
     const logout = async () => {
-        const res = await Auth.logout();
-        if (!res.success) return toast.error(res.message);
-
-        dispatch(actions.stateReset());
-        toast.success("Logout successful");
-        setTimeout(() => history.push("/login"), 500);
+        const res = await dispatch(actions.logout());
+        if (res?.success) {
+            toast.success("Logout successful");
+            history.push("/login");
+        }
     };
 
     return (
         <nav className="navbar">
-            <div className="nav-btn create-bookmark" onClick={() => dispatch(actions.modalOpened("bookmark-create"))}>
-                {isEditorOpen && (
-                    <Modal id="bookmark-create" classes={`pad-ctn-2${isEditorOpen ? "" : " hidden"}`} hasHeader hasBackdrop>
-                        <Editor id="bookmark-create" bookmark={{}} />
-                    </Modal>
-                )}
-            </div>
+            <div className="nav-btn create-bookmark" onClick={() => dispatch(actions.modalOpened("bookmark-create"))} />
+            {isEditorOpen &&
+                <Modal id="bookmark-create" classes="pad-ctn-2" hasHeader hasBackdrop>
+                    <Editor />
+                </Modal>
+            }
+
             <SearchBar hasAdvanced />
+
             <NavMenu id="sort-menu" classes="sort-menu">
-                <SortButton type="Date Modified" direction="desc" />
-                <SortButton type="Date Modified" direction="asc" />
-                <SortButton type="Date Created" direction="desc" />
-                <SortButton type="Date Created" direction="asc" />
-                <SortButton type="Title" direction="desc" />
-                <SortButton type="Title" direction="asc" />
-                <SortButton type="Views" direction="desc" />
-                <SortButton type="Views" direction="asc" />
-                <SortButton type="Image Size" direction="desc" />
-                <SortButton type="Image Size" direction="asc" />
+                <SortRow attribute="dateModified" title="Date Modified" />
+                <SortRow attribute="dateCreated" title="Date Created" />
+                <SortRow attribute="title" title="Title" />
+                <SortRow attribute="views" title="Views" />
+                <SortRow attribute="imageSize" title="Image Size" />
             </NavMenu>
+
             <NavMenu id="side-menu" classes="side-menu down-arrow">
                 <div className="side-menu-btn" onClick={() => dispatch(actions.modalOpened("account"))}>ACCOUNT</div>
-                {isAccountOpen && (
-                    <Modal id="account" classes="account-modal" hasBackdrop>
-                        <Account />
-                    </Modal>
-                )}
-                <div className="side-menu-btn" onClick={() => history.push("/privacy")}>PRIVACY</div>
+                <div className="side-menu-btn" onClick={() => window.open("/privacy", "_blank")}>PRIVACY</div>
                 <div className="side-menu-btn" onClick={logout}>LOGOUT</div>
             </NavMenu>
+
+            {isAccountOpen &&
+                <Modal id="account" classes="account-modal" hasBackdrop>
+                    <Account />
+                </Modal>
+            }
         </nav>
     );
 };
 
-export default withRouter(NavBar);
+export default NavBar;

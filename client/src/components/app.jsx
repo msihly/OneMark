@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import * as actions from "../store/actions";
+import * as actions from "store/actions";
 import { toast } from "react-toastify";
-import { AuthRoute, Home, Login, NotFound, PrivacyPolicy } from "./views";
+import { AuthRoute, NotFound } from "components/views/_common";
+import { Home, Login, PrivacyPolicy } from "components/views";
 import "react-toastify/dist/ReactToastify.css";
-import "../css/index.scss";
+import "css/index.scss";
 
 toast.configure({
     position: "bottom-left",
@@ -24,6 +25,7 @@ const App = () => {
 
     useEffect(() => {
         const closeMenus = () => dispatch(actions.externalClick());
+
         window.addEventListener("click", closeMenus);
 
         return () => window.removeEventListener("click", closeMenus);
@@ -35,7 +37,7 @@ const App = () => {
                 <AuthRoute exact path="/" component={Home} />
                 <Route path="/login" component={Login} />
                 <Route path="/privacy" component={PrivacyPolicy} />
-                <Route path="*" component={NotFound}/>
+                <Route path="*" component={NotFound} />
             </Switch>
         </BrowserRouter>
     );

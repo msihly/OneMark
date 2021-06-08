@@ -1,116 +1,141 @@
+const bcrypt = require("bcrypt");
+const { app } = require("../index.js");
+const db = require("../db");
+const { getFutureDate, handleErrors, validateForm, validatePassword } = require("../utils");
+const { authenticateUser, authenticatePassword, generateAccessToken } = require("../utils/auth.js");
+
+const reqs = {
+    email: { name: "Email", isRequired: true, type: "email" },
+    username: { name: "Username", isRequired: true, minLen: 5, maxLen: 255 },
+    password: { name: "Password", isRequired: true, minLen: 8, maxLen: 72 },
+    currentPassword: { name: "Current Password", isRequired: true, minLen: 8, maxLen: 72 },
+    newPassword: { name: "New Password", isRequired: true, minLen: 8, maxLen: 72 },
+    passwordConf: { name: "Password Confirmation", isRequired: true, minLen: 8, maxLen: 72 },
+};
+
 try {
-    const db = require("../db/functions.js");
-    const app = require("../index.js").app;
-    const bcrypt = require("bcrypt");
-    const { getFutureDate, handleErrors, validate, validateSession } = require("../utils");
+    /* ----------------------------------- GET ---------------------------------- */
+    app.get("/api/user/info", handleErrors(async (req, res) => {
+        const refreshedAccessToken = await authenticateUser(req);
+
+        const { userId, accessLevel } = req.user;
+        const { username, email, dateCreated } = await db.getUserInfo({ userId });
+
+        return res.send({ success: true, info: { username, email, dateCreated, accessLevel }, refreshedAccessToken });
+    }));
+
+    /* ---------------------------------- POST ---------------------------------- */
+    app.post("/api/user/register", handleErrors(async (req, res) => {
+        const { email, username, password, passwordConf, hasRememberMe } = req.body;
+
+        if (password !== passwordConf) return res.send({ success: false, message: "Password confirmation does not match" });
+        if (!validatePassword({ password, res })) return;
+        for (const key in req.body) if (!validateForm(reqs, key, req.body[key], res)) return;
+
+        if (await db.getUserInfo({ username })) return res.send({ success: false, message: "Username already taken" });
+
+        const passwordHash = await bcrypt.hash(password, 10);
+        const userId = await db.register(username, passwordHash, email);
+
+        const user = { userId, accessLevel: 0 };
+        const accessToken = generateAccessToken(user, "15m");
+
+        if ([true, "true", "on", "yes"].includes(hasRememberMe)) {
+            const refreshToken = await db.generateRefreshToken(user, { days: 30 });
+            res.cookie("refreshToken", refreshToken, { maxAge: getFutureDate({ days: 30 }).getTime() - Date.now(), httpOnly: true });
+        }
+
+        return res.send({ success: true, accessToken });
+    }));
 
     app.post("/api/user/login", handleErrors(async (req, res) => {
-        if (req.session.uid) { return res.send({ success: true, message: "User already logged in" }); }
-        if (req.cookies.authToken) {
-            let userId = await db.validateToken(req.cookies.authToken);
-            if (userId) {
-                req.session.uid = userId;
-                return res.send({ success: true, message: "Login via token successful" });
-            }
-            res.clearCookie("authToken", { path: "/" });
-        }
-        if (Object.keys(req.body).length === 0) { throw new Error("No valid AuthToken or login credentials provided"); }
+        const authHeader = req.headers["authorization"];
+        if (authHeader && await authenticateUser(req)) return res.send({ success: true, message: "User already logged in" });
 
         const { username, password, hasRememberMe } = req.body;
-        if (!username || !password) { throw new Error("All fields are required"); }
+        if (!username || !password) return res.send({ success: false, message: "All fields are required" });
 
-        const { userId, passwordHash } = await db.getLoginInfo(username);
-        if (!userId || !passwordHash) { throw new Error("Incorrect login credentials"); }
+        const { userId, passwordHash, accessLevel } = await db.getUserInfo({ username });
+        if (!userId || !passwordHash) return res.send({ success: false, message: "Incorrect credentials" });
 
-        let match = await bcrypt.compare(password, passwordHash.replace("$2y", "$2b"));
-        if (!match) { throw new Error("Incorrect password"); }
-        if (hasRememberMe) {
-            const token = await db.createToken(userId, 30);
-            res.cookie("authToken", token, { maxAge: getFutureDate({days: 30}).getTime() - Date.now(), httpOnly: true });
+        const match = await bcrypt.compare(password, passwordHash.replace("$2y", "$2b"));
+        if (!match) return res.send({ success: false, message: "Incorrect credentials" });
+
+        const user = { userId, accessLevel };
+        const accessToken = generateAccessToken(user, "15m");
+
+        if ([true, "true", "on", "yes"].includes(hasRememberMe)) {
+            const refreshToken = await db.generateRefreshToken(user, { days: 30 });
+            res.cookie("refreshToken", refreshToken, { maxAge: getFutureDate({ days: 30 }).getTime() - Date.now(), httpOnly: true });
         }
 
-        [req.session.uid, req.session.username] = [userId, username];
-        return res.send({ success: true, message: "Login successful" });
+        return res.send({ success: true, accessToken });
     }));
 
     app.post("/api/ext/user/login", handleErrors(async (req, res) => {
         const { username, password } = req.body;
-        if (!username || !password) { throw new Error("All fields are required"); }
+        if (!username || !password) return res.send({ success: false, message: "All fields are required" });
 
         const { userId, passwordHash } = await db.getLoginInfo(username);
-        if (!userId || !passwordHash) { throw new Error("Incorrect login credentials"); }
+        if (!userId || !passwordHash) return res.send({ success: false, message: "Incorrect credentials" });
 
-        let match = await bcrypt.compare(password, passwordHash.replace("$2y", "$2b"));
-        if (!match) { throw new Error("Incorrect password"); }
+        const match = await bcrypt.compare(password, passwordHash.replace("$2y", "$2b"));
+        if (!match) return res.send({ success: false, message: "Incorrect credentials" });
 
-        const token = await db.createToken(userId, 90);
-        return res.send({ success: true, userId, token });
+        const user = { userId, accessLevel };
+        const accessToken = generateAccessToken(user, "30m");
+
+        const refreshToken = await db.generateRefreshToken(user, { days: 90 });
+
+        return res.send({ success: true, userId, accessToken, refreshToken });
     }));
 
-    app.post("/api/user/register", handleErrors(async (req, res) => {
-        const { email, username, password, passwordConf, hasRememberMe } = req.body;
-        if (!email || !username || !password || !passwordConf) { throw new Error("All fields are required"); }
-        if (!validate(email, "email")) { throw new Error("Invalid email"); }
-        if (username.length > 40) { throw new Error("Username cannot be more than 40 characters"); }
-        if (password.length < 8) { throw new Error("Password must be a minimum of 8 characters"); }
-        if (password !== passwordConf) { throw new Error("Password does not match confirmation"); }
-        if (await db.getUserId(username)) { throw new Error("Username is already taken"); }
-
-        const userId = await db.register(email, username, password);
-        [req.session.uid, req.session.username] = [userId, username];
-        if (hasRememberMe) {
-            const token = await db.createToken(userId, 30);
-            res.cookie("authToken", token, { maxAge: getFutureDate({days: 30}).getTime() - Date.now(), httpOnly: true });
-        }
-
-        return res.send({ success: true, message: "Registration successful" });
-    }));
-
-    app.delete("/api/user/logout", handleErrors(async (req, res) => {
-        const { authToken } = req.cookies;
-        if (authToken) {
-            const selector = authToken.substring(0, authToken.indexOf(":"));
-            db.deleteToken(selector);
-            res.clearCookie("authToken");
-        }
-        req.session.destroy();
-        return res.send({ success: true, message: "Logout successful" });
-    }));
-
-    app.get("/api/user/info", handleErrors(async (req, res) => {
-        validateSession(req);
-        const info = await db.getUserInfo(req.session.uid);
-        return res.send({ success: true, info });
-    }));
-
+    /* ----------------------------------- PUT ---------------------------------- */
     app.put("/api/user/profile", handleErrors(async (req, res) => {
-        validateSession(req);
-        const { email, username } = req.body;
-        if (!email || !username) { throw new Error("All fields are required"); }
-        if (!validate(email, "email")) { throw new Error("Invalid email"); }
-        if (username.length > 40) { throw new Error("Username cannot be more than 40 characters"); }
-        if (username !== req.session.username && await db.getUserId(username)) { throw new Error("Username is already taken"); }
+        const refreshedAccessToken = await authenticateUser(req);
 
-        await db.updateProfile(req.session.uid, email, username);
-        req.session.username = username;
+        const { userId } = req.user;
+        const { email, username } = req.body;
+
+        for (const key in req.body) if (!validateForm(reqs, key, req.body[key], res)) return;
+
+        const isPasswordValid = await authenticatePassword({ password, userId, res, refreshedAccessToken });
+        if (!isPasswordValid) return;
+
+        await db.updateProfile({ userId, username, email });
+
         return res.send({ success: true, username, email });
     }));
 
     app.put("/api/user/password", handleErrors(async (req, res) => {
-        validateSession(req);
-        const [{ uid: userId }, { currentPassword, newPassword, passwordConf }] = [req.session, req.body];
+        const refreshedAccessToken = await authenticateUser(req);
 
-        if (!currentPassword || !newPassword || !passwordConf) { throw new Error("All fields are required"); }
-        if (newPassword === currentPassword) { throw new Error("New password cannot match current password"); }
-        if (currentPassword.length < 8 || newPassword.length < 8) { throw new Error("Password must be a minimum of 8 characters"); }
-        if (newPassword !== passwordConf) { throw new Error("New password does not match confirmation"); }
+        const { userId } = req.user;
+        const { currentPassword, newPassword, passwordConf } = req.body;
 
-        const currentPasswordHash = await db.getPass(userId);
-        let match = await bcrypt.compare(currentPassword, currentPasswordHash.replace("$2y", "$2b"));
-        if (!match) { throw new Error("Incorrect password"); }
+        if (newPassword !== passwordConf) return res.send({ success: false, message: "Password confirmation does not match" });
+        for (const key in req.body) if (!validateForm(reqs, key, req.body[key], res, refreshedAccessToken)) return;
 
-        let passwordHash = await bcrypt.hash(newPassword, 10);
-        await db.updatePass(userId, passwordHash);
-        return res.send({ success: true, message: "Password updated" });
+        const isPasswordValid = await authenticatePassword({ password: currentPassword, userId, res, refreshedAccessToken });
+        if (!isPasswordValid) return;
+
+        if (!validatePassword({ password: newPassword, res, refreshedAccessToken })) return;
+
+        const newPasswordHash = await bcrypt.hash(newPassword, 10);
+        await db.updatePassword(userId, newPasswordHash);
+
+        return res.send({ success: true, refreshedAccessToken });
+    }));
+
+    /* --------------------------------- DELETE --------------------------------- */
+    app.delete("/api/user/logout", handleErrors(async (req, res) => {
+        const { refreshToken } = req.cookies;
+
+        if (refreshToken) {
+            db.deleteRefreshToken(refreshToken);
+            res.clearCookie("refreshToken");
+        }
+
+        return res.send({ success: true, message: "Logout successful" });
     }));
 } catch (e) { console.error(e); }

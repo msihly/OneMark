@@ -1,15 +1,16 @@
 # What is OneMark?
 ### [OneMark](https://onemark.herokuapp.com) is a responsive, image-based bookmark organizer featuring a gallery view, comprehensive search engine, and tagging system.
-* ### Make sure to install the [Add-On extension for Chrome](https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm) to automatically generate bookmarks with URL, title, and screenshot in 2 clicks.
+* ### Make sure to install the [Add-On extension for Chrome](https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm) to automatically generate bookmarks with URL, title, and screenshot in 1 click.
 
 * ### Check out demo videos on my [portfolio](https://msihly.github.io/msihly)!
-
-#### *If you have any suggestions, issues to report, or other general comments, please feel free to use the appropriate sections of the GitHub repository or contact me at mohamed.sihly@gmail.com. Thank you for your interest.*
 
 ---
 &nbsp;
 
 # Changelog
+## Version 3.00 &nbsp;-&nbsp; (2021-06-07)
+* **Final changelog update. OneMark will continue to be updated in my free time for personal use; however, I will no longer be documenting development.**
+
 ## Version 2.12 &nbsp;-&nbsp; (2020-12-09)
 * Fixed infinite loop in bookmark creator modal caused by `TagInput` component receiving a non-primitive default value (empty array []) for the `initValue` prop after refactoring to Hooks in (Version 2.11)
 * Updated `Tabs` component to conditionally use the `SideScroller` component for horizontal scrolling in row mode

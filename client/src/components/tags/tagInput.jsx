@@ -1,33 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
+import * as actions from "store/actions";
+import { toast } from "react-toastify";
 import { Tag } from "./";
-import { regexEscape } from "../../utils";
+import { regexEscape } from "utils";
 
-const defaultValue = [];
-
-const TagInput = ({ id, initValue = defaultValue }) => {
+const TagInput = ({ id, initValue }) => {
     const dispatch = useDispatch();
 
-    const [displayedTags, setDisplayedTags ] = useState(initValue);
+    const [displayedTags, setDisplayedTags ] = useState(initValue ?? []);
     const [buttonClass, setButtonClass ] = useState("");
     const [value, setValue ] = useState("");
 
-    const tags = useSelector(state => state.inputs.find(input => input.id === id)?.value);
+    const tags = useSelector(state => state.inputs.find(i => i.id === id))?.value;
 
     useEffect(() => {
-        dispatch(actions.inputCreated(id, initValue));
+        dispatch(actions.inputCreated(id, initValue ?? []));
 
         return () => dispatch(actions.inputDeleted(id));
     }, [dispatch, id, initValue]);
 
-    const addTag = tag => {
+    const addTag = rawTag => {
+        const tag = rawTag.trim().replace(" ", "-");
+        if (!(tag?.length > 0)) {
+            setDisplayedTags(tags);
+            setButtonClass("");
+            return toast.error("Tag cannot be blank");
+        };
+
         dispatch(actions.tagAdded(id, tag));
         setDisplayedTags([...tags, tag]);
         setButtonClass("");
     };
 
-    const removeTag = tag => {
+    const removeTag = rawTag => {
+        const tag = rawTag.trim().replace(" ", "-");
         dispatch(actions.tagRemoved(id, tag));
         setDisplayedTags(tags.filter(t => t !== tag));
         setButtonClass("");
@@ -62,7 +69,7 @@ const TagInput = ({ id, initValue = defaultValue }) => {
                 <input className="placeholder tag-search" placeholder="Tags" onChange={handleSearch} value={value} type="text" />
                 <span className={`tag-search-btn ${buttonClass}`} onClick={handleButtonClick}></span>
             </div>
-            <div className="tags">{displayedTags && displayedTags.map((tag, idx) => <Tag key={idx} value={tag} handleRemoval={removeTag} />)}</div>
+            <div className="tags">{displayedTags?.map((tag, idx) => <Tag key={idx} value={tag} handleRemoval={removeTag} />)}</div>
         </div>
     );
 }

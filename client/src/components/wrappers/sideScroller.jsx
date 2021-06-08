@@ -1,9 +1,9 @@
 import React, { cloneElement, useEffect, useRef, useState } from "react";
-import { debounce } from "../../utils";
-import { useElementResize } from "../../utils/hooks";
-import * as Media from "../../media";
+import { debounce } from "utils";
+import { useElementResize } from "utils/hooks";
+import * as Media from "media";
 
-const SideScroller = ({ children, hasPlaceholder }) => {
+const SideScroller = ({ children, classes, hasPlaceholder }) => {
     const ref = useRef(null);
     useElementResize(ref);
 
@@ -41,11 +41,13 @@ const SideScroller = ({ children, hasPlaceholder }) => {
     };
 
     return (
-        <div className="row">
+        <div className={`row ${classes ?? ""}`}>
             <div onClick={() => handleScroll("left")} className={getButtonClasses("left")}>
                 <Media.IndentedArrowSVG />
             </div>
+
             {children && cloneElement(children, { ref, className: `${children.props.className ?? ""} side-scroller` })}
+
             <div onClick={() => handleScroll("right")} className={getButtonClasses("right")}>
                 <Media.IndentedArrowSVG />
             </div>

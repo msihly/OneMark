@@ -1,14 +1,22 @@
-export { default as Checkmark, ReactComponent as CheckmarkSVG } from "./checkmark.svg";
-export { default as Delete, ReactComponent as DeleteSVG } from "./delete.svg";
-export { default as Error, ReactComponent as ErrorSVG } from "./error.svg";
-export { default as Info, ReactComponent as InfoSVG } from "./info.svg";
-export { default as IndentedArrow, ReactComponent as IndentedArrowSVG } from "./indented-arrow.svg";
-export { default as Loading, ReactComponent as LoadingSVG } from "./image-loading.svg";
-export { default as MultiDelete, ReactComponent as MultiDeleteSVG } from "./multi-delete.svg";
-export { default as MultiTags, ReactComponent as MultiTagsSVG } from "./multi-tags.svg";
-export { default as MultiUnselect, ReactComponent as MultiUnselectSVG } from "./multi-unselect.svg";
-export { default as NoBookmarksFound, ReactComponent as NoBookmarksFoundSVG } from "./no-bookmarks-found.svg";
+export { default as ImageLoading, ReactComponent as ImageLoadingSVG } from "./image-loading.svg";
 export { default as NoImage, ReactComponent as NoImageSVG } from "./no-image.svg";
-export { default as PageNotFound, ReactComponent as PageNotFoundSVG } from "./page-not-found.svg";
-export { default as Upload, ReactComponent as UploadSVG } from "./upload.svg";
-export { default as Warning, ReactComponent as WarningSVG } from "./warning.svg";
+
+/* ---------------------------------- ICONS ---------------------------------- */
+export { default as Checkmark, ReactComponent as CheckmarkSVG } from "./icons/checkmark.svg";
+export { default as Chevron, ReactComponent as ChevronSVG } from "./icons/chevron.svg";
+export { default as Delete, ReactComponent as DeleteSVG } from "./icons/delete.svg";
+export { default as DeleteCloud, ReactComponent as DeleteCloudSVG } from "./icons/delete-cloud.svg";
+export { default as Error, ReactComponent as ErrorSVG } from "./icons/error.svg";
+export { default as Filter, ReactComponent as FilterSVG } from "./icons/filter.svg";
+export { default as Grid, ReactComponent as GridSVG } from "./icons/grid.svg";
+export { default as IndentedArrow, ReactComponent as IndentedArrowSVG } from "./icons/indented-arrow.svg";
+export { default as Info, ReactComponent as InfoSVG } from "./icons/info.svg";
+export { default as List, ReactComponent as ListSVG } from "./icons/list.svg";
+export { default as PageNotFound, ReactComponent as PageNotFoundSVG } from "./icons/page-not-found.svg";
+export { default as Pencil, ReactComponent as PencilSVG } from "./icons/pencil.svg";
+export { default as Plus, ReactComponent as PlusSVG } from "./icons/plus.svg";
+export { default as Tag, ReactComponent as TagSVG } from "./icons/tag.svg";
+export { default as Trashcan, ReactComponent as TrashcanSVG } from "./icons/trashcan.svg";
+export { default as UploadCloud, ReactComponent as UploadCloudSVG } from "./icons/upload-cloud.svg";
+export { default as UserCircle, ReactComponent as UserCircleSVG } from "./icons/user-circle.svg";
+export { default as Warning, ReactComponent as WarningSVG } from "./icons/warning.svg";
