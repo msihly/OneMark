@@ -69,7 +69,7 @@ export const createBookmark = (formData, history) => handleErrors(async (dispatc
 export const deleteBookmarks = (formData, history) => handleErrors(async (dispatch) => {
     const res = await fetchAuthed("/api/bookmarks", { method: "DELETE", body: formData });
 
-    dispatch(bookmarksDeleted(res.bookmarkIds.length));
+    dispatch(bookmarksDeleted(res.bookmarkIds));
 
     toast.success(`${res.bookmarkIds.length} bookmarks deleted`);
     return res;
