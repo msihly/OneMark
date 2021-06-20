@@ -38,7 +38,7 @@ try {
         const userId = await db.register(username, passwordHash, email);
 
         const user = { userId, accessLevel: 0 };
-        const accessToken = generateAccessToken(user, "15m");
+        const accessToken = generateAccessToken(user, "30m");
 
         if ([true, "true", "on", "yes"].includes(hasRememberMe)) {
             const refreshToken = await db.generateRefreshToken(user, { days: 30 });
@@ -52,17 +52,22 @@ try {
         const authHeader = req.headers["authorization"];
         if (authHeader && await authenticateUser(req)) return res.send({ success: true, message: "User already logged in" });
 
-        const { username, password, hasRememberMe } = req.body;
+        const { username, password, hasRememberMe, isFromExtension } = req.body;
         if (!username || !password) return res.send({ success: false, message: "All fields are required" });
 
         const { userId, passwordHash, accessLevel } = await db.getUserInfo({ username });
-        if (!userId || !passwordHash) return res.send({ success: false, message: "Incorrect credentials" });
+        if (!userId || !passwordHash) return res.send({ success: false, message: "Incorrect credentials [1]" });
 
         const match = await bcrypt.compare(password, passwordHash.replace("$2y", "$2b"));
-        if (!match) return res.send({ success: false, message: "Incorrect credentials" });
+        if (!match) return res.send({ success: false, message: "Incorrect credentials [2]" });
 
         const user = { userId, accessLevel };
-        const accessToken = generateAccessToken(user, "15m");
+        const accessToken = generateAccessToken(user, "30m");
+
+        if (isFromExtension) {
+            const refreshToken = await db.generateRefreshToken(user, { days: 90 });
+            return res.send({ success: true, accessToken, refreshToken });
+        }
 
         if ([true, "true", "on", "yes"].includes(hasRememberMe)) {
             const refreshToken = await db.generateRefreshToken(user, { days: 30 });
@@ -70,24 +75,6 @@ try {
         }
 
         return res.send({ success: true, accessToken });
-    }));
-
-    app.post("/api/ext/user/login", handleErrors(async (req, res) => {
-        const { username, password } = req.body;
-        if (!username || !password) return res.send({ success: false, message: "All fields are required" });
-
-        const { userId, passwordHash } = await db.getLoginInfo(username);
-        if (!userId || !passwordHash) return res.send({ success: false, message: "Incorrect credentials" });
-
-        const match = await bcrypt.compare(password, passwordHash.replace("$2y", "$2b"));
-        if (!match) return res.send({ success: false, message: "Incorrect credentials" });
-
-        const user = { userId, accessLevel };
-        const accessToken = generateAccessToken(user, "30m");
-
-        const refreshToken = await db.generateRefreshToken(user, { days: 90 });
-
-        return res.send({ success: true, userId, accessToken, refreshToken });
     }));
 
     /* ----------------------------------- PUT ---------------------------------- */

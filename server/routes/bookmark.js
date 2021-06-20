@@ -1,6 +1,6 @@
 const { app } = require("../index.js");
 const db = require("../db");
-const { getArrayDiff, getIsoDate, handleErrors, parseJSON, validateForm } = require("../utils");
+const { getIsoDate, handleErrors, parseJSON, validateForm } = require("../utils");
 const { authenticateUser } = require("../utils/auth.js");
 const { uploadImage } = require("../utils/upload.js");
 
@@ -33,7 +33,7 @@ try {
         const bookmarkId = await db.createBookmark(req.user.userId, imageId, title, pageUrl, date, date);
 
         const tags = parseJSON(req.body.tags);
-        if (tags.length > 0) await db.addBookmarkTags([bookmarkId], tags);
+        if (tags?.length > 0) await db.addBookmarkTags([bookmarkId], tags);
 
         return res.send({
             success: true,

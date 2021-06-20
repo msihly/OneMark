@@ -21,9 +21,9 @@ exports.authenticatePassword = async ({ res, userId, password, refreshedAccessTo
 
 exports.authenticateUser = async (req, requiresAdmin = false) => {
     try {
-        const refreshToken = req.cookies?.refreshToken;
-        const authHeader = req.headers["authorization"];
-        const accessToken = authHeader && authHeader.split(" ")[1];
+        const authHeader = req.headers["authorization"]?.split(" ");
+        const accessToken = authHeader[1];
+        const refreshToken = req.cookies?.refreshToken ?? authHeader[2];
 
         if ((!accessToken || accessToken === "null") && !refreshToken) throw new Error("No token");
 

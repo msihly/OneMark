@@ -8,7 +8,6 @@ import { compareLogic, regexEscape } from "utils";
 import * as Media from "media";
 
 const SEARCH_TYPE_OPTIONS = ["Anything", "URL", "Title", "Tag"].map(e => makeSelectOption(e));
-
 const SEARCH_CONTAINS_OPTIONS = ["contains", "does not contain"].map(e => makeSelectOption(e));
 
 const typeSwitch = (type) => ({ "Anything": "", "URL": "url:", "Title": "title:", "Tag": "tag:" })[type];
@@ -37,6 +36,10 @@ const SearchBar = ({ hasAdvanced }) => {
             if (searchValue.length > 0) {
                 const terms = searchValue.trim();
 
+                const exactDelim = hasExact ? "\\b" : "";
+                const prefix = `${hasAnd ? "(?=.*" : ".*"}${exactDelim}`;
+                const suffix = `${exactDelim}${hasAnd ? ")" : ""}.*`;
+
                 const regexes = [
                     /(?<!-title:)(?<=title:)\S*/gi,
                     /(?<!-url:)(?<=url:)\S*/gi,
@@ -48,20 +51,16 @@ const SearchBar = ({ hasAdvanced }) => {
                     /(?<=(^|\s)-(?!(title|url|tag):))\S*/gi
                 ];
 
-                const exactDelim = hasExact ? "\\b" : "";
-                const prefix = `${hasAnd ? "(?=.*" : ".*"}${exactDelim}`;
-                const suffix = `${exactDelim}${hasAnd ? ")" : ""}.*`;
-
                 const [titles, urls, tags, any, negTitles, negUrls, negTags, negAny] = regexes.map(re => [terms.match(re) || []].map(
                         arr => arr.length > 0 ? `${prefix}${arr.map(e => regexEscape(e)).join(`${exactDelim}${hasAnd ? ")(?=.*" : "|"}`)}${suffix}` : ""));
 
-                const hasPositives = [titles, urls, tags, any].flat().some(e => e.length > 0);
-                const hasNegatives = [negTitles, negUrls, negTags, negAny].flat().some(e => e.length > 0);
-
                 const [reTitle, reURL, reTag, reAny] = [titles, urls, tags, any].map(arr =>
                     RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : (hasAnd ? "\\S*" : "$")}`, "i"));
-                const [reNegTitle, reNegURL, reNegTag, reNegAny] =[negTitles, negUrls, negTags, negAny].map(arr =>
+                const [reNegTitle, reNegURL, reNegTag, reNegAny] = [negTitles, negUrls, negTags, negAny].map(arr =>
                     RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : ""}$`, "i"));
+
+                const hasPositives = [titles, urls, tags, any].flat().some(e => e.length > 0);
+                const hasNegatives = [negTitles, negUrls, negTags, negAny].flat().some(e => e.length > 0);
 
                 filteredBookmarks = bookmarks.filter(bk => {
                     const [title, pageUrl, tags] = [bk.title, bk.pageUrl, bk.tags.length > 0 ? bk.tags : [null]];
