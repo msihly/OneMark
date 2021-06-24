@@ -22,22 +22,9 @@ const Home = () => {
     const [isConfirmationOpen, isTaggerOpen, isBannerOpen] = ["confirm-delete", "tagger", "extension-prompt"]
         .map(id => modals.find(m => m.id === id)?.isOpen ?? false);
 
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [sortKey, setSortKey] = useState(localStorage.getItem("sortKey"));
     const [sortDir, setSortDir] = useState(localStorage.getItem("sortDir"));
-
-    const deleteBookmarks = () => {
-        const formData = new FormData();
-        formData.append("bookmarkIds", JSON.stringify(bookmarks.map(b => b.bookmarkId)));
-        dispatch(actions.bookmarksDeleted(formData));
-    };
-
-    const disableExtBanner = () => localStorage.setItem("hideExtBanner", true);
-
-    const hideBanner = () => {
-        disableExtBanner();
-        dispatch(actions.modalClosed("extension-prompt"));
-    };
 
     useEffect(() => {
         document.title = "Home - OneMark";
@@ -67,6 +54,19 @@ const Home = () => {
 
         return () => dispatch(actions.stateReset());
     }, [dispatch, history]);
+
+    const deleteBookmarks = () => {
+        const formData = new FormData();
+        formData.append("bookmarkIds", JSON.stringify(bookmarks.map(b => b.bookmarkId)));
+        dispatch(actions.bookmarksDeleted(formData));
+    };
+
+    const disableExtBanner = () => localStorage.setItem("hideExtBanner", true);
+
+    const hideBanner = () => {
+        disableExtBanner();
+        dispatch(actions.modalClosed("extension-prompt"));
+    };
 
     return isLoading ? <Loading /> : (
         <div className="common home dark">
