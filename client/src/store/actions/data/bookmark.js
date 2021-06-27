@@ -76,7 +76,7 @@ export const deleteBookmarks = (formData, history) => handleErrors(async (dispat
 }, { isAuth: true, hasToast: true, history });
 
 export const editBookmark = (formData, history) => handleErrors(async (dispatch) => {
-    const res = await fetchAuthed(`/api/bookmark/${formData.get("bookmarkId")}`, { method: "PUT", body: formData });
+    const res = await fetchAuthed(`/api/bookmark`, { method: "PUT", body: formData });
 
     const bookmark = castObjectNumbers(res.bookmark);
     dispatch(bookmarkEdited(bookmark));

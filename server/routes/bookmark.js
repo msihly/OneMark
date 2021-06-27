@@ -29,6 +29,8 @@ try {
 
         const { imageId, imageUrl, imageSize } = await uploadImage(req.files[0]);
 
+        console.log({ user: req.user, authTokens: req.headers["authorization"] });
+
         const date = getIsoDate();
         const bookmarkId = await db.createBookmark(req.user.userId, imageId, title, pageUrl, date, date);
 
@@ -53,10 +55,9 @@ try {
     }));
 
     /* ----------------------------------- PUT ---------------------------------- */
-    app.put("/api/bookmark/:id", handleErrors(async (req, res) => {
+    app.put("/api/bookmark", handleErrors(async (req, res) => {
         const refreshedAccessToken = await authenticateUser(req);
 
-        // req.params.id is unused; bookmarkId extracted from body; // DEBUG
         const { bookmarkId, title, pageUrl, isImageRemoved } = req.body;
         const tags = parseJSON(req.body.tags);
 
