@@ -10,8 +10,6 @@ import * as Media from "media";
 const SEARCH_TYPE_OPTIONS = ["Anything", "URL", "Title", "Tag"].map(e => makeSelectOption(e));
 const SEARCH_CONTAINS_OPTIONS = ["contains", "does not contain"].map(e => makeSelectOption(e));
 
-const typeSwitch = (type) => ({ "Anything": "", "URL": "url:", "Title": "title:", "Tag": "tag:" })[type];
-
 const SearchBar = ({ hasAdvanced }) => {
     const dispatch = useDispatch();
 
@@ -29,54 +27,87 @@ const SearchBar = ({ hasAdvanced }) => {
         setSearchValue(`${searchValue} ${term}`);
     };
 
+    const createRegExes = (prefixes = [], positives, negatives) => {
+        const exactDelim = hasExact ? "\\b" : "";
+        const prefix = `${hasAnd ? "(?=.*" : ".*"}${exactDelim}`;
+        const suffix = `${exactDelim}${hasAnd ? ")" : ""}.*`;
+        const andOrDelim = `${exactDelim}${hasAnd ? ")(?=.*" : "|"}`;
+
+        const typeMaps = [{ prefixMap: positives, reMap: new Map() }, { prefixMap: negatives, reMap: new Map() }];
+
+        typeMaps.forEach(({ prefixMap, reMap }) => {
+            const terms = prefixMap.get("anything");
+            reMap.set("anything", terms.length > 0 ? new RegExp(`(${terms.join("|")})`, "i") : false);
+        });
+
+        typeMaps.forEach(({ prefixMap, reMap }) => {
+            prefixes.forEach(key => {
+                const terms = prefixMap.get(key);
+                const reString = terms.length > 0 ? `${prefix}${terms.map(e => regexEscape(e)).join(andOrDelim)}${suffix}` : "";
+                reMap.set(key, reString.length > 0 ? new RegExp(reString, "i") : false);
+            });
+        });
+
+        return { rePos: typeMaps[0].reMap, reNeg: typeMaps[1].reMap };
+    };
+
+    const filterBookmarks = (searchString, prefixes = []) => {
+        const { positives, negatives } = findPrefixes(searchString, prefixes);
+
+        const { rePos, reNeg } = createRegExes(prefixes, positives, negatives);
+
+        const [hasPositives, hasNegatives] = [positives, negatives].map(prefixMap => [...prefixMap.values()].flat().some(e => e.length > 0));
+
+        return bookmarks.filter(b => {
+            const [title, pageUrl, tags] = [b.title, b.pageUrl, b.tags.length > 0 ? b.tags : [null]];
+            const any = [title, pageUrl, tags].flat();
+
+            const isPosAnyValid = rePos.get("anything") ? any.some(a => rePos.get("anything").test(a)) : true;
+            const isPosTitleValid = rePos.get("title") ? rePos.get("title").test(title) : true;
+            const isPosUrlValid = rePos.get("url") ? rePos.get("url").test(pageUrl) : true;
+            const isPosTagsValid = rePos.get("tag") ? tags.some(t => rePos.get("tag").test(t)) : true;
+
+            const isNegAnyValid = reNeg.get("anything") ? !any.some(a => reNeg.get("anything").test(a)) : true;
+            const isNegTitleValid = reNeg.get("title") ? !reNeg.get("title").test(title) : true;
+            const isNegUrlValid = reNeg.get("url") ? !reNeg.get("url").test(pageUrl) : true;
+            const isNegTagsValid = reNeg.get("tag") ? !tags.some(t => reNeg.get("tag").test(t)) : true;
+
+            const isPosValid = compareLogic(hasAnd ? "and" : "or", isPosTitleValid, isPosUrlValid, isPosTagsValid, isPosAnyValid);
+            const isNegValid = compareLogic(hasAnd ? "and" : "or", isNegTitleValid, isNegUrlValid, isNegTagsValid, isNegAnyValid);
+
+            return (isNegValid && isPosValid) || (!hasPositives && hasNegatives);
+        });
+    };
+
+    const findPrefixes = (searchString, prefixes = []) => {
+        if (!prefixes?.length) return false;
+
+        const positives = new Map([["anything", searchString.match(new RegExp(`(?<=^|\\s)(?!-|(${prefixes.join("|")}):)\\S*\\S`, "gi")) || []]]);
+        prefixes.forEach(prefix => {
+            const re = new RegExp(`(?<!-${prefix}:)(?<=${prefix}:)\\S+`, "gi");
+            positives.set(prefix, searchString.match(re) || []);
+        });
+
+        const negatives = new Map([["anything", searchString.match(new RegExp(`(?<=(^|\\s)-(?!(${prefixes.join("|")}):))\\S*`, "gi")) || []]]);
+        prefixes.forEach(prefix => {
+            const re = new RegExp(`\(?<=-${prefix}:\)\\S+`, "gi");
+            negatives.set(prefix, searchString.match(re) || []);
+        });
+
+        return { positives, negatives };
+    };
+
+    const typeSwitch = (type) => ({ "Anything": "", "URL": "url:", "Title": "title:", "Tag": "tag:" })[type];
+
     useEffect(() => {
         try {
-            let filteredBookmarks = null;
-
-            if (searchValue.length > 0) {
-                const terms = searchValue.trim();
-
-                const exactDelim = hasExact ? "\\b" : "";
-                const prefix = `${hasAnd ? "(?=.*" : ".*"}${exactDelim}`;
-                const suffix = `${exactDelim}${hasAnd ? ")" : ""}.*`;
-
-                const regexes = [
-                    /(?<!-title:)(?<=title:)\S*/gi,
-                    /(?<!-url:)(?<=url:)\S*/gi,
-                    /(?<!-tag:)(?<=tag:)\S*/gi,
-                    /(?<=^|\s)(?!-|(title|tag|url):)\S*\S/gi,
-                    /(?<=-title:)\S*/gi,
-                    /(?<=-url:)\S*/gi,
-                    /(?<=-tag:)\S*/gi,
-                    /(?<=(^|\s)-(?!(title|url|tag):))\S*/gi
-                ];
-
-                const [titles, urls, tags, any, negTitles, negUrls, negTags, negAny] = regexes.map(re => [terms.match(re) || []].map(
-                        arr => arr.length > 0 ? `${prefix}${arr.map(e => regexEscape(e)).join(`${exactDelim}${hasAnd ? ")(?=.*" : "|"}`)}${suffix}` : ""));
-
-                const [reTitle, reURL, reTag, reAny] = [titles, urls, tags, any].map(arr =>
-                    RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : (hasAnd ? "\\S*" : "$")}`, "i"));
-                const [reNegTitle, reNegURL, reNegTag, reNegAny] = [negTitles, negUrls, negTags, negAny].map(arr =>
-                    RegExp(`^${arr.filter(e => e !== "").length > 0 ? arr : ""}$`, "i"));
-
-                const hasPositives = [titles, urls, tags, any].flat().some(e => e.length > 0);
-                const hasNegatives = [negTitles, negUrls, negTags, negAny].flat().some(e => e.length > 0);
-
-                filteredBookmarks = bookmarks.filter(bk => {
-                    const [title, pageUrl, tags] = [bk.title, bk.pageUrl, bk.tags.length > 0 ? bk.tags : [null]];
-                    const any = [title, pageUrl, tags].flat();
-                    return !( reNegTitle.test(title) || reNegURL.test(pageUrl) || tags.some(tag => reNegTag.test(tag)) || any.some(term => reNegAny.test(term)) )
-                            && ( compareLogic(hasAnd ? "and" : "or", reTitle.test(title), reURL.test(pageUrl), tags.some(tag => reTag.test(tag)), any.some(term => reAny.test(term)))
-                            || ( !hasPositives && hasNegatives ));
-                });
-            }
-
+            const filteredBookmarks = searchValue?.length > 0 ? filterBookmarks(searchValue, ["title", "url", "tag"]) : null;
             dispatch(actions.bookmarksFiltered(filteredBookmarks));
         } catch (e) {
             console.log(e);
             toast.error("Search Error: Check console for details");
         }
-    }, [dispatch, hasAnd, hasExact, searchValue]); // eslint-disable-line react-hooks/exhaustive-deps
+    }, [dispatch, filterBookmarks, hasAnd, hasExact, searchValue]); // eslint-disable-line
 
     return (
         <div onClick={event => event.stopPropagation()} className="search-group">
