@@ -10,6 +10,8 @@ import * as Media from "media";
 const SEARCH_TYPE_OPTIONS = ["Anything", "URL", "Title", "Tag"].map(e => makeSelectOption(e));
 const SEARCH_CONTAINS_OPTIONS = ["contains", "does not contain"].map(e => makeSelectOption(e));
 
+const typeSwitch = (type) => ({ "Anything": "", "URL": "url:", "Title": "title:", "Tag": "tag:" })[type];
+
 const SearchBar = ({ hasAdvanced }) => {
     const dispatch = useDispatch();
 
@@ -36,14 +38,12 @@ const SearchBar = ({ hasAdvanced }) => {
         const typeMaps = [{ prefixMap: positives, reMap: new Map() }, { prefixMap: negatives, reMap: new Map() }];
 
         typeMaps.forEach(({ prefixMap, reMap }) => {
-            const terms = prefixMap.get("anything");
-            reMap.set("anything", terms.length > 0 ? new RegExp(`(${terms.join("|")})`, "i") : false);
-        });
+            const anyTerms = prefixMap.get("anything");
+            reMap.set("anything", anyTerms.length > 0 ? new RegExp(`(${anyTerms.join("|")})`, "i") : false);
 
-        typeMaps.forEach(({ prefixMap, reMap }) => {
             prefixes.forEach(key => {
-                const terms = prefixMap.get(key);
-                const reString = terms.length > 0 ? `${prefix}${terms.map(e => regexEscape(e)).join(andOrDelim)}${suffix}` : "";
+                const preTerms = prefixMap.get(key);
+                const reString = preTerms.length > 0 ? `${prefix}${preTerms.map(e => regexEscape(e)).join(andOrDelim)}${suffix}` : "";
                 reMap.set(key, reString.length > 0 ? new RegExp(reString, "i") : false);
             });
         });
@@ -51,55 +51,68 @@ const SearchBar = ({ hasAdvanced }) => {
         return { rePos: typeMaps[0].reMap, reNeg: typeMaps[1].reMap };
     };
 
-    const filterBookmarks = (searchString, prefixes = []) => {
-        const { positives, negatives } = findPrefixes(searchString, prefixes);
-
-        const { rePos, reNeg } = createRegExes(prefixes, positives, negatives);
-
-        const [hasPositives, hasNegatives] = [positives, negatives].map(prefixMap => [...prefixMap.values()].flat().some(e => e.length > 0));
-
-        return bookmarks.filter(b => {
-            const [title, pageUrl, tags] = [b.title, b.pageUrl, b.tags.length > 0 ? b.tags : [null]];
-            const any = [title, pageUrl, tags].flat();
-
-            const isPosAnyValid = rePos.get("anything") ? any.some(a => rePos.get("anything").test(a)) : true;
-            const isPosTitleValid = rePos.get("title") ? rePos.get("title").test(title) : true;
-            const isPosUrlValid = rePos.get("url") ? rePos.get("url").test(pageUrl) : true;
-            const isPosTagsValid = rePos.get("tag") ? tags.some(t => rePos.get("tag").test(t)) : true;
-
-            const isNegAnyValid = reNeg.get("anything") ? !any.some(a => reNeg.get("anything").test(a)) : true;
-            const isNegTitleValid = reNeg.get("title") ? !reNeg.get("title").test(title) : true;
-            const isNegUrlValid = reNeg.get("url") ? !reNeg.get("url").test(pageUrl) : true;
-            const isNegTagsValid = reNeg.get("tag") ? !tags.some(t => reNeg.get("tag").test(t)) : true;
-
-            const isPosValid = compareLogic(hasAnd ? "and" : "or", isPosTitleValid, isPosUrlValid, isPosTagsValid, isPosAnyValid);
-            const isNegValid = compareLogic(hasAnd ? "and" : "or", isNegTitleValid, isNegUrlValid, isNegTagsValid, isNegAnyValid);
-
-            return (isNegValid && isPosValid) || (!hasPositives && hasNegatives);
-        });
-    };
-
     const findPrefixes = (searchString, prefixes = []) => {
         if (!prefixes?.length) return false;
 
         const positives = new Map([["anything", searchString.match(new RegExp(`(?<=^|\\s)(?!-|(${prefixes.join("|")}):)\\S*\\S`, "gi")) || []]]);
-        prefixes.forEach(prefix => {
-            const re = new RegExp(`(?<!-${prefix}:)(?<=${prefix}:)\\S+`, "gi");
-            positives.set(prefix, searchString.match(re) || []);
-        });
-
         const negatives = new Map([["anything", searchString.match(new RegExp(`(?<=(^|\\s)-(?!(${prefixes.join("|")}):))\\S*`, "gi")) || []]]);
+
         prefixes.forEach(prefix => {
-            const re = new RegExp(`\(?<=-${prefix}:\)\\S+`, "gi");
-            negatives.set(prefix, searchString.match(re) || []);
+            const rePos = new RegExp(`(?<!-${prefix}:)(?<=${prefix}:)\\S+`, "gi");
+            positives.set(prefix, searchString.match(rePos) || []);
+
+            const reNeg = new RegExp(`(?<=-${prefix}:)\\S+`, "gi");
+            negatives.set(prefix, searchString.match(reNeg) || []);
         });
 
         return { positives, negatives };
     };
 
-    const typeSwitch = (type) => ({ "Anything": "", "URL": "url:", "Title": "title:", "Tag": "tag:" })[type];
-
     useEffect(() => {
+        const filterBookmarks = (searchString, prefixes = []) => {
+            const { positives, negatives } = findPrefixes(searchString, prefixes);
+
+            const { rePos, reNeg } = createRegExes(prefixes, positives, negatives);
+
+            const [hasPositives, hasNegatives] = [positives, negatives].map(prefixMap => [...prefixMap.values()].flat().some(e => e.length > 0));
+
+            return bookmarks.filter(b => {
+                const [title, pageUrl, tags] = [b.title, b.pageUrl, b.tags.length > 0 ? b.tags : [null]];
+                const any = [title, pageUrl, tags].flat();
+
+                const isPosAnyValid = rePos.get("anything") ? any.some(a => rePos.get("anything").test(a)) : true;
+                const isPosTitleValid = rePos.get("title") ? rePos.get("title").test(title) : true;
+                const isPosUrlValid = rePos.get("url") ? rePos.get("url").test(pageUrl) : true;
+                const isPosTagsValid = rePos.get("tag") ? tags.some(t => rePos.get("tag").test(t)) : true;
+
+                const isNegAnyValid = reNeg.get("anything") ? !any.some(a => reNeg.get("anything").test(a)) : true;
+                const isNegTitleValid = reNeg.get("title") ? !reNeg.get("title").test(title) : true;
+                const isNegUrlValid = reNeg.get("url") ? !reNeg.get("url").test(pageUrl) : true;
+                const isNegTagsValid = reNeg.get("tag") ? !tags.some(t => reNeg.get("tag").test(t)) : true;
+
+                const isPosValid = compareLogic(hasAnd ? "and" : "or", isPosTitleValid, isPosUrlValid, isPosTagsValid, isPosAnyValid);
+                const isNegValid = compareLogic(hasAnd ? "and" : "or", isNegTitleValid, isNegUrlValid, isNegTagsValid, isNegAnyValid);
+
+                if (b.bookmarkId === 5552 || b.bookmarkId === 5452)
+                    console.log({
+                        b,
+                        isPosAnyValid,
+                        isPosTitleValid,
+                        isPosUrlValid,
+                        isPosTagsValid,
+                        isNegAnyValid,
+                        isNegTitleValid,
+                        isNegUrlValid,
+                        isNegTagsValid,
+                        reNegTag: reNeg.get("tag"),
+                        isPosValid,
+                        isNegValid
+                    });
+
+                return (isNegValid && isPosValid) || (!hasPositives && hasNegatives);
+            });
+        };
+
         try {
             const filteredBookmarks = searchValue?.length > 0 ? filterBookmarks(searchValue, ["title", "url", "tag"]) : null;
             dispatch(actions.bookmarksFiltered(filteredBookmarks));
@@ -107,7 +120,7 @@ const SearchBar = ({ hasAdvanced }) => {
             console.log(e);
             toast.error("Search Error: Check console for details");
         }
-    }, [dispatch, filterBookmarks, hasAnd, hasExact, searchValue]); // eslint-disable-line
+    }, [dispatch, hasAnd, hasExact, searchValue]); // eslint-disable-line
 
     return (
         <div onClick={event => event.stopPropagation()} className="search-group">
