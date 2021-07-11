@@ -20,6 +20,8 @@ try {
 
     /* ---------------------------------- POST ---------------------------------- */
     app.post("/api/bookmark", handleErrors(async (req, res) => {
+        console.log({ user: req.user, authTokens: req.headers["authorization"] }); // DEBUG
+
         const refreshedAccessToken = await authenticateUser(req);
 
         const { title, pageUrl } = req.body;
@@ -28,8 +30,6 @@ try {
         if (await db.checkBookmarkExists(req.user.userId, pageUrl) !== false) return res.send({ success: false, message: "Bookmark already exists" });
 
         const { imageId, imageUrl, imageSize } = await uploadImage(req.files[0]);
-
-        console.log({ user: req.user, authTokens: req.headers["authorization"] });
 
         const date = getIsoDate();
         const bookmarkId = await db.createBookmark(req.user.userId, imageId, title, pageUrl, date, date);

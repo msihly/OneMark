@@ -58,10 +58,10 @@ const SearchBar = ({ hasAdvanced }) => {
         const negatives = new Map([["anything", searchString.match(new RegExp(`(?<=(^|\\s)-(?!(${prefixes.join("|")}):))\\S*`, "gi")) || []]]);
 
         prefixes.forEach(prefix => {
-            const rePos = new RegExp(`(?<!-${prefix}:)(?<=${prefix}:)\\S+`, "gi");
+            const rePos = new RegExp(`(?<!-${prefix}:)(?<=${prefix}:)\\S*`, "gi");
             positives.set(prefix, searchString.match(rePos) || []);
 
-            const reNeg = new RegExp(`(?<=-${prefix}:)\\S+`, "gi");
+            const reNeg = new RegExp(`(?<=-${prefix}:)\\S*`, "gi");
             negatives.set(prefix, searchString.match(reNeg) || []);
         });
 

@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import * as actions from "store/actions";
-import { toast } from "react-toastify";
 import { AuthRoute, NotFound } from "components/views/_common";
 import { Home, Login, PrivacyPolicy } from "components/views";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "css/index.scss";
 
