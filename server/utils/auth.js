@@ -25,8 +25,6 @@ exports.authenticateUser = async (req, requiresAdmin = false) => {
         const accessToken = authHeader[1];
         const refreshToken = authHeader[2] ?? req.cookies?.refreshToken;
 
-        console.log({ authHeader, accessToken, refreshToken });
-
         if ((!accessToken || accessToken === "null") && !refreshToken) throw new Error("No token");
 
         return await this.setSessionUser({ accessToken, refreshToken, req, requiresAdmin });
@@ -59,8 +57,6 @@ exports.setSessionUser = async ({ accessToken, refreshToken, req, requiresAdmin 
 
         user = jwt.verify(accessToken, ACCESS_TOKEN_SECRET);
     }
-
-    console.log({ user });
 
     if (requiresAdmin && !user?.accessLevel) throw new Error("Access level");
 
