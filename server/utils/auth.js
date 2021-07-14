@@ -23,7 +23,7 @@ exports.authenticateUser = async (req, requiresAdmin = false) => {
     try {
         const authHeader = req.headers["authorization"]?.split(" ");
         const accessToken = authHeader[1];
-        const refreshToken = req.cookies?.refreshToken ?? authHeader[2];
+        const refreshToken = authHeader[2] ?? req.cookies?.refreshToken;
 
         console.log({ authHeader, accessToken, refreshToken });
 
