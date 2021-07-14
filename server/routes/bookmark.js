@@ -21,7 +21,6 @@ try {
     /* ---------------------------------- POST ---------------------------------- */
     app.post("/api/bookmark", handleErrors(async (req, res) => {
         const refreshedAccessToken = await authenticateUser(req);
-        console.log({ user: req.user, authTokens: req.headers["authorization"] }); // DEBUG
 
         const { title, pageUrl } = req.body;
         for (const key in req.body) if (!validateForm(reqs, key, req.body[key], res)) return;
