@@ -1,3 +1,6 @@
+> <img alt="Warning" src="./media/warning.svg"><br>
+Deprecated. Visit the [Mark II](https://github.com/msihly/mark-ii) repository for the successor to this project.
+
 # What is OneMark?
 ### [OneMark](https://onemark.herokuapp.com) is a responsive, image-based bookmark organizer featuring a gallery view, comprehensive search engine, and tagging system.
 * ### Make sure to install the [Add-On extension for Chrome](https://chrome.google.com/webstore/detail/onemark/cjklnajnighcegajggjfmjecfidllinm) to automatically generate bookmarks with URL, title, and screenshot in 1 click.
